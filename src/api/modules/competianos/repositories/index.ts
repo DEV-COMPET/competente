@@ -1,4 +1,4 @@
-import type {Competiano} from '../entities/competiano.entity';
+import type { CompetianoType} from '../entities/competiano.entity';
 import type {BaseRepository} from './repository';
 export abstract class Repository<T> implements BaseRepository<T> {
 	public abstract create(data: T): Promise<void> ;
@@ -9,4 +9,4 @@ export abstract class Repository<T> implements BaseRepository<T> {
 
 export type WithId<T> = {id: string} & T;
 
-export type CompetianoRepository = Repository<Competiano>;
+export type CompetianoRepository = Repository<CompetianoType>;
