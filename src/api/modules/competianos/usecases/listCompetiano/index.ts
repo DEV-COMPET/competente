@@ -2,8 +2,7 @@ import { ListCompetianoUseCase } from "./listCompetianoUseCase";
 import { ListCompetianoController } from "./listCompetianoController";
 import { CompetianoMongoDBRepository as CompetianoRepository } from "../../repositories/defaultMongoDBRepository/competianoRepository";
 export default (): ListCompetianoController => {
-	const competianoRepository = new CompetianoRepository();
-	const listCompetianoUseCase = new ListCompetianoUseCase(competianoRepository);
-	const listCompetianoController = new ListCompetianoController(listCompetianoUseCase);
-	return listCompetianoController;
+	const repository = new CompetianoRepository();
+	const useCase = new ListCompetianoUseCase(repository);
+	return new ListCompetianoController(useCase);
 };

@@ -2,10 +2,10 @@ import type {Request, Response} from 'express';
 import type {ListCompetianoUseCase as IListCompetianoUseCase} from './listCompetianoUseCase'
 
 export class ListCompetianoController {
-	constructor(private readonly listCompetianoUseCase: IListCompetianoUseCase) {}
+	constructor(private readonly useCase: IListCompetianoUseCase) {}
 	async handle(request: Request, response: Response): Promise<Response> {
 		try {
-		const competianos= await this.listCompetianoUseCase.execute();
+		const competianos= await this.useCase.execute();
 		return response.json(competianos);
 	} catch (error: unknown) {
 			console.error(error);

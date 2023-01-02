@@ -1,21 +1,21 @@
-import { Competiano } from '../../entities/competiano.entity';
+import { Competiano, CompetianoType } from '../../entities/competiano.entity';
 import type {CompetianoRepository as InterfaceCreateCompetianoRepository} from '../../repositories';
-type InterfaceRequest = {
-	name: string;
-	email: string;
-  data_inicio:Date
-};
-export type InterfaceCreateCompetianoUseCase = {
-	execute: (request: InterfaceRequest) => Promise<void>;
+export interface InterfaceCreateCompetianoUseCase {
+	execute: (request: CompetianoType) => Promise<CompetianoType>;
 };
 export class CreateCompetianoUseCase implements InterfaceCreateCompetianoUseCase {
-	constructor(private readonly competianoRepository: InterfaceCreateCompetianoRepository) {}
-	async execute({name, email,data_inicio}: InterfaceRequest) {
-		const competianoExists = await this.competianoRepository.getByName(name);
-		if (competianoExists) {
-			throw new Error('Esse competiano já existe!');
+	constructor(private readonly repository: InterfaceCreateCompetianoRepository) {}
+	async execute({nome, email,data_inicio,url_imagem,linkedin,lates}: CompetianoType) :Promise<CompetianoType>{
+		let competianoExists = await this.repository.getByName(nome);
+		if (!competianoExists) {
+			competianoExists = await this.repository.getByEmail(email)
+			if(!competianoExists){
+				throw new Error('Já existe um membro cadastrado com esse email!');
+			}
+			const competiano = new Competiano({data_inicio,email,nome,url_imagem,linkedin,lates})
+			await this.repository.create(competiano);
+			return competiano
 		}
-    const competiano = new Competiano({data_inicio,email,name})
-		await this.competianoRepository.create(competiano);
+		throw new Error('O membro já se encontra cadastrado na nossa base de dados!');
 	}
 }

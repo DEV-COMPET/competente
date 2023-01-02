@@ -1,13 +1,13 @@
-import { Competiano, CompetianoType } from '../../entities/competiano.entity';
+import { CompetianoType } from '../../entities/competiano.entity';
 import type { CompetianoRepository as InterfaceListCompetianoRepository } from '../../repositories';
 
-export type InterfaceListCompetianoUseCase = {
+export interface InterfaceListCompetianoUseCase {
 	execute: () => Promise<CompetianoType[]>;
 };
 export class ListCompetianoUseCase implements InterfaceListCompetianoUseCase {
-	constructor(private readonly competianoRepository: InterfaceListCompetianoRepository) { }
+	constructor(private readonly repository: InterfaceListCompetianoRepository) { }
 	async execute(): Promise<CompetianoType[]> {
-		const competiano = await this.competianoRepository.list();
+		const competiano = await this.repository.list();
 		return competiano
 	}
 }

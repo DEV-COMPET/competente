@@ -12,8 +12,8 @@ export class CompetianoMongoDBRepository extends DefaultMongoDBRepository<Compet
       return result
     })
   }
-  public async getByName(name: string): Promise<CompetianoType | undefined> {
-    const competiano= await this.competianoModel.findOne({name})
+  public async getByName(nome: string): Promise<CompetianoType | undefined> {
+    const competiano= await this.competianoModel.findOne({nome})
     const result:CompetianoType|undefined=competiano?.toJSON()
     return result
   }
@@ -22,5 +22,13 @@ export class CompetianoMongoDBRepository extends DefaultMongoDBRepository<Compet
     const result:CompetianoType|undefined=competiano?.toJSON()
     return result
   }
-
+  public async create(data: CompetianoType): Promise<CompetianoType> {
+    const model = new this.competianoModel(data)
+    const createdData = await model.save()
+    if(!createdData){
+      throw new Error("Failed to create new Data")
+    }
+    const result :CompetianoType= createdData.toJSON<CompetianoType>()
+    return result
+  }
 }
