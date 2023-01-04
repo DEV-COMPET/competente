@@ -36,15 +36,10 @@ export class CreateCompetianoController {
 			});
 			return response.status(201).json(memberCreated);
 		} catch (error: any) {
-			console.error(error);
-			response.status(400).json({
+			return response.status(400).json({
 				code: response.statusCode,
 				message: error.message
 			});
 		}
-		return response.status(500).json({
-			code: response.statusCode,
-			message: "Erro interno no servidor, por favor tente novamente mais tarde, ou contate os desenvolvedores."
-		});
 	}
 }

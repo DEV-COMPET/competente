@@ -6,12 +6,8 @@ export interface InterfaceCreateCompetianoUseCase {
 export class CreateCompetianoUseCase implements InterfaceCreateCompetianoUseCase {
 	constructor(private readonly repository: InterfaceCreateCompetianoRepository) {}
 	async execute({nome, email,data_inicio,url_imagem,linkedin,lates}: CompetianoType) :Promise<CompetianoType>{
-		let competianoExists = await this.repository.getByName(nome);
+		const competianoExists = await this.repository.getByName(nome);
 		if (!competianoExists) {
-			competianoExists = await this.repository.getByEmail(email)
-			if(!competianoExists){
-				throw new Error('Já existe um membro cadastrado com esse email!');
-			}
 			const competiano = new Competiano({data_inicio,email,nome,url_imagem,linkedin,lates})
 			await this.repository.create(competiano);
 			return competiano
