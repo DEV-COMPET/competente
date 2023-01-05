@@ -1,6 +1,20 @@
 import { CompetianoModel, CompetianoType } from '../../entities/competiano.entity';
 import type { CompetianoRepository as InterfaceCompetianoRepository } from '../';
 import { DefaultMongoDBRepository } from '.';
+export type MemberData = {
+  nome?:string
+  data_inicio?:Date
+  email?:string
+  membro_ativo?:boolean
+  tutor?:boolean
+  scrum_master?:boolean
+  intercambio?:boolean
+  data_fim?:Date
+  lates?:string
+  linkedin?:string
+  depoimentos?:string
+  url_imagem?:string
+}
 export class CompetianoMongoDBRepository extends DefaultMongoDBRepository<CompetianoType> implements InterfaceCompetianoRepository {
   constructor(private competianoModel = CompetianoModel) {
     super(competianoModel);
@@ -39,5 +53,11 @@ export class CompetianoMongoDBRepository extends DefaultMongoDBRepository<Compet
     await deletedMember.delete();
     return deletedMember.toJSON<CompetianoType>()
   }
-
+  public async update(nome:string,data:MemberData):Promise<CompetianoType | undefined> {
+    const updatedMember = await this.competianoModel.findOneAndUpdate({ nome },data,{new:true})
+    if (!updatedMember) {
+      return
+    }
+    return updatedMember.toJSON<CompetianoType>()
+  }
 }
