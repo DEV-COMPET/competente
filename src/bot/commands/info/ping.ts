@@ -1,7 +1,7 @@
 import { Command } from "../../structures/Command";
 
 export default new Command({
-  name: 'ping',
+  name: 'teste',
   description: "replies with pong",
   run: async ({ interaction }) => {
     interaction.followUp("Pong")
