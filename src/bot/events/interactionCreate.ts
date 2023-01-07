@@ -1,16 +1,42 @@
 import { Event } from "../structures/Event";
 import { client } from ".."
-import { CommandInteractionOptionResolver } from "discord.js";
+import { CommandInteractionOptionResolver, ModalSubmitInteraction } from "discord.js";
 import { ExtendedInteraction } from "../typings/Commands";
+import { ExtendedModalInteraction } from "../typings/Modals";
 export default new Event("interactionCreate", async (interaction) => {
-  if (interaction.isCommand()) {
-    await interaction.deferReply()
+  if (interaction.isChatInputCommand()) {
+    
     const command = client.commands.get(interaction.commandName)
-    if (!command) return interaction.followUp("You have used a non existent command!")
-    command.run({
-      args: interaction.options as CommandInteractionOptionResolver,
-      client,
-      interaction:interaction as ExtendedInteraction
-    })
+    if (!command) {
+      await interaction.followUp("Você usou um comando não existente")
+      return
+    }
+    try {
+      await command.run({
+        args: interaction.options as CommandInteractionOptionResolver,
+        client,
+        interaction: interaction as ExtendedInteraction
+      })
+    } catch (error) {
+      console.log(error);
+      await interaction.followUp("Houve um erro ao tentar executar esse comando")
+    }
+
+  }
+  else if (interaction.isModalSubmit()) {
+    const modalInteraction: ModalSubmitInteraction = interaction
+    const command = client.modals.get(interaction.customId)
+    if (!command) {
+      await modalInteraction.followUp("Você usou um comando não existente")
+      return
+    }
+    try {
+      await command.run({
+        client,
+        interaction:modalInteraction as ExtendedModalInteraction
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 })

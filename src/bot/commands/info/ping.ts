@@ -4,6 +4,6 @@ export default new Command({
   name: 'teste',
   description: "replies with pong",
   run: async ({ interaction }) => {
-    interaction.followUp("Pong")
+   await interaction.reply({content:"Pong",ephemeral:true})
   },
 })
