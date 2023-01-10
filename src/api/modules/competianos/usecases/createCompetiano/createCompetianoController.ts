@@ -14,13 +14,13 @@ export class CreateCompetianoController {
 					code: response.statusCode
 				})
 			}
-			if (!url_imagem || !validators.validateImgUrl(url_imagem)) {
+			if (url_imagem && !validators.validateImgUrl(url_imagem)) {
 				return response.status(422).json({
 					message: "Erro de validação, por favor forneça uma url válida do imgbb para a foto do novo membro!",
 					code: response.statusCode
 				})
 			}
-			if (!linkedin || !validators.validateLinkedin(linkedin)) {
+			if (linkedin && !validators.validateLinkedin(linkedin)) {
 				return response.status(422).json({
 					message: "Erro de validação, por favor forneça uma url válida para o perfil do linkedin do novo membro!",
 					code: response.statusCode

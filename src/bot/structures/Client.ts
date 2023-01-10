@@ -27,7 +27,8 @@ export class ExtendedClient extends Client {
   }
   async start() {
     await this.registerModules()
-    await this.registerModals()
+    const createdCommands=this.commands.map(command=>command)
+    await this.registerCommands({commands:createdCommands})
     await this.login(token)
   }
   async importFile(filepath: string) {
@@ -56,7 +57,6 @@ export class ExtendedClient extends Client {
       console.log(command);
       this.commands.set(command.name, command)
       slashCommands.push(command)
-      await this.registerCommands({ commands: slashCommands })
     })
     //events
     const eventFiles = await globPromise(`${__dirname}/../events/*{.ts,.js}`)
@@ -64,6 +64,7 @@ export class ExtendedClient extends Client {
       const event: Event<keyof ClientEvents> = await this.importFile(filepath)
       this.on(event.event, event.run)
     })
+    await this.registerModals()
   }
   async registerModals (){
     const modalFiles = await globPromise(`${__dirname}/../modals/*/*{.ts,.js}`)
@@ -71,8 +72,7 @@ export class ExtendedClient extends Client {
     modalFiles.forEach(async filepath => {
       const modal: ModalType = await this.importFile(filepath)
       if (!modal) return
-      console.log(modal);
-      this.modals.set(modal.customId, modal)
+      this.modals.set(modal.customId, modal)      
     })
   }
 }

@@ -5,6 +5,7 @@ import { ExtendedInteraction } from "../typings/Commands";
 import { ExtendedModalInteraction } from "../typings/Modals";
 export default new Event("interactionCreate", async (interaction) => {
   if (interaction.isChatInputCommand()) {
+    console.log({commands:client.commands});
     
     const command = client.commands.get(interaction.commandName)
     if (!command) {
@@ -17,6 +18,7 @@ export default new Event("interactionCreate", async (interaction) => {
         client,
         interaction: interaction as ExtendedInteraction
       })
+      
     } catch (error) {
       console.log(error);
       await interaction.followUp("Houve um erro ao tentar executar esse comando")
@@ -24,9 +26,12 @@ export default new Event("interactionCreate", async (interaction) => {
 
   }
   else if (interaction.isModalSubmit()) {
+    
     const modalInteraction: ModalSubmitInteraction = interaction
     const command = client.modals.get(interaction.customId)
+
     if (!command) {
+      await modalInteraction.deferReply()
       await modalInteraction.followUp("Você usou um comando não existente")
       return
     }

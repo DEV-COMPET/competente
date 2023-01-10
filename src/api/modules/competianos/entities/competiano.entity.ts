@@ -28,7 +28,7 @@ export class Competiano implements CompetianoType {
   depoimentos?: string | undefined
   url_imagem?: string | undefined
   constructor(competiano: CompetianoType) { 
-    this.url_imagem = competiano.url_imagem
+    this.url_imagem = competiano.url_imagem ||""
     this.nome = competiano.nome
     this.email = competiano.email
     this.data_inicio = competiano.data_inicio
@@ -37,7 +37,7 @@ export class Competiano implements CompetianoType {
     this.tutor = !!competiano.tutor
     this.membro_ativo = competiano.membro_ativo || true
     this.depoimentos = competiano.depoimentos || ""
-    this.linkedin = competiano.linkedin 
+    this.linkedin = competiano.linkedin ||""
     this.lates = competiano.lates || ""
     this.data_fim = competiano.data_fim || new Date("05/09/1899")
   }
