@@ -6,7 +6,7 @@ import {
   TextInputStyle,
   EmbedBuilder
 } from "discord.js";
-import { Member } from "../../structures/Member";
+import { Member } from "../../typings/Member";
 import { Modal } from "../../structures/Modals";
 const modal = new ModalBuilder()
   .setTitle("Adicione o mais novo membro do compet!")

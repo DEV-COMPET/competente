@@ -3,7 +3,6 @@ import createCompetianoController from "../modules/competianos/usecases/createCo
 import listCompetianoController from "../modules/competianos/usecases/listCompetiano";
 import getCompetianoByEmailController from "../modules/competianos/usecases/getCompetianoByEmail";
 import deleteCompetiano from "../modules/competianos/usecases/deleteCompetiano";
-import { CompetianoMongoDBRepository, MemberData } from "../modules/competianos/repositories/defaultMongoDBRepository/competianoRepository";
 import updateCompetiano from "../modules/competianos/usecases/updateCompetiano";
 const competianosRouter = Router();
 competianosRouter.get("/", async (request, response) => listCompetianoController().handle(request, response))
