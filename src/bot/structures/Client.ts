@@ -13,22 +13,21 @@ import { promisify } from "util";
 import { RegisterCommandsOptions } from "../typings/client";
 import { Event } from "./Event";
 import * as dotenv from "dotenv";
+import * as path from "path";
 import { ModalType } from "../typings/Modals";
 dotenv.config()
-const appId = process.env.DISCORD_CLIENT_ID||""
+const appId = process.env.DISCORD_CLIENT_ID || ""
 const token = process.env.DISCORD_TOKEN
 const rest = new REST({ version: "10" }).setToken(process.env.DISCORD_TOKEN || "")
 const globPromise = promisify(glob);
 export class ExtendedClient extends Client {
   commands: Collection<string, CommandType> = new Collection()
-  modals:Collection<string,ModalType> = new Collection()
+  modals: Collection<string, ModalType> = new Collection()
   constructor() {
     super({ intents: [GatewayIntentBits.Guilds] })
   }
   async start() {
     await this.registerModules()
-    const createdCommands=this.commands.map(command=>command)
-    await this.registerCommands({commands:createdCommands})
     await this.login(token)
   }
   async importFile(filepath: string) {
@@ -40,7 +39,8 @@ export class ExtendedClient extends Client {
       await this.guilds.cache.get(guildId)?.commands.set(commands)
       console.log(`Registering commands for ${guildId}`)
     } else {
-
+      console.log(commands);
+      
       await rest.put(Routes.applicationCommands(appId), { body: commands })
       await this.application?.commands.set(commands);
       console.log(`Registering global commands`);
@@ -49,30 +49,55 @@ export class ExtendedClient extends Client {
   }
   async registerModules() {
     const slashCommands: ApplicationCommandDataResolvable[] = []
-    const commandFiles = await globPromise(`${__dirname}/../commands/*/*{.ts,.js}`)
-    console.log({ commandFiles });
-    commandFiles.forEach(async filepath => {
-      const command: CommandType = await this.importFile(filepath)
-      if (!command) return
-      console.log(command);
-      this.commands.set(command.name, command)
-      slashCommands.push(command)
-    })
-    //events
-    const eventFiles = await globPromise(`${__dirname}/../events/*{.ts,.js}`)
-    eventFiles.forEach(async filepath => {
-      const event: Event<keyof ClientEvents> = await this.importFile(filepath)
-      this.on(event.event, event.run)
-    })
+    try {
+      const pattern = "**/*{.ts,.js}";
+      const directory = path.join(__dirname, "..", "commands")
+      const commandFiles = await globPromise(pattern, { cwd: directory })
+      console.log({ commandFiles });
+      commandFiles.forEach(async filepath => {
+        const command: CommandType = await this.importFile(path.join(directory, filepath))
+        if (!command) return
+        console.log(command);
+        this.commands.set(command.name, command)
+        slashCommands.push(command)
+      })
+    } catch (error) {
+      console.error(error);
+
+    }
+    // import events
+    try {
+      const pattern = "*{.ts,.js}";
+      const directory = path.join(__dirname, "..", "events")
+      const eventFiles = await globPromise(pattern, { cwd: directory })
+      eventFiles.forEach(async filepath => {
+        const event: Event<keyof ClientEvents> = await this.importFile(path.join(directory,filepath))
+        this.on(event.event, event.run)
+      })
+    } catch (error) {
+      console.error(error);
+
+    }
+    const createdCommands = this.commands.map(command => command)
+    console.log(createdCommands.length);
+    
+    await this.registerCommands({ commands: createdCommands })
     await this.registerModals()
   }
-  async registerModals (){
-    const modalFiles = await globPromise(`${__dirname}/../modals/*/*{.ts,.js}`)
-    console.log({ modalFiles });
-    modalFiles.forEach(async filepath => {
-      const modal: ModalType = await this.importFile(filepath)
-      if (!modal) return
-      this.modals.set(modal.customId, modal)      
-    })
+  async registerModals() {
+    try {
+      const pattern = "**/*{.ts,.js}";
+      const directory = path.join(__dirname, "..", "modals")
+      const modalFiles = await globPromise(pattern, { cwd: directory })
+      console.log({ modalFiles });
+      modalFiles.forEach(async filepath => {
+        const modal: ModalType = await this.importFile(path.join(directory, filepath))
+        if (!modal) return
+        this.modals.set(modal.customId, modal)
+      })
+    } catch (error) {
+      console.error(error);
+
+    }
   }
 }
