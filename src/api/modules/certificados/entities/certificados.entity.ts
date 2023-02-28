@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-export type CertificateType = {
+export type CertificatesType = {
   titulo: string
   data: Date
   link: string
@@ -7,14 +7,14 @@ export type CertificateType = {
   compbio: boolean
   listaNomes: string[]
 }
-export class Certificate implements CertificateType{
+export class Certificates implements CertificatesType{
   titulo: string
   data: Date
   link: string
   compet_talks: boolean
   compbio: boolean
   listaNomes: string[]
-  constructor(certificate:CertificateType){
+  constructor(certificate:CertificatesType){
     this.compbio=certificate.compbio
     this.compet_talks=certificate.compet_talks
     this.listaNomes=certificate.listaNomes
@@ -24,7 +24,7 @@ export class Certificate implements CertificateType{
   }
 
 }
-const schema = new mongoose.Schema<CertificateType>({
+const schema = new mongoose.Schema<CertificatesType>({
   compbio:{type: Boolean,required:true},
   compet_talks:{type: Boolean,required:true},
   listaNomes:{type: [String],required:true},
@@ -43,4 +43,4 @@ const schema = new mongoose.Schema<CertificateType>({
   }
 }
 )
-export const CertificateModel = mongoose.model<CertificateType>("certifieds",schema)
+export const CertificatesModel = mongoose.model<CertificatesType>("certifieds",schema)
