@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "start": "node dist/src/api/server.ts",
     "dev": "npx nodemon src/api/server.ts",
-    "discord": "ts-node src/bot/index.ts"
+    "discord": "npx nodemon src/bot/index.ts"
   },
   "contributors": [
     {

@@ -4,15 +4,18 @@ import { IUpdateCompetianoUseCase } from "./updateCompetianoUseCase";
 export class UpdateCompetianoController{
   constructor(private useCase:IUpdateCompetianoUseCase){}
   async handle(request:Request,response:Response):Promise<Response>{
+    const {nome} = request.params
     const competiano: MemberData = request.body
     try {
-      if (!competiano.nome) {
+      if (!nome) {
         return response.status(422).json({
           message: "Nome não pode ser vazio",
           code: response.statusCode
         })
       }
-      const updatedMember = await this.useCase.execute(competiano.nome, competiano)
+      console.log(nome);
+      
+      const updatedMember = await this.useCase.execute(nome, competiano)
       if(!updatedMember){
         return response.status(404).json({
           code:response.statusCode,
