@@ -10,32 +10,21 @@ export default new Command({
     run: async ({ interaction }) => {
         const member = await interaction.guild?.members.fetch(interaction.user.id)
         const isADM = member?.permissions.has("Administrator")
-        const url = "http://localhost:4444/competianos/"
+        const url = "http://localhost:4444/competianos"
+
+        // Esse comando verifica se o usúario é um administrador e caso seja, torna possível tornar um membro do compet Scrum do compet 
         if (isADM) {
             const email = interaction.options.get("new_scrum_mail")?.value
 
-            const response = await fetch(`${url}${email}`, {
+            const response = await fetch(`${url}/${email}`, {
                 method: "get",
                 headers: { 'Content-Type': 'application/json' }
             })
-            
+
             if (response.status >= 200 && response.status < 300) {
                 const data: CompetianoType = await response.json()
                 if (!data.scrum_master) {
-                    const fetch_members = await fetch(url, {
-                        method: "get",
-                        headers: { 'Content-Type': 'application/json' }
-                    })
-                    const members :Member[]= await fetch_members.json()
-                    const atualScrum = members.find(membro=>membro.scrum_master===true)?.nome
-                    console.log(atualScrum);
-                    
 
-                    await fetch(`${url}${atualScrum}`, {
-                        method: "put",
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ scrum_master: false })
-                    })
                     const response = await fetch(`${url}${data.nome}`, {
                         method: "put",
                         headers: { 'Content-Type': 'application/json' },

@@ -12,9 +12,7 @@ export class UpdateCompetianoController{
           message: "Nome não pode ser vazio",
           code: response.statusCode
         })
-      }
-      console.log(nome);
-      
+      }      
       const updatedMember = await this.useCase.execute(nome, competiano)
       if(!updatedMember){
         return response.status(404).json({
