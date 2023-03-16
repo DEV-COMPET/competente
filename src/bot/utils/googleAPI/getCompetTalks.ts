@@ -34,7 +34,8 @@ async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]>
 }
 export async function getCompetTalksRegistration(talksEventName: string): Promise<FormResponseTalks[]> {
   const registrations = await getAllRegistrations(competTalksFormId);
-  const eventRegistrations = registrations.filter(registration => registration.event === talksEventName)
+  // O código abaixo remove os caracteres especiais
+  const eventRegistrations = registrations.filter(registration => registration.event?.toLowerCase() === talksEventName.toLowerCase())
   if (eventRegistrations.length === 0) throw new Error(`O evento ${talksEventName} não existe ou não possui nenhum aluno apto a receber o certificado`)
   return eventRegistrations
 }

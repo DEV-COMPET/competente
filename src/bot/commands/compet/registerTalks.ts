@@ -1,11 +1,11 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { ApplicationCommandOptionType } from "discord.js";
+import { CertificatesType } from "../../../api/modules/certificados/entities/certificados.entity";
 import { Command } from "../../structures/Command";
 import { getCompetTalksRegistration } from "../../utils/googleAPI/getCompetTalks";
 function validateLink(link: string): boolean {
-    const regex = /^https:\/\/drive\.google\.com\/file\/d\/[a-zA-Z0-9_-]+(\/view)?(\?usp=sharing)?$/;
-
-    return regex.test(link)
+    const regex = /^https:\/\/drive\.google\.com\/file\/d\/[a-zA-Z0-9_-]+(\/view)?(\?usp=share_link)?$/;
+    return regex.test(link);
 }
 export default new Command({
     name: "register-talks",
@@ -21,7 +21,7 @@ export default new Command({
             name: "link",
             description: "O link do drive que contem os certificados",
             type: ApplicationCommandOptionType.String,
-            required: true
+            required: false
         }
     ],
 
@@ -31,21 +31,61 @@ export default new Command({
         if (isADM) {
             const titulo = interaction.options.get("titulo")?.value as string
             const link = interaction.options.get("link")?.value as string
-            if (!titulo || !link) {
-                return interaction.reply({
-                    content: "Você precisa informar o titulo e o link do drive",
+            if (!titulo) {
+                await interaction.reply({
+                    content: "Você precisa informar o titulo do evento!",
                     ephemeral: true
                 })
+                return;
             }
             try {
                 const registration = await getCompetTalksRegistration(titulo)
                 const listaNomes = registration.map(registration => registration.nome)
+                const data = new Date(registration[0].createTime)
+                const compet_talks = true
+                const compbio = false
 
-                await interaction.reply({ content: "boa", ephemeral: true })
+                if (link) {
+                    if (!validateLink(link)) {
+                        await interaction.reply({
+                            content: "Link inválido, você precisa informar um link do google drive válido pra que possamos cadastra-lo na nossa base de dados!",
+                            ephemeral: true
+                        })
+                        return;
+                    }
+                    const body: CertificatesType = { data, compbio, compet_talks, link, listaNomes, titulo }
+                    const url = "http://localhost:4444/certificados/"
+                    console.log(body);
+                    const response = await fetch(url, {
+                        method: "post",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    })
+                    if (response.status >= 200 && response.status < 300) {
+                        // TODO: enviar email para a lista de participantes informando que o certificado está disponivel
+                        const data = await response.json();
+                        console.log(data);
+
+                        await interaction.reply({ content: "Certificados registrados com sucesso!", ephemeral: true })
+                    } else {
+                        const data: { code: number, message: string } = await response.json()
+
+                        await interaction.reply({
+                            content: `Erro ${data.code}: ${data.message}`,
+                            ephemeral: true
+                        })
+                    }
+                    return;
+                } else {
+                    const body: CertificatesType = { data, compbio, compet_talks, link: "teste", listaNomes, titulo }
+                    console.log(body);
+                    await interaction.reply({ content: "boa", ephemeral: true })
+                    return
+                }
             } catch (error: any) {
                 console.log(error.message)
                 await interaction.reply({ content: error.message, ephemeral: true })
-
+                return;
             }
         }
         else {
@@ -63,7 +103,7 @@ export default new Command({
                 ephemeral: true,
                 embeds: [embed]
             })
-
+            return;
         }
     }
 })

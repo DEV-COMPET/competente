@@ -19,3 +19,9 @@ export enum FormItemsId{
     ALERTA = "438ea020",
     AGRADECIMENTO = "3a7b1f93"
 }
+export interface Aluno {
+    matricula: string;
+    email: string;
+    nome: string;
+
+}
