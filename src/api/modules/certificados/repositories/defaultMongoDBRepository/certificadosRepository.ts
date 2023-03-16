@@ -37,5 +37,12 @@ export class CertificatesRepository extends DefaultMongoDBRepository<Certificate
     const result: CertificatesType = certificates.toJSON<CertificatesType>()
     return result
   }
-
+  public async getByTitulo(titulo: string): Promise<CertificatesType | undefined> {
+    const certificates = await this.certificateModel.findOne({ titulo })
+    if (!certificates) {
+      return
+    }
+    const result: CertificatesType = certificates.toJSON<CertificatesType>()
+    return result
+  }
 }
