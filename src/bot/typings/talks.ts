@@ -6,8 +6,16 @@ export interface FormResponseTalks {
     createTime: string;
 }
 export enum FormInput{
-    EVENT="459eff55",
+    EVENTO="459eff55",
     NOME = "5449dcbb",
     EMAIL = "69f30e2c",
     MATRICULA = "3ee1b434"
+}
+export enum FormItemsId{
+    NOME = "4c2c8a48",
+    EMAIL = "2b605265",
+    MATRICULA = "4d4dad1f",
+    EVENTO = "2d282a40",
+    ALERTA = "438ea020",
+    AGRADECIMENTO = "3a7b1f93"
 }

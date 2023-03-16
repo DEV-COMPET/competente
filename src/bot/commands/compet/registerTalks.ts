@@ -2,6 +2,11 @@ import { EmbedBuilder } from "@discordjs/builders";
 import { ApplicationCommandOptionType } from "discord.js";
 import { Command } from "../../structures/Command";
 import { getCompetTalksRegistration } from "../../utils/googleAPI/getCompetTalks";
+function validateLink(link: string): boolean {
+    const regex = /^https:\/\/drive\.google\.com\/file\/d\/[a-zA-Z0-9_-]+(\/view)?(\?usp=sharing)?$/;
+
+    return regex.test(link)
+}
 export default new Command({
     name: "register-talks",
     description: "Registra os certificados assinados do talks em questão",
@@ -15,7 +20,8 @@ export default new Command({
         {
             name: "link",
             description: "O link do drive que contem os certificados",
-            type: ApplicationCommandOptionType.String
+            type: ApplicationCommandOptionType.String,
+            required: true
         }
     ],
 
@@ -34,7 +40,7 @@ export default new Command({
             try {
                 const registration = await getCompetTalksRegistration(titulo)
                 const listaNomes = registration.map(registration => registration.nome)
-                console.log(registration)
+
                 await interaction.reply({ content: "boa", ephemeral: true })
             } catch (error: any) {
                 console.log(error.message)

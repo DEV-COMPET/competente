@@ -18,15 +18,15 @@ async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]>
     formId: formID,
   });
   const data: Array<any> | undefined = res.data.responses
+
   if (!data) throw new Error("Não foi possivel encontrar nenhuma resposta para o formulário requisitado!")
   const certificados = data.map(form => {
-    const event: string = form.answers[FormInput.EVENT]?.textAnswers.answers[0].value
+    const event: string = form.answers[FormInput.EVENTO]?.textAnswers.answers[0].value
     const nome: string = form.answers[FormInput.NOME]?.textAnswers.answers[0].value
     const email: string = form.answers[FormInput.EMAIL]?.textAnswers.answers[0].value
     const matricula: string = form.answers[FormInput.MATRICULA]?.textAnswers.answers[0].value
     const createTime: string = form.createTime
     const certificado = { nome, email, event, matricula, createTime }
-    console.log(certificado);
     return certificado
   })
   return certificados;
