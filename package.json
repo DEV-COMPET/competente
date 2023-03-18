@@ -7,7 +7,9 @@
     "build": "npx tsc",
     "start": "node dist/src/api/server.ts",
     "dev": "npx nodemon src/api/server.ts",
-    "discord": "npx nodemon src/bot/index.ts"
+    "discord": "npx nodemon src/bot/index.ts",
+    "teste": "npx nodemon src/bot/utils/autentiqueAPI/index.ts",
+    "generate": "graphql-codegen"
   },
   "contributors": [
     {
@@ -24,22 +26,35 @@
   "author": "Compet",
   "license": "MIT",
   "dependencies": {
+    "@types/node-fetch": "^2.6.2",
+    "awesome-graphql-client": "^0.13.0",
+    "blob-util": "^2.0.2",
     "body-parser": "^1.20.1",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "extract-files": "^13.0.0",
     "glob": "^8.0.3",
     "googleapis": "^105.0.0",
+    "graphql": "^16.6.0",
     "mongoose": "^6.8.2",
+    "node-fetch": "^2.6.9",
+    "python-shell": "^5.0.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/client-preset": "^2.1.1",
+    "@graphql-codegen/typescript": "^3.0.2",
+    "@graphql-codegen/typescript-resolvers": "^3.1.1",
+    "@types/apollo-upload-client": "^17.0.2",
     "@types/express": "^4.17.15",
     "@types/glob": "^8.0.0",
     "@types/node": "^18.11.18",
     "@types/uuid": "^9.0.1",
+    "graphql-tag": "^2.12.6",
     "nodemon": "^2.0.20",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }

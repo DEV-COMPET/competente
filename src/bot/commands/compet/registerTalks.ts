@@ -1,8 +1,11 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { ApplicationCommandOptionType } from "discord.js";
+import path from "path";
 import { CertificatesType } from "../../../api/modules/certificados/entities/certificados.entity";
 import { Command } from "../../structures/Command";
+import { submitTalksToAutentique } from "../../utils/autentiqueAPI";
 import { getCompetTalksRegistration } from "../../utils/googleAPI/getCompetTalks";
+import { createTalksPdf, formatarData } from "../../utils/python";
 function validateLink(link: string): boolean {
     const regex = /^https:\/\/drive\.google\.com\/file\/d\/[a-zA-Z0-9_-]+(\/view)?(\?usp=share_link)?$/;
     return regex.test(link);
@@ -44,7 +47,7 @@ export default new Command({
                 const data = new Date(registration[0].createTime)
                 const compet_talks = true
                 const compbio = false
-
+                // Caso um link seja passado como parâmetro então a operação é apenas de cadastro de um certificado já existente e já autenticado,
                 if (link) {
                     if (!validateLink(link)) {
                         await interaction.reply({
@@ -78,9 +81,19 @@ export default new Command({
                     return;
                 } else {
                     const body: CertificatesType = { data, compbio, compet_talks, link: "teste", listaNomes, titulo }
-                    console.log(body);
-                    await interaction.reply({ content: "boa", ephemeral: true })
-                    return
+                    try {
+                        await interaction.reply({ content: "boa", ephemeral: true })
+                        const filePath = await createTalksPdf({ titulo, data: formatarData(data), listaNomes })
+                        console.log(filePath);
+                        await new Promise(resolve => setTimeout(resolve, 5000));
+                        const response = await submitTalksToAutentique(listaNomes.length, titulo, filePath)
+                        console.log(response);
+                        return
+                    } catch (error: any) {
+                        console.error(error);
+                        await interaction.reply({ content: error.message, ephemeral: true })
+                        return
+                    }
                 }
             } catch (error: any) {
                 console.log(error.message)
