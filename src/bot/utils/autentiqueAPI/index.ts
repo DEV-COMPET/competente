@@ -87,7 +87,7 @@ const CREATE_DOCUMENT_MUTATION_PRODUCTION = gql`
 const mutations = { "development": CREATE_DOCUMENT_MUTATION_DEVELOPMENT, "production": CREATE_DOCUMENT_MUTATION_PRODUCTION };
 function setupAssignPositions(numPages: number): PositionInput[] {
   const positions: PositionInput[] = []
-  for (let i = 1; i < numPages; i++) {
+  for (let i = 1; i <= numPages; i++) {
     const position: PositionInput = {
       x: CertificatePositionAssign.eixoX, //Posição x da assinatura do modelo em porcentagem
       y: CertificatePositionAssign.eixoY, //Posição y da assinatura do modelo em porcentagem
