@@ -58,3 +58,11 @@ export function formatarData(data: Date): string {
   const ano = data.getFullYear().toString();
   return `${dia}-${mes}-${ano}`;
 }
+export async function createCertificadoTalksPalestrantes({ titulo, listaNomes, horas = "1", minutos = "30", data }: ITalksProps): Promise<string> {
+  const text_dir = "talks_palestrante_content.txt" // Arquivo de texto que contém o texto do certificado
+  const template_dir = "talks_template.png" // Imagem que contém o template do certificado
+  const response = await createCertificate({ data, titulo, horas, minutos, listaNomes, template_dir, text_dir })
+  if (!response) throw new Error("Erro na criação do certificado!");
+  const path_to_certificate: string = response[0]
+  return path_to_certificate
+}

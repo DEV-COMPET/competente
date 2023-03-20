@@ -5,7 +5,7 @@ import { FormInput, FormItemsId } from '../../typings/talks';
 dotenv.config();
 const competTalksFormId = '1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w';
 const environment = process.env.ENVIRONMENT;
-export async function updateTalks(formId: string, titulo: string) {
+async function updateForm(formId: string, titulo: string) {
     const auth = new google.auth.GoogleAuth({
         keyFile: path.join(__dirname, `competente.${environment}.json`),
         scopes: 'https://www.googleapis.com/auth/drive',
@@ -21,7 +21,7 @@ export async function updateTalks(formId: string, titulo: string) {
                 {
                     updateItem: {
                         item: {
-                            title:"O nome do Evento",
+                            title: "O nome do Evento",
                             questionItem: {
                                 question: {
                                     questionId: FormInput.EVENTO,
@@ -39,7 +39,7 @@ export async function updateTalks(formId: string, titulo: string) {
                         }
                     },
                 },
-                 {
+                {
                     updateFormInfo: {
                         info: {
                             title: titulo,
@@ -52,3 +52,4 @@ export async function updateTalks(formId: string, titulo: string) {
     })
     return createResponse.status
 }
+export async function updateTalks(titulo: string) { return updateForm(competTalksFormId, titulo) }

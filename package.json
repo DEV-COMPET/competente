@@ -8,7 +8,7 @@
     "start": "node dist/src/api/server.ts",
     "dev": "npx nodemon src/api/server.ts",
     "discord": "npx nodemon src/bot/index.ts",
-    "teste": "npx nodemon src/bot/utils/autentiqueAPI/index.ts",
+    "teste": "npx nodemon src/bot/utils/python/index.ts",
     "generate": "graphql-codegen"
   },
   "contributors": [
@@ -26,7 +26,6 @@
   "author": "Compet",
   "license": "MIT",
   "dependencies": {
-    "@types/node-fetch": "^2.6.2",
     "awesome-graphql-client": "^0.13.0",
     "blob-util": "^2.0.2",
     "body-parser": "^1.20.1",
@@ -49,8 +48,11 @@
     "@graphql-codegen/typescript-resolvers": "^3.1.1",
     "@types/apollo-upload-client": "^17.0.2",
     "@types/express": "^4.17.15",
+    "@types/form-data": "^2.5.0",
     "@types/glob": "^8.0.0",
+    "@types/graphql": "^14.5.0",
     "@types/node": "^18.11.18",
+    "@types/node-fetch": "^2.6.2",
     "@types/uuid": "^9.0.1",
     "graphql-tag": "^2.12.6",
     "nodemon": "^2.0.20",
