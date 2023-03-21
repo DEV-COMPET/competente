@@ -1,6 +1,5 @@
 import { EmbedBuilder } from "@discordjs/builders";
 import { ApplicationCommandOptionType } from "discord.js";
-import path from "path";
 import { CertificatesType } from "../../../api/modules/certificados/entities/certificados.entity";
 import { Command } from "../../structures/Command";
 import { submitTalksToAutentique } from "../../utils/autentiqueAPI";
@@ -11,7 +10,7 @@ function validateLink(link: string): boolean {
     return regex.test(link);
 }
 export default new Command({
-    name: "register-talks",
+    name: "registrar-talks",
     description: "Registra os certificados assinados do talks em questão",
     options: [
         {
@@ -21,11 +20,17 @@ export default new Command({
             required: true
         },
         {
+            name: "minutos",
+            description: "O tempo do talks em minutos",
+            type: ApplicationCommandOptionType.Number,
+            required: true
+        },
+        {
             name: "link",
             description: "O link do drive que contem os certificados",
             type: ApplicationCommandOptionType.String,
             required: false
-        }
+        },
     ],
 
     run: async ({ interaction }) => {
@@ -34,6 +39,9 @@ export default new Command({
         if (isADM) {
             const titulo = interaction.options.get("titulo")?.value as string
             const link = interaction.options.get("link")?.value as string
+            const minutos_input = interaction.options.get("minutos")?.value as number
+            const timing: { horas: unknown, minutos: unknown } = { horas: (Math.trunc(minutos_input / 60)), minutos: (minutos_input % 60) }
+            const { horas, minutos } = { horas: timing.horas as string, minutos: timing.minutos as string }
             if (!titulo) {
                 await interaction.reply({
                     content: "Você precisa informar o titulo do evento!",
@@ -83,7 +91,13 @@ export default new Command({
                     const body: CertificatesType = { data, compbio, compet_talks, link: "teste", listaNomes, titulo }
                     try {
                         await interaction.reply({ content: "boa", ephemeral: true })
-                        const filePath = await createTalksPdf({ titulo, data: formatarData(data), listaNomes })
+                        const filePath = await createTalksPdf({
+                            titulo,
+                            data: formatarData(data),
+                            listaNomes,
+                            horas,
+                            minutos
+                        })
                         console.log(filePath);
                         await new Promise(resolve => setTimeout(resolve, 5000));
                         const response = await submitTalksToAutentique(listaNomes.length, titulo, filePath)

@@ -8,7 +8,7 @@
     "start": "node dist/src/api/server.ts",
     "dev": "npx nodemon src/api/server.ts",
     "discord": "npx nodemon src/bot/index.ts",
-    "teste": "npx nodemon src/bot/utils/python/index.ts",
+    "teste": "npx nodemon ngrok-config.ts",
     "generate": "graphql-codegen"
   },
   "contributors": [
@@ -37,6 +37,7 @@
     "googleapis": "^105.0.0",
     "graphql": "^16.6.0",
     "mongoose": "^6.8.2",
+    "ngrok": "^4.3.3",
     "node-fetch": "^2.6.9",
     "python-shell": "^5.0.0",
     "uuid": "^9.0.0"

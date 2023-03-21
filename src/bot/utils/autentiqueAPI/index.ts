@@ -127,7 +127,9 @@ export async function submitTalksToAutentique(numPages: number, titulo: string, 
     name: titulo,
     configs: { signature_appearance: SignatureAppearanceEnum.Handwriting },
     message: `Favor assinar os certificados referentes ao talks \"${titulo}\".`,
-
+    show_audit_page: false,
+    footer: FooterEnum.Right,
+    
   };
   const result = await createDocument({ document, filePath, signers, numPages })
   return result
