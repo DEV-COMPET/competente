@@ -3,8 +3,8 @@ import path from 'path';
 import { google } from 'googleapis';
 import dotenv from "dotenv";
 dotenv.config();
-const competTalksFormId = '1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w';
-const environment = process.env.ENVIRONMENT;
+const competTalksFormId = process.env.GOOGLE_FORM_ID ||"";
+const environment = process.env.ENVIRONMENT||"development";
 async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]> {
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(__dirname, `competente.${environment}.json`),
