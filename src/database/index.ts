@@ -1,9 +1,8 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 dotenv.config()
-
+mongoose.set('strictQuery',true);
 const { MONGODB_USER } = process.env
-console.log(MONGODB_USER)
 const MONGODB_PASSWORD =
   encodeURIComponent(
     process.env.MONGODB_PASSWORD ? process.env.MONGODB_PASSWORD : ''

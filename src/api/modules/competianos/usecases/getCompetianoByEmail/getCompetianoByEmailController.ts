@@ -7,7 +7,7 @@ interface IGetCompetianoByEmailController {
 export class GetCompetianoByEmailController implements IGetCompetianoByEmailController {
   constructor(private useCase: IGetCompetianoByEmailUseCase) { }
   async handle(request: Request, response: Response): Promise<Response> {
-    const { email } = request.body;
+    const email = request.params.email;    
     try {
       if (!validateEmail(email)) {
 				return response.status(422).json({

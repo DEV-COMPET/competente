@@ -1,0 +1,2979 @@
+union AcceptSignatureUnion = HashToSign | Signature
+
+"""
+types.Action.description
+"""
+type Action {
+  """
+  Action name
+  """
+  name: ActionEnum!
+}
+
+enum ActionEnum {
+  """
+  enums.Action.sign
+  """
+  SIGN
+
+  """
+  enums.Action.approve
+  """
+  APPROVE
+
+  """
+  enums.Action.recognize
+  """
+  RECOGNIZE
+
+  """
+  enums.Action.sign_as_part
+  """
+  SIGN_AS_PART @deprecated(reason: "Sign as part has been deprecated.")
+
+  """
+  enums.Action.sign_as_a_witness
+  """
+  SIGN_AS_A_WITNESS
+
+  """
+  enums.Action.sign_as_intervener
+  """
+  SIGN_AS_INTERVENER
+    @deprecated(reason: "Sign as intervener has been deprecated.")
+
+  """
+  enums.Action.acknowledge_receipt
+  """
+  ACKNOWLEDGE_RECEIPT
+
+  """
+  enums.Action.endorse_in_black
+  """
+  ENDORSE_IN_BLACK
+
+  """
+  enums.Action.endorse_in_white
+  """
+  ENDORSE_IN_WHITE
+}
+
+"""
+types.Affiliate.description
+"""
+type Affiliate {
+  """
+  types.Affiliate.fields.id
+  """
+  id: String
+
+  """
+  types.Affiliate.fields.full_name
+  """
+  full_name: String
+
+  """
+  types.Affiliate.fields.email
+  """
+  email: EmailScalar
+
+  """
+  types.Affiliate.fields.referral_code
+  """
+  referral_code: String
+
+  """
+  types.Affiliate.fields.referred_to
+  """
+  referred_to: String
+
+  """
+  types.Affiliate.fields.is_receiving_payments
+  """
+  is_receiving_payments: Boolean
+
+  """
+  types.Affiliate.fields.created_at
+  """
+  created_at: Timestamp
+
+  """
+  types.Affiliate.fields.referral_configuration
+  """
+  referral_configuration: String
+
+  """
+  types.Affiliate.fields.payment_info
+  """
+  payment_info: String
+}
+
+"""
+inputs.ApiOptions.description
+"""
+input ApiOptionsInput {
+  """
+  mutations.ApiOptions.args.webhook_url
+  """
+  webhook_url: String
+}
+
+"""
+types.Attribute.description
+"""
+type Attribute {
+  """
+  inputs.Attribute.fields.id
+  """
+  id: UUID!
+
+  """
+  inputs.Attribute.fields.name
+  """
+  name: String!
+
+  """
+  inputs.Attribute.fields.position
+  """
+  position: String
+
+  """
+  inputs.Attribute.fields.type
+  """
+  type: String
+
+  """
+  inputs.Attribute.fields.required
+  """
+  required: Boolean
+}
+
+"""
+inputs.Attribute.description
+"""
+input AttributeInput {
+  """
+  inputs.Attribute.fields.id
+  """
+  id: UUID
+
+  """
+  inputs.Attribute.fields.name
+  """
+  name: String!
+
+  """
+  inputs.Attribute.fields.position
+  """
+  position: Int!
+
+  """
+  inputs.Attribute.fields.type
+  """
+  type: String!
+
+  """
+  inputs.Attribute.fields.required
+  """
+  required: Boolean!
+}
+
+"""
+types.Author.description
+"""
+type Author {
+  """
+  types.Author.fields.id
+  """
+  id: UUID!
+
+  """
+  types.Author.fields.organization_id
+  """
+  organization_id: Int
+
+  """
+  Full User name
+  """
+  name: String
+
+  """
+  User email
+  """
+  email: EmailScalar
+
+  """
+  types.User.fields.company
+  """
+  company: String
+}
+
+type AuthType {
+  access_token: String!
+  token_type: String!
+  expires_in: Int!
+}
+
+"""
+CNPJ is represented as a string type in the format 00.000.000/0000-00
+"""
+scalar CNPJ
+
+type Contact {
+  """
+  types.Contact.fields.name
+  """
+  name: String
+
+  """
+  types.Contact.fields.email
+  """
+  email: EmailScalar
+}
+
+"""
+enums.Context.description
+"""
+enum ContextEnum {
+  """
+  enums.Context.user
+  """
+  USER
+
+  """
+  enums.Context.organization
+  """
+  ORGANIZATION
+
+  """
+  enums.Context.group
+  """
+  GROUP
+}
+
+"""
+CPF is represented as a string type in the format 000.000.000-00
+"""
+scalar CPF
+
+type CreditPackType {
+  name: String
+  description: String
+  best: Boolean
+  quantity: Int
+  amount: Int
+}
+
+type CreditType {
+  value: String
+  cost: Int
+}
+
+"""
+types.DataSource.description
+"""
+type DataSource {
+  """
+  types.DataSource.fields.name
+  """
+  name: String
+
+  """
+  types.DataSource.fields.voucher
+  """
+  voucher: String
+
+  """
+  types.DataSource.fields.birthday
+  """
+  birthday: Date
+}
+
+"""
+enums.DataSource.description
+"""
+enum DataSourceEnum {
+  """
+  enums.DataSource.cpf
+  """
+  CPF
+
+  """
+  enums.DataSource.cnpj
+  """
+  CNPJ
+}
+
+"""
+Date is represented as a string type in the format dd/mm/yyyy
+"""
+scalar Date
+
+enum DeliveryMethodEnum {
+  DELIVERY_METHOD_EMAIL
+  DELIVERY_METHOD_LINK
+  DELIVERY_METHOD_SMS
+  DELIVERY_METHOD_WHATSAPP
+}
+
+type Document {
+  id: UUID!
+  name: String!
+  refusable: Boolean
+  stop_on_rejected: Boolean
+  qualified: Boolean
+  ignore_cpf: Boolean
+  sortable: Boolean
+  is_blocked: Boolean
+  sandbox: Boolean
+  signers_history: [SignerHistory]
+  created_at: Timestamp!
+  deleted_at: Timestamp
+  deadline_at: Timestamp
+  updated_at: Timestamp!
+  processed_at: Timestamp
+  expiration_at: Timestamp
+  notify_in: Int
+  reminder: ReminderEnum
+  message: String
+  footer: FooterEnum
+  cc: [EmailScalar]
+  configs: DocumentConfig
+  signatures_count: Int
+  signed_count: Int
+  rejected_count: Int
+  signatures: [Signature]
+  author: Author!
+  files: File!
+  hashes: Hash!
+  new_signature_style: Boolean
+  show_audit_page: Boolean
+}
+
+type DocumentConfig {
+  notification_finished: Boolean
+  notification_signed: Boolean
+  signature_appearance: SignatureAppearanceEnum
+}
+
+input DocumentConfigInput {
+  notification_finished: Boolean = false
+  notification_signed: Boolean = true
+  signature_appearance: SignatureAppearanceEnum = null
+}
+
+input DocumentInput {
+  name: String!
+  message: String
+  refusable: Boolean
+  ignore_cpf: Boolean = false
+  stop_on_rejected: Boolean
+  qualified: Boolean = false
+  sortable: Boolean
+  reminder: ReminderEnum
+  new_signature_style: Boolean = false
+  show_audit_page: Boolean = true
+
+  """
+  Your datetime should be in ISO-8601 format
+  """
+  deadline_at: String
+  expiration: ExpirationInput
+  footer: FooterEnum
+  cc: [EmailInput]
+  configs: DocumentConfigInput
+}
+
+type DocumentPagination {
+  """
+  List of Documents on the current page
+  """
+  data: [Document]
+
+  """
+  Number of total Documents selected by the query
+  """
+  total: Int
+
+  """
+  Number of Documents returned per page
+  """
+  per_page: Int!
+
+  """
+  Current page of the cursor
+  """
+  current_page: Int!
+
+  """
+  Last page of Documents
+  """
+  last_page: Int
+
+  """
+  Number of the first Documents returned
+  """
+  from: Int
+
+  """
+  Number of the last Document returned
+  """
+  to: Int
+}
+
+enum DocumentReportColumnEnum {
+  NAME
+  CREATED_AT
+  EXPIRATION_AT
+  SIGNATURES
+  STATUS
+  SHA
+  AUTHOR
+  LINK
+}
+
+"""
+types.DocumentSignature.description
+"""
+type DocumentSignature {
+  """
+  types.DocumentSignature.fields.document_id
+  """
+  document_id: UUID!
+
+  """
+  types.DocumentSignature.fields.signature_id
+  """
+  signature_id: UUID!
+
+  """
+  types.DocumentSignature.fields.signature_public_id
+  """
+  signature_public_id: UUID!
+  action: Action
+}
+
+"""
+enums.Status.description
+"""
+enum DocumentStatusEnum {
+  """
+  enums.Status.pending
+  """
+  PENDING
+
+  """
+  enums.Status.signed
+  """
+  SIGNED
+
+  """
+  enums.Status.not_signed
+  """
+  NOT_SIGNED
+
+  """
+  enums.Status.deleted
+  """
+  DELETED
+}
+
+"""
+types.EmailEvent.description
+"""
+type EmailEvent {
+  """
+  types.EmailEvent.fields.id
+  """
+  id: String
+
+  """
+  types.EmailEvent.fields.sent
+  """
+  sent: String
+
+  """
+  types.EmailEvent.fields.opened
+  """
+  opened: String
+
+  """
+  types.EmailEvent.fields.refused
+  """
+  refused: String
+
+  """
+  types.EmailEvent.fields.delivered
+  """
+  delivered: String
+
+  """
+  types.EmailEvent.fields.reason
+  """
+  reason: String
+
+  """
+  types.EmailEvent.fields.user
+  """
+  user: User
+
+  """
+  types.EmailEvent.fields.author
+  """
+  author: User
+
+  """
+  types.EmailEvent.fields.type
+  """
+  type: EmailTypeEnum
+}
+
+"""
+inputs.Email.description
+"""
+input EmailInput {
+  """
+  inputs.Email.fields.name
+  """
+  email: String!
+}
+
+scalar EmailScalar
+
+"""
+types.EmailTemplate.description
+"""
+type EmailTemplate {
+  """
+  types.EmailTemplate.fields.text
+  """
+  text: String
+
+  """
+  types.EmailTemplate.fields.title
+  """
+  title: String
+
+  """
+  types.EmailTemplate.fields.subject
+  """
+  subject: String
+
+  """
+  types.EmailTemplate.fields.sender
+  """
+  sender: String
+
+  """
+  types.EmailTemplate.fields.colors
+  """
+  colors: [String]
+
+  """
+  types.EmailTemplate.fields.image
+  """
+  image: String
+
+  """
+  types.EmailTemplate.fields.template
+  """
+  template: String
+
+  """
+  types.EmailTemplate.fields.type
+  """
+  type: EmailTemplateTypeEnum
+}
+
+"""
+types.EmailTemplates.description
+"""
+type EmailTemplates {
+  """
+  types.EmailTemplates.fields.id
+  """
+  id: Int!
+
+  """
+  types.EmailTemplates.fields.name
+  """
+  name: String
+
+  """
+  types.EmailTemplates.fields.email
+  """
+  email: EmailTemplate
+}
+
+"""
+inputs.EmailTemplates.description
+"""
+input EmailTemplatesInput {
+  """
+  inputs.EmailTemplates.fields.name
+  """
+  name: String
+
+  """
+  inputs.EmailTemplates.fields.title
+  """
+  title: String
+
+  """
+  inputs.EmailTemplates.fields.text
+  """
+  text: String
+
+  """
+  inputs.EmailTemplates.fields.subject
+  """
+  subject: String
+
+  """
+  inputs.EmailTemplates.fields.sender
+  """
+  sender: String
+
+  """
+  inputs.EmailTemplates.fields.colors
+  """
+  colors: [String]
+
+  """
+  inputs.EmailTemplates.fields.template
+  """
+  template: String
+
+  """
+  inputs.EmailTemplates.fields.image
+  """
+  image: Upload
+
+  """
+  inputs.EmailTemplates.fields.type
+  """
+  type: EmailTemplateTypeEnum = SOLICITATION
+}
+
+"""
+enums.EmailTemplateType.description
+"""
+enum EmailTemplateTypeEnum {
+  SOLICITATION
+  COMPLETED
+}
+
+type EmailType {
+  email: String
+  has_password: Boolean
+  email_verified_at: Timestamp
+  created_at: Timestamp
+  deleted_at: Timestamp
+}
+
+"""
+enums.EmailType.description
+"""
+enum EmailTypeEnum {
+  """
+  enums.EmailType.solicitation
+  """
+  SOLICITATION
+
+  """
+  enums.EmailType.reminder
+  """
+  REMINDER
+
+  """
+  enums.EmailType.resend
+  """
+  RESEND
+}
+
+"""
+types.Escavador.description
+"""
+type Escavador {
+  """
+  types.Escavador.fields.body
+  """
+  body: String
+}
+
+"""
+types.Event.description
+"""
+type Event {
+  user: User
+  ip: String
+  port: Int
+  ipv4: String @deprecated(reason: "Use ip intead.")
+  ipv6: String @deprecated(reason: "Use ip intead.")
+  reason: String
+  geolocation: Geolocation
+
+  """
+  Autentique's Privacy
+  """
+  user_agent: String
+  created_at: Timestamp
+}
+
+"""
+inputs.Expiration.description
+"""
+input ExpirationInput {
+  """
+  inputs.Expiration.fields.days_before
+  """
+  days_before: Int!
+
+  """
+  inputs.Expiration.fields.notify_at
+  """
+  notify_at: Date!
+}
+
+type File {
+  original: String
+  signed: String
+  certified: String
+  pades: String
+}
+
+"""
+types.Folder.description
+"""
+type Folder {
+  """
+  Folder identifier
+  """
+  id: UUID!
+
+  """
+  Full Folder name
+  """
+  name: String!
+  slug: String!
+
+  """
+  types.Folder.fields.type
+  """
+  type: FolderTypeEnum!
+    @deprecated(reason: "Deprecated due to use of context field.")
+
+  """
+  types.Folder.fields.context
+  """
+  context: ContextEnum!
+
+  """
+  Folder created at
+  """
+  created_at: Timestamp!
+
+  """
+  types.Folder.fields.updated_at
+  """
+  updated_at: Timestamp!
+}
+
+"""
+inputs.Folder.description
+"""
+input FolderInput {
+  """
+  inputs.Folder.fields.name
+  """
+  name: String!
+}
+
+type FolderPagination {
+  """
+  List of Folders on the current page
+  """
+  data: [Folder]
+
+  """
+  Number of total Folders selected by the query
+  """
+  total: Int
+
+  """
+  Number of Folders returned per page
+  """
+  per_page: Int!
+
+  """
+  Current page of the cursor
+  """
+  current_page: Int!
+
+  """
+  Last page of Folders
+  """
+  last_page: Int
+
+  """
+  Number of the first Folders returned
+  """
+  from: Int
+
+  """
+  Number of the last Folder returned
+  """
+  to: Int
+}
+
+"""
+enums.FolderType.description
+"""
+enum FolderTypeEnum {
+  """
+  enums.FolderType.default
+  """
+  DEFAULT
+
+  """
+  enums.FolderType.organization
+  """
+  ORGANIZATION
+
+  """
+  enums.FolderType.group
+  """
+  GROUP
+}
+
+"""
+enums.Font.description
+"""
+enum FontEnum {
+  """
+  enums.Font.autograf
+  """
+  AUTOGRAF
+
+  """
+  enums.Font.fathur
+  """
+  FATHUR
+
+  """
+  enums.Font.robertson
+  """
+  ROBERTSON
+}
+
+"""
+enums.Footer.description
+"""
+enum FooterEnum {
+  """
+  enums.Footer.B
+  """
+  BOTTOM
+
+  """
+  enums.Footer.L
+  """
+  LEFT
+
+  """
+  enums.Footer.R
+  """
+  RIGHT
+}
+
+"""
+types.Geolocation.description
+"""
+type Geolocation {
+  country: String
+  countryISO: String
+  state: String
+  stateISO: String
+  city: String
+  zipcode: String
+  latitude: String
+  longitude: String
+}
+
+type Group {
+  id: Int!
+  uuid: String
+  name: String
+  company: String
+  cnpj: CNPJ
+  overwrite_template_group: Boolean
+  overwrite_template: Boolean
+  email_template: EmailTemplates
+  permissions: Permission
+  styles: GroupStyle
+
+  """
+  Autentique's Privacy
+  """
+  members: [Member]
+  members_count: Int
+  is_default: Boolean
+}
+
+"""
+inputs.Group.description
+"""
+input GroupInput {
+  """
+  inputs.Group.fields.name
+  """
+  name: String
+
+  """
+  inputs.Group.fields.overwrite_template_group
+  """
+  overwrite_template_group: Boolean
+
+  """
+  inputs.Group.fields.overwrite_template
+  """
+  overwrite_template: Boolean
+}
+
+"""
+types.GroupStyle.description
+"""
+type GroupStyle {
+  """
+  types.GroupStyle.fields.overwrite_email
+  """
+  overwrite_email: Boolean
+
+  """
+  types.GroupStyle.fields.overwrite_name
+  """
+  overwrite_name: Boolean
+}
+
+"""
+inputs.GroupStyle.description
+"""
+input GroupStyleInput {
+  """
+  inputs.GroupStyle.fields.company
+  """
+  company: String
+
+  """
+  inputs.GroupStyle.fields.cnpj
+  """
+  cnpj: String
+
+  """
+  inputs.GroupStyle.fields.overwrite_email
+  """
+  overwrite_email: Boolean
+
+  """
+  inputs.GroupStyle.fields.email_template_id
+  """
+  email_template_id: Int
+
+  """
+  inputs.GroupStyle.fields.overwrite_name
+  """
+  overwrite_name: Boolean
+}
+
+"""
+types.Hash.description
+"""
+type Hash {
+  """
+  types.Hash.fields.md5
+  """
+  md5: String
+
+  """
+  types.Hash.fields.sha1
+  """
+  sha1: String
+
+  """
+  types.Hash.fields.sha256
+  """
+  sha2: String
+}
+
+type HashToSign {
+  hash: String!
+}
+
+type Invitation {
+  id: Int
+  user: User
+  group: Group
+  permissions: Permission
+}
+
+type Invoice {
+  id: Int
+  description: String
+  due_date: Timestamp
+  price: String
+  status: String
+  payment_method: String
+  url_payment: String
+  url_nfse: String
+}
+
+input IuguAddressInput {
+  zip_code: String
+  number: String
+  street: String
+  district: String
+  complement: String
+}
+
+type IuguCard {
+  id: String
+  description: String
+  item_type: String
+  customer_id: String
+  data: IuguCardData
+}
+
+type IuguCardData {
+  brand: String
+  holder_name: String
+  display_number: String
+  bin: String
+  year: Int
+  month: Int
+  last_digits: String
+  first_digits: String
+  masked_number: String
+}
+
+"""
+inputs.IuguCard.description
+"""
+input IuguCardInput {
+  """
+  mutations.IuguCard.args.set_as_default
+  """
+  set_as_default: Boolean!
+
+  """
+  mutations.IuguCard.args.token
+  """
+  token: String!
+
+  """
+  mutations.IuguCard.args.description
+  """
+  description: String!
+}
+
+type IuguCharge {
+  id: String
+  url: String
+  pdf: String
+  method: String
+  bank_slip: IuguChargeBankSlip
+  credit_card: IuguChargeCreditCard
+  pix: IuguChargePix
+  errors: String
+}
+
+type IuguChargeBankSlip {
+  digitable_line: String
+  barcode_data: String
+  barcode: String
+  status: String
+  bank_slip_bank: Int
+  bank_slip_error_code: String
+  bank_slip_error_message: String
+}
+
+type IuguChargeCreditCard {
+  success: Boolean
+  brand: String
+  bin: String
+  message: String
+  status: String
+  info_message: String
+}
+
+type IuguChargePix {
+  qrcode: String
+  qrcode_text: String
+  status: String
+  payer_name: String
+  payer_cpf_cnpj: Int
+}
+
+type IuguCustomer {
+  id: String
+  email: String
+  name: String
+  created_at: Timestamp
+  updated_at: Timestamp
+  cc_emails: String
+  cpf_cnpj: String
+  zip_code: String
+  number: String
+  complement: String
+  phone: String
+  phone_prefix: String
+  city: String
+  state: String
+  district: String
+  street: String
+  default_payment: IuguCard
+}
+
+input IuguCustomerInput {
+  name: String
+  email: EmailScalar
+  cpf: String
+  cnpj: String
+}
+
+"""
+types.IuguInvoice.description
+"""
+type IuguInvoice {
+  """
+  types.IuguInvoice.fields.id
+  """
+  id: String
+
+  """
+  types.IuguInvoice.fields.due_date
+  """
+  due_date: String
+
+  """
+  types.IuguInvoice.fields.status
+  """
+  status: String
+
+  """
+  types.IuguInvoice.fields.total
+  """
+  total: String
+
+  """
+  types.IuguInvoice.fields.total_paid
+  """
+  total_paid: String
+
+  """
+  types.IuguInvoice.fields.total_cents
+  """
+  total_cents: Int
+
+  """
+  types.IuguInvoice.fields.total_paid_cents
+  """
+  total_paid_cents: Int
+
+  """
+  types.IuguInvoice.fields.paid_at
+  """
+  paid_at: Timestamp
+
+  """
+  types.IuguInvoice.fields.payable_with
+  """
+  payable_with: IuguPaymentEnum
+
+  """
+  types.IuguInvoice.fields.secure_url
+  """
+  secure_url: String
+
+  """
+  types.IuguInvoice.fields.created_at
+  """
+  created_at: Timestamp
+
+  """
+  types.IuguInvoice.fields.updated_at
+  """
+  updated_at: Timestamp
+}
+
+type IuguOrder {
+  active: Boolean
+  suspended: Boolean
+  cycled_at: Timestamp
+  expires_at: Timestamp
+  payable_with: IuguPaymentEnum
+  plan_name: String
+  price_cents: Int
+  recent_invoices: JSONScalar
+}
+
+"""
+inputs.IuguOrder.description
+"""
+input IuguOrderInput {
+  """
+  inputs.IuguOrder.fields.plan
+  """
+  plan: String!
+
+  """
+  inputs.IuguOrder.fields.payable
+  """
+  payable: IuguPaymentEnum!
+}
+
+"""
+enums.IuguPayment.description
+"""
+enum IuguPaymentEnum {
+  """
+  enums.IuguPayment.credit_card
+  """
+  CREDIT_CARD
+
+  """
+  enums.IuguPayment.bank_slip
+  """
+  BANK_SLIP
+
+  """
+  enums.IuguPayment.pix
+  """
+  PIX
+
+  """
+  enums.IuguPayment.all
+  """
+  ALL
+}
+
+"""
+types.IuguPlan.description
+"""
+type IuguPlan {
+  """
+  types.IuguPlan.fields.id
+  """
+  id: String!
+
+  """
+  types.IuguPlan.fields.name
+  """
+  name: String
+
+  """
+  types.IuguPlan.fields.price
+  """
+  price: String
+
+  """
+  types.IuguPlan.fields.documents
+  """
+  documents: Int
+
+  """
+  types.IuguPlan.fields.hidden
+  """
+  hidden: Boolean
+
+  """
+  types.IuguPlan.fields.interval
+  """
+  interval: String
+
+  """
+  types.IuguPlan.fields.identifier
+  """
+  identifier: String
+}
+
+scalar JSONScalar
+
+"""
+types.Link.description
+"""
+type Link {
+  """
+  types.Link.fields.id
+  """
+  id: String!
+
+  """
+  types.Link.fields.short_link
+  """
+  short_link: String
+}
+
+type Member {
+  id: String! @deprecated(reason: "Deprecated in this version.")
+  name: String @deprecated(reason: "Deprecated in this version.")
+  email: EmailScalar @deprecated(reason: "Deprecated in this version.")
+  role: Role @deprecated(reason: "Deprecated in this version.")
+  user: User
+
+  """
+  Autentique's Privacy
+  """
+  organization: Organization
+  group: Group
+  permissions: Permission
+  created_at: Timestamp
+  deleted_at: Timestamp
+}
+
+"""
+inputs.Member.description
+"""
+input MemberInput {
+  """
+  inputs.Member.args.email
+  """
+  email: EmailScalar
+
+  """
+  inputs.Member.args.group_id
+  """
+  group_id: Int
+
+  """
+  inputs.Member.args.permissions
+  """
+  permissions: PermissionInput
+}
+
+type Mutation {
+  """
+  mutations.CreateDocument.description
+  """
+  createDocument(
+    """
+    mutations.CreateDocument.args.document
+    """
+    document: DocumentInput!
+
+    """
+    mutations.CreateDocument.args.signers
+    """
+    signers: [SignerInput!]!
+
+    """
+    mutations.CreateDocument.args.file
+    """
+    file: Upload!
+
+    """
+    mutations.CreateDocument.args.sandbox
+    """
+    sandbox: Boolean = false
+  ): Document
+
+  """
+  mutations.UpdateDocument.description
+  """
+  updateDocument(
+    """
+    mutations.UpdateDocument.args.id
+    """
+    id: UUID!
+
+    """
+    mutations.UpdateDocument.args.folder
+    """
+    document: UpdateDocumentInput!
+  ): Document
+  deleteDocument(
+    id: UUID!
+    member_id: String = null
+    group_uuid: String
+    context: ContextEnum = ORGANIZATION
+  ): Boolean
+
+  """
+  mutations.MoveDocumentToFolder.description
+  """
+  moveDocumentToFolder(
+    """
+    mutations.MoveDocumentToFolder.args.document_id
+    """
+    document_id: UUID!
+
+    """
+    mutations.MoveDocumentToFolder.args.folder_id
+    """
+    folder_id: UUID!
+
+    """
+    mutations.MoveDocumentToFolder.args.current_folder_id
+    """
+    current_folder_id: UUID = null
+
+    """
+    mutations.MoveDocumentToFolder.args.context
+    """
+    context: ContextEnum = ORGANIZATION
+  ): Boolean
+
+  """
+  mutations.MoveDocumentToRoot.description
+  """
+  moveDocumentToRoot(
+    """
+    mutations.MoveDocumentToRoot.args.document_id
+    """
+    document_id: UUID!
+
+    """
+    mutations.MoveDocumentToRoot.args.folder_id
+    """
+    folder_id: UUID!
+  ): Boolean
+  signDocument(id: UUID!): Boolean
+
+  """
+  mutations.CreateSignature.description
+  """
+  createSigner(
+    """
+    mutations.CreateSignature.args.document_id
+    """
+    document_id: UUID!
+
+    """
+    mutations.CreateSignature.args.signer
+    """
+    signer: SignerInput!
+  ): Signature
+
+  """
+  mutations.CreateFolder.description
+  """
+  createFolder(
+    """
+    mutations.CreateFolder.args.folder
+    """
+    folder: FolderInput!
+
+    """
+    mutations.CreateFolder.args.type
+    """
+    type: FolderTypeEnum
+  ): Folder
+
+  """
+  mutations.UpdateFolder.description
+  """
+  updateFolder(
+    """
+    mutations.UpdateFolder.args.id
+    """
+    id: UUID!
+
+    """
+    mutations.UpdateFolder.args.folder
+    """
+    folder: FolderInput!
+  ): Folder
+
+  """
+  mutations.DeleteFolder.description
+  """
+  deleteFolder(
+    """
+    mutations.DeleteFolder.args.id
+    """
+    id: UUID!
+  ): Boolean
+}
+
+"""
+types.Notification.description
+"""
+type Notification {
+  """
+  types.Notification.fields.signature_you
+  """
+  signature_you: Boolean!
+
+  """
+  types.Notification.fields.signature_others
+  """
+  signature_others: Boolean!
+}
+
+"""
+inputs.Notification.description
+"""
+input NotificationInput {
+  """
+  mutations.Notification.args.signature_you
+  """
+  signature_you: Boolean!
+
+  """
+  mutations.Notification.args.signature_others
+  """
+  signature_others: Boolean!
+}
+
+"""
+inputs.OrderBy.description
+"""
+input OrderBy {
+  """
+  inputs.OrderBy.fields.field
+  """
+  field: String!
+
+  """
+  inputs.OrderBy.fields.direction
+  """
+  direction: OrderByEnum!
+}
+
+"""
+enums.OrderBy.description
+"""
+enum OrderByEnum {
+  """
+  enums.OrderBy.asc
+  """
+  ASC
+
+  """
+  enums.OrderBy.desc
+  """
+  DESC
+}
+
+type Organization {
+  id: Int!
+  uuid: String
+  name: String
+  cnpj: CNPJ
+  customer_id: String
+  settings: Setting
+  overwrite_email: Boolean! @deprecated(reason: "Deprecated in this version.")
+  overwrite_template: Boolean!
+    @deprecated(reason: "Deprecated in this version.")
+  overwrite_name: Boolean! @deprecated(reason: "Deprecated in this version.")
+
+  """
+  Autentique's Privacy
+  """
+  members: [Member] @deprecated(reason: "Deprecated in this version.")
+
+  """
+  Autentique's Privacy
+  """
+  groups: [Group]
+
+  """
+  Autentique's Privacy
+  """
+  subscription: Subscription
+  created_at: Timestamp
+}
+
+"""
+inputs.Organization.description
+"""
+input OrganizationInput {
+  """
+  inputs.Organization.fields.name
+  """
+  name: String
+
+  """
+  inputs.Organization.fields.cnpj
+  """
+  cnpj: String
+}
+
+enum PadesActionEnum {
+  START
+  COMPLETE
+}
+
+"""
+inputs.Password.description
+"""
+input PasswordInput {
+  """
+  inputs.Password.args.current
+  """
+  current: String
+
+  """
+  inputs.Password.args.new
+  """
+  new: String
+
+  """
+  inputs.Password.args.new_confirmation
+  """
+  new_confirmation: String
+}
+
+"""
+types.Permission.description
+"""
+type Permission {
+  """
+  types.Permission.fields.overwrite_permissions
+  """
+  overwrite_permissions: Boolean
+
+  """
+  types.Permission.fields.create_documents
+  """
+  create_documents: Boolean
+
+  """
+  types.Permission.fields.sign_documents
+  """
+  sign_documents: Boolean
+
+  """
+  types.Permission.fields.delete_documents
+  """
+  delete_documents: Boolean
+
+  """
+  types.Permission.fields.archive_documents
+  """
+  archive_documents: Boolean
+
+  """
+  types.Permission.fields.view_documents_gr
+  """
+  view_documents_gr: Boolean
+
+  """
+  types.Permission.fields.view_folders_gr
+  """
+  view_folders_gr: Boolean
+
+  """
+  types.Permission.fields.actions_folders_gr
+  """
+  actions_folders_gr: Boolean
+
+  """
+  types.Permission.fields.actions_documents_gr
+  """
+  actions_documents_gr: Boolean
+
+  """
+  types.Permission.fields.actions_templates_gr
+  """
+  actions_templates_gr: Boolean
+
+  """
+  types.Permission.fields.actions_members_oz
+  """
+  actions_members_oz: Boolean
+
+  """
+  types.Permission.fields.actions_groups_oz
+  """
+  actions_groups_oz: Boolean
+
+  """
+  types.Permission.fields.actions_webhooks_oz
+  """
+  actions_webhooks_oz: Boolean
+
+  """
+  types.Permission.fields.view_documents_oz
+  """
+  view_documents_oz: Boolean
+
+  """
+  types.Permission.fields.view_member_documents_oz
+  """
+  view_member_documents_oz: Boolean
+
+  """
+  types.Permission.fields.view_group_documents_oz
+  """
+  view_group_documents_oz: Boolean
+
+  """
+  types.Permission.fields.view_folders_oz
+  """
+  view_folders_oz: Boolean
+
+  """
+  types.Permission.fields.view_member_folders_oz
+  """
+  view_member_folders_oz: Boolean
+
+  """
+  types.Permission.fields.view_group_folders_oz
+  """
+  view_group_folders_oz: Boolean
+
+  """
+  types.Permission.fields.actions_documents_oz
+  """
+  actions_documents_oz: Boolean
+
+  """
+  types.Permission.fields.view_invoices_oz
+  """
+  view_invoices_oz: Boolean
+
+  """
+  types.Permission.fields.change_plan_oz
+  """
+  change_plan_oz: Boolean
+
+  """
+  types.Permission.fields.actions_folders_oz
+  """
+  actions_folders_oz: Boolean
+
+  """
+  types.Permission.fields.change_appearances_oz
+  """
+  change_appearances_oz: Boolean
+}
+
+"""
+inputs.Permission.description
+"""
+input PermissionInput {
+  """
+  inputs.Permission.fields.overwrite_permissions
+  """
+  overwrite_permissions: Boolean
+
+  """
+  inputs.Permission.fields.create_documents
+  """
+  create_documents: Boolean
+
+  """
+  inputs.Permission.fields.sign_documents
+  """
+  sign_documents: Boolean
+
+  """
+  inputs.Permission.fields.delete_documents
+  """
+  delete_documents: Boolean
+
+  """
+  inputs.Permission.fields.archive_documents
+  """
+  archive_documents: Boolean
+
+  """
+  inputs.Permission.fields.view_documents_gr
+  """
+  view_documents_gr: Boolean
+
+  """
+  inputs.Permission.fields.view_folders_gr
+  """
+  view_folders_gr: Boolean
+
+  """
+  inputs.Permission.fields.actions_folders_gr
+  """
+  actions_folders_gr: Boolean
+
+  """
+  inputs.Permission.fields.actions_documents_gr
+  """
+  actions_documents_gr: Boolean
+
+  """
+  inputs.Permission.fields.actions_templates_gr
+  """
+  actions_templates_gr: Boolean
+
+  """
+  inputs.Permission.fields.actions_members_oz
+  """
+  actions_members_oz: Boolean
+
+  """
+  inputs.Permission.fields.actions_groups_oz
+  """
+  actions_groups_oz: Boolean
+
+  """
+  inputs.Permission.fields.actions_webhooks_oz
+  """
+  actions_webhooks_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_documents_oz
+  """
+  view_documents_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_member_documents_oz
+  """
+  view_member_documents_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_group_documents_oz
+  """
+  view_group_documents_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_folders_oz
+  """
+  view_folders_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_member_folders_oz
+  """
+  view_member_folders_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_group_folders_oz
+  """
+  view_group_folders_oz: Boolean
+
+  """
+  inputs.Permission.fields.actions_documents_oz
+  """
+  actions_documents_oz: Boolean
+
+  """
+  inputs.Permission.fields.view_invoices_oz
+  """
+  view_invoices_oz: Boolean
+
+  """
+  inputs.Permission.fields.change_plan_oz
+  """
+  change_plan_oz: Boolean
+
+  """
+  inputs.Permission.fields.actions_folders_oz
+  """
+  actions_folders_oz: Boolean
+
+  """
+  inputs.Permission.fields.change_appearances_oz
+  """
+  change_appearances_oz: Boolean
+}
+
+"""
+enums.PositionElement.description
+"""
+enum PositionElementEnum {
+  """
+  enums.PositionElement.signature
+  """
+  SIGNATURE
+
+  """
+  enums.PositionElement.name
+  """
+  NAME
+
+  """
+  enums.PositionElement.initials
+  """
+  INITIALS
+
+  """
+  enums.PositionElement.date
+  """
+  DATE
+
+  """
+  enums.PositionElement.cpf
+  """
+  CPF
+}
+
+input PositionInput {
+  x: String!
+  y: String!
+  z: Int!
+  angle: Float = 0
+  element: PositionElementEnum = SIGNATURE
+}
+
+"""
+types.Provider.description
+"""
+type Provider {
+  """
+  types.Provider.fields.name
+  """
+  name: String!
+}
+
+type PublicDocument {
+  id: UUID!
+  name: String!
+  refusable: Boolean
+  stop_on_rejected: Boolean
+  qualified: Boolean
+  ignore_cpf: Boolean
+  sortable: Boolean
+  is_blocked: Boolean
+  sandbox: Boolean
+  signers_history: [SignerHistory]
+  created_at: Timestamp!
+  deadline_at: Timestamp
+  updated_at: Timestamp!
+  expiration_at: Timestamp
+  notify_in: Int
+  reminder: ReminderEnum
+  footer: FooterEnum
+  configs: DocumentConfig
+  signatures: [PublicSignature]
+  author: Author!
+  files: File!
+  hashes: Hash!
+  new_signature_style: Boolean
+  show_audit_page: Boolean
+}
+
+"""
+types.PublicSignature.description
+"""
+type PublicSignature {
+  """
+  types.PublicSignature.fields.public_id
+  """
+  public_id: UUID
+
+  """
+  types.PublicSignature.fields.name
+  """
+  name: String
+
+  """
+  types.PublicSignature.fields.email
+  """
+  email: EmailScalar
+  delivery_method: DeliveryMethodEnum
+
+  """
+  types.PublicSignature.fields.email_events
+  """
+  email_events: EmailEvent
+
+  """
+  types.PublicSignature.fields.email_history
+  """
+  email_history: [EmailEvent]
+
+  """
+  types.PublicSignature.fields.positions
+  """
+  positions: [SignaturePosition]
+
+  """
+  types.PublicSignature.fields.configs
+  """
+  configs: SignatureConfig
+
+  """
+  types.PublicSignature.fields.created_at
+  """
+  created_at: Timestamp
+
+  """
+  types.PublicSignature.fields.updated_at
+  """
+  updated_at: Timestamp
+
+  """
+  types.PublicSignature.fields.archived_at
+  """
+  archived_at: Timestamp
+  certificate: SignedCertificate
+
+  """
+  types.PublicSignature.fields.viewed
+  """
+  viewed: Event
+
+  """
+  types.PublicSignature.fields.signed
+  """
+  signed: Event
+
+  """
+  types.PublicSignature.fields.rejected
+  """
+  rejected: Event
+
+  """
+  types.PublicSignature.fields.parent
+  """
+  parent: String
+  verifications: [SecurityVerificationType]
+
+  """
+  types.PublicSignature.fields.action
+  """
+  action: Action
+
+  """
+  types.PublicSignature.fields.document
+  """
+  document: PublicDocument!
+
+  """
+  types.PublicSignature.fields.user
+  """
+  user: PublicUser
+}
+
+"""
+types.PublicUser.description
+"""
+type PublicUser {
+  """
+  types.PublicUser.fields.id
+  """
+  id: UUID!
+
+  """
+  types.PublicUser.fields.name
+  """
+  name: String
+
+  """
+  types.PublicUser.fields.email
+  """
+  email: EmailScalar
+
+  """
+  types.User.fields.phone
+  """
+  phone: String
+
+  """
+  types.PublicUser.fields.cpf
+  """
+  cpf: CPF
+
+  """
+  types.PublicUser.fields.company
+  """
+  company: String
+
+  """
+  types.PublicUser.fields.birthday
+  """
+  birthday: Date
+
+  """
+  types.PublicUser.fields.escavador
+  """
+  escavador: String
+
+  """
+  types.PublicUser.fields.organization
+  """
+  organization: Organization
+
+  """
+  types.PublicUser.fields.member
+  """
+  member: Member
+
+  """
+  types.PublicUser.fields.created_at
+  """
+  created_at: Timestamp!
+
+  """
+  types.PublicUser.fields.auth_methods
+  """
+  auth_methods: [Provider] @deprecated(reason: "Deprecated in this version.")
+
+  """
+  types.PublicUser.fields.settings
+  """
+  settings: Setting
+  group: Group @deprecated(reason: "Deprecated in this version.")
+}
+
+type Query {
+  """
+  My Autentique account information
+  """
+  me: User
+
+  """
+  queries.Organization.description
+  """
+  organization: Organization
+
+  """
+  queries.Document.description
+  """
+  document(
+    """
+    ID represented as a Document identifier
+    """
+    id: UUID!
+  ): Document
+  documents(
+    member_id: UUID
+    folder_id: UUID
+    group_uuid: String
+    context: ContextEnum
+    status: DocumentStatusEnum
+    limit: Int! = 60
+    page: Int! = 1
+    name: String
+    signer: String
+    search: String
+    start_date: String
+    end_date: String
+    include_deleted: Boolean
+    include_archived: Boolean
+    orderBy: OrderBy
+    showSandbox: Boolean
+  ): DocumentPagination
+  documentsByFolder(
+    member_id: UUID
+    folder_id: UUID
+    group_uuid: String
+    context: ContextEnum
+    status: DocumentStatusEnum
+    limit: Int! = 60
+    page: Int! = 1
+    name: String
+    signer: String
+    search: String
+    start_date: String
+    end_date: String
+    include_deleted: Boolean
+    include_archived: Boolean
+    orderBy: OrderBy
+    showSandbox: Boolean
+  ): DocumentPagination
+
+  """
+  queries.Folder.description
+  """
+  folder(
+    """
+    ID represented as a Folder identifier
+    """
+    id: UUID!
+  ): Folder
+
+  """
+  queries.Folders.description
+  """
+  folders(
+    """
+    Limit the Folders per page
+    """
+    limit: Int!
+
+    """
+    Display a specific page
+    """
+    page: Int!
+
+    """
+    queries.Folders.args.type
+    """
+    type: FolderTypeEnum
+
+    """
+    Search for Folders
+    """
+    search: String
+
+    """
+    queries.Folders.args.orderBy
+    """
+    orderBy: OrderBy
+  ): FolderPagination
+}
+
+"""
+types.Referral.description
+"""
+type Referral {
+  """
+  types.Referral.fields.id
+  """
+  id: String
+
+  """
+  types.Referral.fields.full_name
+  """
+  full_name: String
+
+  """
+  types.Referral.fields.email
+  """
+  email: EmailScalar
+
+  """
+  types.Referral.fields.referral_code
+  """
+  referral_code: String
+
+  """
+  types.Referral.fields.referral_to
+  """
+  referral_to: String
+
+  """
+  types.Referral.fields.total_amount
+  """
+  total_amount: Float
+
+  """
+  types.Referral.fields.is_receiving_payments
+  """
+  is_receiving_payments: Boolean
+
+  """
+  types.Referral.fields.created_at
+  """
+  created_at: Timestamp
+
+  """
+  types.Referral.fields.affiliates
+  """
+  affiliates: [Affiliate]
+  referral_configuration: String
+  payment_info: String
+  monthly_amount: String
+  recent_extracts: String
+}
+
+"""
+enums.Reminder.description
+"""
+enum ReminderEnum {
+  """
+  enums.Reminder.daily
+  """
+  DAILY
+
+  """
+  enums.Reminder.weekly
+  """
+  WEEKLY
+}
+
+"""
+types.Role.description
+"""
+type Role {
+  """
+  Role identifier
+  """
+  id: ID!
+
+  """
+  Full Role name
+  """
+  name: String!
+
+  """
+  Role description
+  """
+  description: String!
+}
+
+"""
+enums.Role.description
+"""
+enum RoleEnum {
+  """
+  enums.Role.admin
+  """
+  ADMIN
+
+  """
+  enums.Role.user
+  """
+  USER
+}
+
+enum SecurityVerificationEnum {
+  SMS
+  UPLOAD
+  LIVE
+}
+
+input SecurityVerificationInput {
+  type: SecurityVerificationEnum
+  verify_phone: String
+}
+
+type SecurityVerificationType {
+  id: Int
+  type: SecurityVerificationEnum
+  verify_phone: String
+  url: String
+  reference: String
+  failcode: Int
+  user: SecurityVerificationUser
+  verified_at: Timestamp
+}
+
+type SecurityVerificationUser {
+  images: [String]
+  confidence: Int
+}
+
+type SessionType {
+  ip_address: String
+  user_agent: String
+  created_at: Timestamp
+}
+
+"""
+types.Setting.description
+"""
+type Setting {
+  """
+  types.Setting.fields.name
+  """
+  name: String
+
+  """
+  types.Setting.fields.email
+  """
+  email: EmailTemplate
+
+  """
+  types.Setting.fields.format
+  """
+  format: String
+
+  """
+  types.Setting.fields.webhook_url
+  """
+  webhook_url: String
+
+  """
+  types.Setting.fields.signature
+  """
+  signature: String
+
+  """
+  types.Setting.fields.signature_draw
+  """
+  signature_draw: String
+
+  """
+  types.Setting.fields.initials_format
+  """
+  initials_format: String
+
+  """
+  types.Setting.fields.initials
+  """
+  initials: String
+
+  """
+  types.Setting.fields.initials_draw
+  """
+  initials_draw: String
+
+  """
+  types.Setting.fields.font
+  """
+  font: String
+
+  """
+  types.Setting.fields.signature_text
+  """
+  signature_text: String
+
+  """
+  types.Setting.fields.needs_signature
+  """
+  has_signature_appearance: Boolean
+
+  """
+  types.Setting.fields.needs_initials
+  """
+  has_initials_appearance: Boolean
+}
+
+"""
+types.Signature.description
+"""
+type Signature {
+  """
+  types.Signature.fields.public_id
+  """
+  public_id: UUID
+
+  """
+  types.Signature.fields.name
+  """
+  name: String
+
+  """
+  types.Signature.fields.email
+  """
+  email: EmailScalar
+  delivery_method: DeliveryMethodEnum
+
+  """
+  types.Signature.fields.email_events
+  """
+  email_events: EmailEvent
+
+  """
+  types.Signature.fields.email_history
+  """
+  email_history: [EmailEvent]
+
+  """
+  types.Signature.fields.positions
+  """
+  positions: [SignaturePosition]
+
+  """
+  types.Signature.fields.configs
+  """
+  configs: SignatureConfig
+
+  """
+  types.Signature.fields.organization_id
+  """
+  organization_id: Int
+
+  """
+  types.Signature.fields.group_id
+  """
+  group_id: Int
+
+  """
+  Signature created at
+  """
+  created_at: Timestamp
+
+  """
+  Signature updated at
+  """
+  updated_at: Timestamp
+
+  """
+  types.Signature.fields.archived_at
+  """
+  archived_at: Timestamp
+  action: Action
+  link: Link
+  certificate: SignedCertificate
+  viewed: Event
+  signed: Event
+  rejected: Event
+
+  """
+  types.Signature.fields.user
+  """
+  user: User
+
+  """
+  types.Signature.fields.parent
+  """
+  parent: String
+  verifications: [SecurityVerificationType]
+
+  """
+  Autentique's Privacy
+  """
+  folder: Folder
+
+  """
+  Autentique's Privacy
+  """
+  organization: Organization
+}
+
+enum SignatureAppearanceEnum {
+  DRAW
+  HANDWRITING
+  ELETRONIC
+  IMAGE
+}
+
+type SignatureConfig {
+  overwrite_name: String
+  overwrite_date: Date
+  cpf: String
+}
+
+input SignatureConfigInput {
+  overwrite_name: String
+  overwrite_date: String
+}
+
+input SignatureInput {
+  email: EmailScalar
+  positions: [PositionInput]
+  configs: SignatureConfigInput
+}
+
+type SignaturePosition {
+  x: String!
+  y: String!
+  z: Int!
+  angle: Float
+  element: PositionElementEnum
+}
+
+enum SignatureTypesEnum {
+  A1
+  A3
+  SAFEID
+}
+
+type SignedCertificate {
+  type: SignatureTypesEnum
+  name: String
+
+  """
+  Document number (TAX ID)
+  """
+  document: String
+  email: EmailScalar
+}
+
+input SignerConfigInput {
+  cpf: String
+}
+
+"""
+types.SignerHistory.description
+"""
+type SignerHistory {
+  """
+  types.SignerHistory.fields.created_at
+  """
+  created_at: Timestamp
+
+  """
+  types.SignerHistory.fields.user
+  """
+  user: PublicSignature
+
+  """
+  types.SignerHistory.fields.author
+  """
+  author: PublicSignature
+
+  """
+  types.SignerHistory.fields.category
+  """
+  category: SignerHistoryEnum
+}
+
+"""
+enums.SignerHistory.description
+"""
+enum SignerHistoryEnum {
+  """
+  enums.SignerHistory.create
+  """
+  CREATE
+
+  """
+  enums.SignerHistory.delete
+  """
+  DELETE
+
+  """
+  enums.SignerHistory.generate_link
+  """
+  GENERATE_LINK
+}
+
+input SignerInput {
+  name: String
+  email: EmailScalar
+  phone: String
+  delivery_method: DeliveryMethodEnum
+  positions: [PositionInput]
+  action: ActionEnum!
+  configs: SignerConfigInput
+  security_verifications: [SecurityVerificationInput]
+}
+
+type SocialType {
+  email: String
+  provider: String
+  created_at: Timestamp
+  deleted_at: Timestamp
+}
+
+"""
+types.Statistic.description
+"""
+type Statistic {
+  """
+  types.Statistic.fields.documents
+  """
+  documents: Int!
+
+  """
+  types.Statistic.fields.sent
+  """
+  sent: Int!
+
+  """
+  types.Statistic.fields.signatures
+  """
+  signatures: Int!
+}
+
+"""
+types.Storage.description
+"""
+type Storage {
+  path: String!
+  size: Int
+}
+
+type Subscription {
+  name: String
+  documents: Int!
+  credits: Int
+  bonus: Int!
+  has_premium_features: Boolean!
+  iugu_id: String
+  iugu_plan: String
+  created_at: Timestamp!
+  ends_at: Timestamp
+  bought_at: Timestamp
+  expires_at: Timestamp
+}
+
+"""
+types.Template.description
+"""
+type Template {
+  """
+  types.Template.fields.id
+  """
+  id: UUID!
+
+  """
+  types.Template.fields.user
+  """
+  user: User!
+
+  """
+  types.Template.fields.name
+  """
+  name: String!
+
+  """
+  types.Template.fields.text
+  """
+  text: String
+
+  """
+  Folder created at
+  """
+  created_at: Timestamp!
+
+  """
+  types.Folder.fields.updated_at
+  """
+  updated_at: Timestamp!
+
+  """
+  types.Template.fields.attributes
+  """
+  attributes: [Attribute]
+}
+
+"""
+inputs.Template.description
+"""
+input TemplateInput {
+  """
+  inputs.Template.fields.id
+  """
+  id: UUID
+
+  """
+  inputs.Template.fields.name
+  """
+  name: String!
+
+  """
+  inputs.Template.fields.text
+  """
+  text: String!
+}
+
+"""
+A UNIX timestamp represented as an integer
+"""
+scalar Timestamp
+
+"""
+types.Token.description
+"""
+type Token {
+  """
+  types.Token.fields.access_token
+  """
+  access_token: String!
+
+  """
+  types.Token.fields.token_type
+  """
+  token_type: String!
+
+  """
+  types.Token.fields.env
+  """
+  env: String!
+
+  """
+  types.Token.fields.created_at
+  """
+  created_at: Timestamp!
+}
+
+"""
+inputs.Token.description
+"""
+input TokenInput {
+  """
+  inputs.Token.fields.name
+  """
+  name: String!
+}
+
+"""
+enums.Type.description
+"""
+enum TypeEnum {
+  """
+  enums.Type.LINK
+  """
+  LINK
+
+  """
+  enums.Type.SIGNATURE
+  """
+  SIGNATURE
+}
+
+input UpdateDocumentInput {
+  name: String
+  message: String
+  refusable: Boolean
+  ignore_cpf: Boolean = false
+  stop_on_rejected: Boolean
+  sortable: Boolean
+  reminder: ReminderEnum
+  new_signature_style: Boolean = false
+  show_audit_page: Boolean = true
+  expiration: ExpirationInput
+  footer: FooterEnum
+  cc: [EmailInput]
+  configs: DocumentConfigInput
+
+  """
+  Your datetime should be in ISO-8601 format
+  """
+  deadline_at: String
+}
+
+"""
+The `Upload` special type represents a file to be uploaded in the same HTTP request as specified by
+ [graphql-multipart-request-spec](https://github.com/jaydenseric/graphql-multipart-request-spec).
+"""
+scalar Upload
+
+type User {
+  id: UUID!
+  name: String
+  email: EmailScalar
+  phone: String
+  email_verified_at: Timestamp
+  cpf: CPF
+  cnpj: CNPJ
+  company: String
+  birthday: Date
+  founder: Boolean!
+  user_hash: String
+  nolt: String
+  escavador: String
+  organization: Organization
+  member: Member
+  created_at: Timestamp!
+  updated_at: Timestamp
+  auth_methods: [Provider] @deprecated(reason: "Deprecated in this version.")
+  settings: Setting
+  statistics: Statistic! @deprecated(reason: "Deprecated in this version.")
+  subscription: Subscription
+  group: Group @deprecated(reason: "Deprecated in this version.")
+  permissions: Permission @deprecated(reason: "Deprecated in this version.")
+  customer_id: String @deprecated(reason: "Deprecated in this version.")
+
+  """
+  Autentique's Privacy
+  """
+  emails: [EmailType]
+
+  """
+  Autentique's Privacy
+  """
+  socials: [SocialType]
+
+  """
+  Autentique's Privacy
+  """
+  members: [Member]
+
+  """
+  Autentique's Privacy
+  """
+  sessions: [SessionType]
+}
+
+"""
+inputs.UserDetail.description
+"""
+input UserDetailInput {
+  """
+  inputs.UserDetail.fields.email
+  """
+  email: EmailScalar!
+
+  """
+  inputs.UserDetail.fields.password
+  """
+  password: String!
+}
+
+"""
+inputs.User.description
+"""
+input UserInput {
+  """
+  inputs.User.fields.name
+  """
+  name: String
+
+  """
+  inputs.User.fields.email
+  """
+  email: EmailScalar
+
+  """
+  inputs.User.fields.password
+  """
+  password: String
+
+  """
+  inputs.User.fields.cpf
+  """
+  cpf: String
+
+  """
+  inputs.User.fields.birthday
+  """
+  birthday: String
+
+  """
+  inputs.User.fields.organization
+  """
+  organization: OrganizationInput
+}
+
+"""
+inputs.UserSignature.description
+"""
+input UserSignatureInput {
+  format: String!
+  file_image: Upload
+  file_draw: Upload
+  font: FontEnum! = AUTOGRAF
+  signature_text: String
+}
+
+"""
+UUID is represented as a string type identifier
+"""
+scalar UUID
+
+"""
+types.Webhook.description
+"""
+type Webhook {
+  """
+  types.Webhook.fields.id
+  """
+  id: Int!
+
+  """
+  types.Webhook.fields.url
+  """
+  url: String!
+
+  """
+  types.Webhook.fields.type
+  """
+  type: String!
+
+  """
+  types.Webhook.fields.created_at
+  """
+  created_at: Timestamp!
+
+  """
+  types.Webhook.fields.updated_at
+  """
+  updated_at: Timestamp!
+}
+
+"""
+types.WebhookType.description
+"""
+type WebhookType {
+  """
+  types.WebhookType.fields.id
+  """
+  id: Int!
+
+  """
+  types.WebhookType.fields.name
+  """
+  name: String!
+
+  """
+  types.WebhookType.fields.created_at
+  """
+  created_at: Timestamp!
+
+  """
+  types.WebhookType.fields.updated_at
+  """
+  updated_at: Timestamp!
+}
