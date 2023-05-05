@@ -20,6 +20,18 @@ export default new Command({
       required: true,
     },
     {
+      name: "email-assinante",
+      description: "O email de quem deve assinar o certificado",
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+    {
+      name: "nome-assinante",
+      description: "O nome de quem deve assinar o certificado",
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+    {
       name: "minutos",
       description: "O tempo do talks em minutos",
       type: ApplicationCommandOptionType.Number,
@@ -38,6 +50,10 @@ export default new Command({
     const isADM = member?.permissions.has("Administrator");
     if (isADM) {
       const titulo = interaction.options.get("titulo")?.value as string;
+      const assigner_name = interaction.options.get("nome-assinante")
+        ?.value as string;
+      const assigner_mail = interaction.options.get("email-assinante")
+        ?.value as string;
       const link = interaction.options.get("link")?.value as string;
       const minutos_input = interaction.options.get("minutos")?.value as number;
       const timing: { horas: unknown; minutos: unknown } = {
@@ -60,6 +76,7 @@ export default new Command({
         const listaNomes = registration.map(
           (registration) => registration.nome
         );
+        const numPages = listaNomes.length;
         const data = new Date(registration[0].createTime);
         const compet_talks = true;
         const compbio = false;
@@ -91,8 +108,6 @@ export default new Command({
           if (response.status >= 200 && response.status < 300) {
             // TODO: enviar email para a lista de participantes informando que o certificado está disponivel
             const data = await response.json();
-            console.log(data);
-
             await interaction.reply({
               content: "Certificados registrados com sucesso!",
               ephemeral: true,
@@ -125,13 +140,13 @@ export default new Command({
               horas,
               minutos,
             });
-            console.log(filePath);
             await new Promise((resolve) => setTimeout(resolve, 5000));
-            const response = await submitTalksToAutentique(
-              listaNomes.length,
+            const response = await submitTalksToAutentique({
+              numPages,
               titulo,
-              filePath
-            );
+              filePath,
+              signer: { name: assigner_name, email: assigner_mail },
+            });
             console.log(response);
             return;
           } catch (error: any) {
