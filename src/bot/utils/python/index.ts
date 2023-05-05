@@ -1,7 +1,18 @@
 import { PythonShell } from 'python-shell';
 import path from 'path';
+const { execSync } = require('child_process');
+const isWin = process.platform === "win32";
+const isLinux = process.platform === "linux";
+let pythonPath= "";
+if(isLinux){
+  pythonPath = execSync('which python3').toString().trim();
+}
+if(isWin){
+  pythonPath ='python'
+}
 // caminho para o arquivo script.py
 const scriptPath = path.resolve(__dirname, "script.py");
+console.log(scriptPath);
 interface ICreateCertificateProps {
   text_dir: string,
   template_dir: string,
@@ -31,7 +42,7 @@ async function createCertificate({
   aux_args.push(text_dir, template_dir, titulo, data, horas, minutos)
   const args = aux_args.concat(listaNomes);
   const options = {
-    pythonPath: 'python',
+    pythonPath,
     args
   }
   try {

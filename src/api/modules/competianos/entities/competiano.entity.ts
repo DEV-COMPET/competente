@@ -1,50 +1,49 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 export type CompetianoType = {
-  nome: string
-  data_inicio: Date
-  email: string
-  membro_ativo?: boolean
-  tutor?: boolean
-  scrum_master?: boolean
-  intercambio?: boolean
-  data_fim?: Date | undefined
-  lates?: string | undefined
-  linkedin?: string | undefined
-  depoimentos?: string | undefined
-  url_imagem?: string | undefined
-}
+  nome: string;
+  data_inicio: Date;
+  email: string;
+  membro_ativo?: boolean;
+  tutor?: boolean;
+  scrum_master?: boolean;
+  intercambio?: boolean;
+  data_fim?: Date | undefined;
+  lates?: string | undefined;
+  linkedin?: string | undefined;
+  depoimentos?: string | undefined;
+  url_imagem?: string | undefined;
+};
 export class Competiano implements CompetianoType {
-  nome: string
-  data_inicio: Date
-  email: string
-  membro_ativo?: boolean
-  tutor?: boolean
-  scrum_master?: boolean
-  intercambio?: boolean
-  data_fim?: Date | undefined
-  lates?: string | undefined
-  linkedin?: string | undefined
-  depoimentos?: string | undefined
-  url_imagem?: string | undefined
-  constructor(competiano: CompetianoType) { 
-    this.url_imagem = competiano.url_imagem ||""
-    this.nome = competiano.nome
-    this.email = competiano.email
-    this.data_inicio = competiano.data_inicio
-    this.intercambio = !!competiano.intercambio
-    this.scrum_master = !!competiano.scrum_master
-    this.tutor = !!competiano.tutor
-    this.membro_ativo = competiano.membro_ativo || true
-    this.depoimentos = competiano.depoimentos || ""
-    this.linkedin = competiano.linkedin ||""
-    this.lates = competiano.lates || ""
-    this.data_fim = competiano.data_fim || new Date("05/09/1899")
+  nome: string;
+  data_inicio: Date;
+  email: string;
+  membro_ativo?: boolean;
+  tutor?: boolean;
+  scrum_master?: boolean;
+  intercambio?: boolean;
+  data_fim?: Date | undefined;
+  lates?: string | undefined;
+  linkedin?: string | undefined;
+  depoimentos?: string | undefined;
+  url_imagem?: string | undefined;
+  constructor(competiano: CompetianoType) {
+    this.url_imagem = competiano.url_imagem || "";
+    this.nome = competiano.nome;
+    this.email = competiano.email;
+    this.data_inicio = competiano.data_inicio;
+    this.intercambio = !!competiano.intercambio;
+    this.scrum_master = !!competiano.scrum_master;
+    this.tutor = !!competiano.tutor;
+    this.membro_ativo = competiano.membro_ativo || true;
+    this.depoimentos = competiano.depoimentos || "";
+    this.linkedin = competiano.linkedin || "";
+    this.lates = competiano.lates || "";
+    this.data_fim = competiano.data_fim || new Date("05/09/1899");
   }
-  
 }
 export interface existentCompetiano extends CompetianoType {
-  id: string
+  id: string;
 }
 const schema = new mongoose.Schema<CompetianoType>(
   {
@@ -61,16 +60,19 @@ const schema = new mongoose.Schema<CompetianoType>(
     depoimentos: { type: String, required: false },
     url_imagem: { type: String, required: false },
   },
-  
+
   {
-    versionKey:false,
+    versionKey: false,
     toJSON: {
       transform: (_, ret): void => {
-        ret.id = ret._id.toString()
-        delete ret._id
-        delete ret.__v
-      }
+        ret.id = ret._id.toString();
+        delete ret._id;
+        delete ret.__v;
+      },
     },
-  },
-)
-export const CompetianoModel = mongoose.model<CompetianoType>("membros", schema)
+  }
+);
+export const CompetianoModel = mongoose.model<CompetianoType>(
+  "membros",
+  schema
+);
