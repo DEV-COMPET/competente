@@ -3,7 +3,7 @@ import { client } from ".."
 import { CommandInteractionOptionResolver, ModalSubmitInteraction } from "discord.js";
 import { ExtendedInteraction } from "../typings/Commands";
 import { ExtendedModalInteraction } from "../typings/Modals";
-export default new Event("interactionCreate", async (interaction) => {
+export default new Event("interactionCreate","on", async (interaction) => {
   if (interaction.isChatInputCommand()) {
     console.log({commands:client.commands});
     
