@@ -110,15 +110,23 @@ export class ExtendedClient extends Client {
       console.error(error);
     }
   }
-  async createWebhook({webhookName,channelName}:{webhookName:string,channelName:string}) {
+  async createWebhook({
+    webhookName,
+    channelName,
+  }: {
+    webhookName: string;
+    channelName: string;
+  }) {
     const guildId = process.env.DISCORD_GUILD_ID || "";
     const guild = this.guilds.cache.get(guildId);
     if (!guild) {
       throw new Error("Servidor não encontrado.");
     }
-    const channels = guild.channels.cache.find((c) => c.name.toLowerCase()===channelName.toLocaleLowerCase()) as TextChannel;
-    if(!channels){
-      throw new Error(`Nenhum canal ${channelName} encontrado.`)
+    const channels = guild.channels.cache.find(
+      (c) => c.name.toLowerCase() === channelName.toLocaleLowerCase()
+    ) as TextChannel;
+    if (!channels) {
+      throw new Error(`Nenhum canal ${channelName} encontrado.`);
     }
     const webhooks = await channels.fetchWebhooks();
     const existingWebhook = webhooks.find(
