@@ -18,6 +18,18 @@ export default new Command({
       required: true,
     },
     {
+      name: "email-assinante",
+      description: "O email de quem deve assinar o certificado",
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+    {
+      name: "nome-assinante",
+      description: "O nome de quem deve assinar o certificado",
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+    {
       name: "palestrantes",
       type: ApplicationCommandOptionType.String,
       description: "A lista de palestrantes do evento em questão",
@@ -34,6 +46,10 @@ export default new Command({
     const member = await interaction.guild?.members.fetch(interaction.user.id);
     const isADM = member?.permissions.has("Administrator");
     if (isADM) {
+      const assigner_name = interaction.options.get("nome-assinante")
+        ?.value as string;
+      const assigner_mail = interaction.options.get("email-assinante")
+        ?.value as string;
       const palestrantes_input = interaction.options.get("palestrantes")
         ?.value as string;
       const listaNomes: string[] = palestrantes_input.split(",");
@@ -56,9 +72,12 @@ export default new Command({
         });
         await new Promise((resolve) => setTimeout(resolve, 5000));
         const response = await submitTalksToAutentique(
-          listaNomes.length,
-          titulo,
-          filePath
+          {
+            numPages:listaNomes.length,
+            filePath,
+            titulo,
+            signer:{email:assigner_mail,name:assigner_name}
+          }
         );
         console.log(response);
         await new Promise((resolve) => setTimeout(resolve, 5000));
