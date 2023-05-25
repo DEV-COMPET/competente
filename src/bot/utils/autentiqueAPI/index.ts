@@ -9,7 +9,6 @@ import {
   FooterEnum,
   PositionElementEnum,
   PositionInput,
-  ReminderEnum,
   SignatureAppearanceEnum,
   SignerInput,
 } from "./graphql/resolvers-types";

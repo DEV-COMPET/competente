@@ -6,9 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "node dist/src/api/server.ts",
-    "dev": "npx nodemon src/api/server.ts",
-    "discord": "npx nodemon src/bot/index.ts",
-    "teste": "npx nodemon ngrok-config.ts",
+    "api:dev": "npx nodemon src/api/server.ts",
+    "bot:dev": "npx nodemon src/bot/index.ts",
     "generate": "graphql-codegen"
   },
   "contributors": [
