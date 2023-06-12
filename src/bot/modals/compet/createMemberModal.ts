@@ -73,14 +73,14 @@ export default new Modal({
     const linkedin = interaction.fields.getTextInputValue(
       linkedinInput.data.custom_id || ""
     );
-    const url_image = interaction.fields.getTextInputValue(
+    const url_imagem = interaction.fields.getTextInputValue(
       imageUrlInput.data.custom_id || ""
     );
     const data_inicio = new Date().toISOString();
 
     const requestOptions = {
       method: "post",
-      body: JSON.stringify({ nome, email, linkedin, url_image, data_inicio }),
+      body: JSON.stringify({ nome, email, linkedin, url_imagem, data_inicio }),
       headers: { "Content-Type": "application/json" },
     };
     const response = await fetch(createMemberUrl, requestOptions);
@@ -110,8 +110,8 @@ export default new Modal({
           },
           { name: "Email", value: data.email, inline: false }
         );
-      url_image
-        ? embed.setImage(url_image)
+      url_imagem
+        ? embed.setImage(url_imagem)
         : embed.setImage(
             "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
           );
