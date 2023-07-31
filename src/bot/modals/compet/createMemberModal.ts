@@ -116,12 +116,12 @@ export default new Modal({
             "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
           );
       embed.setTimestamp();
-      await interaction.reply({
+      return await interaction.reply({
         content: "Seu envio foi realizado com sucesso!",
         ephemeral: true,
         embeds: [embed],
       });
-    } else {
+    }
       const data: { code: number; message: string } = await response.json();
       const embed = new EmbedBuilder()
         .setColor(0xf56565)
@@ -142,12 +142,11 @@ export default new Modal({
           },
           { name: "Mensagem do erro", value: data.message, inline: false }
         );
-      await interaction.reply({
+      return await interaction.reply({
         content: "Não foi possível concluir o cadastro",
         ephemeral: true,
         embeds: [embed],
       });
-    }
   },
 });
 export { modal };
