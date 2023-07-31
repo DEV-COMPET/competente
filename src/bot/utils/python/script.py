@@ -90,6 +90,10 @@ parser.add_argument("minutos",
                     help="A quantidade de minutos do evento",
                     type=str,
                     nargs="?")
+parser.add_argument("dataFinal",
+                    help="A data final do evento",
+                    type=str,
+                    nargs="?")
 parser.add_argument("listaNomes",
                     help="Uma lista contendo os participantes do evento",
                     type=str,
@@ -139,6 +143,10 @@ txt_name = os.path.join(dirname, args.texto)
 img_name = os.path.join(dirname, args.imagem)
 reader = args.listaNomes
 evento = args.evento
+dataFinal = args.dataFinal
+if(args.dataFinal != ""):
+    dataFinal = data_legivel(args.dataFinal)
+
 data = data_legivel(args.data)
 hora = args.hora
 minutos = args.minutos
@@ -220,7 +228,7 @@ if args.fonte:
 if args.fonteNegrito:
     fonte_bold = args.fonteNegrito in fontes or fonte_bold
 if args.tamanho: tam_fonte = args.tamanho
-def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader):
+def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader,dataFinal):
     fonte = "light"  # FONTE PADRÃO DO TEXTO
     fonte_bold = "negrito"
     fontB = fonte_bold  # IGNORE
@@ -231,12 +239,13 @@ def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader):
     fonte_italic = "Times-Italic"
     #fonte_italic = "Times-BoldItalic"
     
-    campos = ["nome", "data", "hora", "minutos", "evento"]
+    campos = ["nome", "data", "hora", "minutos", "evento","dataFinal"]
     fields = {
         "nome": "",
         "data": data,
         "hora": hora,
         "minutos": minutos,
+        "dataFinal":dataFinal,
         "evento": evento
     }
     text_lines = open(txt_name, 'r', -1, "utf-8").read().split(
@@ -270,13 +279,15 @@ def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader):
             if (len(aux_line) == 0):
                 continue
             for campo in campos:
-                aux_line = aux_line.replace(var_char + campo + var_char,
-                                            fields[campo])
+                aux_line = aux_line.replace(var_char + campo + var_char,fields[campo])
                 tam_fonte = tam_texto
                 #CASO QUEIRA ADICIONAR MAIS UM TRATAMENTO ESPECIAL A UM CARACTERE QUE
                 #TENHA COMO OBJETIVO ALTERAR O TEXTO, ADICIONE MAIS UMA EXPRESSÃO CONDICIONAL,
                 #SEGUIDA DAS ALTERAÇÕES DESEJADAS.
-    
+            if re.search(r'&\$', aux_line):
+                aux_segs = aux_line.split('&$')
+                fonte_bold = fonte_italic  # Define fonte_bold como fonte_italic
+                tam_fonte = tam_texto
             if re.search('&*', aux_line):
                 aux_segs = aux_line.split(italic_char)  #APAGA O CARACTERE ESPECIAL
                 fonte_bold = fonte_italic  #POR PADRÃO, FONTE_BOLD = A NOVA FONTE
@@ -294,8 +305,10 @@ def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader):
             #print('Texto: '+aux_segs+" \n")
             for seg in aux_segs:
                 fnt = None
-                if flip: fnt = fonte_bold
-                else: fnt = fonte
+                if flip:
+                    fnt = fonte_bold
+                else:
+                    fnt = fonte
                 length += (1 + epsilon) * pdf.stringWidth(seg, fnt, tam_fonte)
                 flip = not flip
             to = pdf.beginText()
@@ -320,4 +333,4 @@ def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader):
     
     pdf.save()
     print (dest_path)
-gerar_pdf(txt_name,img_name,data,hora,minutos,evento,reader)
+gerar_pdf(txt_name,img_name,data,hora,minutos,evento,reader,dataFinal)

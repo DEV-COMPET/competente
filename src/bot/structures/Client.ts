@@ -44,13 +44,9 @@ export class ExtendedClient extends Client {
         body: commands,
       });
       await this.guilds.cache.get(guildId)?.commands.set(commands);
-      console.log(`Registering commands for ${guildId}`);
     } else {
-      console.log(commands);
-
       await rest.put(Routes.applicationCommands(appId), { body: commands });
       await this.application?.commands.set(commands);
-      console.log(`Registering global commands`);
     }
   }
   async registerModules() {
@@ -59,13 +55,11 @@ export class ExtendedClient extends Client {
       const pattern = "**/*{.ts,.js}";
       const directory = path.join(__dirname, "..", "commands");
       const commandFiles = await globPromise(pattern, { cwd: directory });
-      console.log({ commandFiles });
       commandFiles.forEach(async (filepath) => {
         const command: CommandType = await this.importFile(
           path.join(directory, filepath)
         );
         if (!command) return;
-        console.log(command);
         this.commands.set(command.name, command);
         slashCommands.push(command);
       });
@@ -88,8 +82,6 @@ export class ExtendedClient extends Client {
       console.error(error);
     }
     const createdCommands = this.commands.map((command) => command);
-    console.log(createdCommands.length);
-
     await this.registerCommands({ commands: createdCommands });
     await this.registerModals();
   }

@@ -49,7 +49,7 @@ export class SendAutentiqueMessageUseCase
     const icon_url =
       tutorCompetData?.url_imagem ||
       `https://i.ibb.co/rpkBgxZ/msg-1183775647-43870.jpg`; // link para imagem do discord bot
-    const content = `Os certificados referentes ao talks \"${apiResponse.documento.nome}\" estão liberados!`;
+    const content = `Os certificados referentes ao ${apiResponse.documento.nome.toLocaleLowerCase().includes("talks")?"talks":"projeto"} ${apiResponse.documento.nome} estão liberados!`;
     const embed = new EmbedBuilder()
       .setAuthor({
         name: tutor.nome,

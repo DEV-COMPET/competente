@@ -93,7 +93,6 @@ export default new Command({
             });
           }
         } else {
-          console.log(data.data_fim);
 
           const embed = new EmbedBuilder()
             .setColor(0xf56565)
@@ -120,7 +119,6 @@ export default new Command({
         await interaction.reply("ok");
       } else {
         const data = await response.json();
-        console.log(data);
 
         await interaction.reply("ok");
       }

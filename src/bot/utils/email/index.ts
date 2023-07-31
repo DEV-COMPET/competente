@@ -24,7 +24,6 @@ interface sendEmail {
   
     try {
       const info = await transporter.sendMail(mailOptions);
-      console.log('Email enviado com sucesso:', info.response);
     } catch (error) {
       console.error('Ocorreu um erro ao enviar o email:', error);
     }

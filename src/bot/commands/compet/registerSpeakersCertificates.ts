@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType } from "discord.js";
 import { Command } from "../../structures/Command";
-import { submitTalksToAutentique } from "../../utils/autentiqueAPI";
+import { submitToAutentique } from "../../utils/autentiqueAPI";
 import { getCompetTalksRegistration } from "../../utils/googleAPI/getCompetTalks";
 import {
   createCertificadoTalksPalestrantes,
@@ -60,6 +60,7 @@ export default new Command({
         (interaction.options.get("tempo")?.value as number) / 60
       ).toString();
       try {
+        await interaction.reply({ content: "boa", ephemeral: true });
         const titulo = interaction.options.get("titulo")?.value as string;
         const registration = await getCompetTalksRegistration(titulo);
         const data = new Date(registration[0].createTime);
@@ -70,8 +71,7 @@ export default new Command({
           horas,
           minutos,
         });
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        const response = await submitTalksToAutentique(
+        const response = await submitToAutentique(
           {
             numPages:listaNomes.length,
             filePath,
@@ -79,14 +79,8 @@ export default new Command({
             signer:{email:assigner_mail,name:assigner_name}
           }
         );
-        console.log(response);
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        await interaction.reply({
-          content: "Os certificados foram gerados e submetidos no autentique",
-        });
       } catch (error: any) {
-        console.log(error.message);
-        await interaction.reply({ content: error.message, ephemeral: true });
+        return await interaction.reply({ content: error.message, ephemeral: true });
       }
     }
   },
