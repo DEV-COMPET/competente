@@ -161,7 +161,7 @@ async function createDocument({
   });
   return response;
 }
-export async function submitTalksToAutentique({
+export async function submitToAutentique({
   numPages,
   titulo,
   signer,
@@ -179,9 +179,9 @@ export async function submitTalksToAutentique({
   const document: DocumentInput = {
     name: titulo,
     configs: { signature_appearance: SignatureAppearanceEnum.Handwriting },
-    message: `Favor assinar os certificados referentes ao talks \"${titulo}\".`,
+    message: `Favor assinar os certificados referentes ao ${titulo.toLocaleLowerCase().includes("talks")?"talks":"projeto"} "${titulo}".`,
     show_audit_page: false,
-    footer: FooterEnum.Right,
+    footer: FooterEnum.Bottom,
   };
   const result = await createDocument({
     document,
