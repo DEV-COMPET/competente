@@ -28,7 +28,6 @@ export default new Command({
       if (response.status >= 200 && response.status < 300) {
         const data: CompetianoType = await response.json();
         if (data.membro_ativo) {
-          console.log(data.data_fim);
           const response = await fetch(`${url}${data.nome}`, {
             method: "put",
             headers: { "Content-Type": "application/json" },
@@ -74,27 +73,6 @@ export default new Command({
                   "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
                 );
             embed.setTimestamp();
-            await interaction.reply({
-              content: "Não foi possível executar este comando",
-              ephemeral: true,
-              embeds: [embed],
-            });
-          } else {
-            const embed = new EmbedBuilder()
-              .setColor(0xf56565)
-              .setTitle("Não foi possível completar essa ação!")
-              .setDescription("Algo de errado aconteceu.")
-              .setThumbnail(
-                "https://www.pngfind.com/pngs/m/0-1420_red-cross-mark-clipart-green-checkmark-red-x.png"
-              )
-              .addFields(
-                { name: "Código do erro", value: "400", inline: false },
-                {
-                  name: "Mensagem do erro",
-                  value: "Não foi possivel atualizar o membro em questão!",
-                  inline: false,
-                }
-              );
             return await interaction.reply({
               content: "Não foi possível executar este comando",
               ephemeral: true,
@@ -102,8 +80,6 @@ export default new Command({
             });
           }
         } else {
-          console.log(data.data_fim);
-
           const embed = new EmbedBuilder()
             .setColor(0xf56565)
             .setTitle("Não foi possível completar essa ação!")
@@ -125,13 +101,27 @@ export default new Command({
             embeds: [embed],
           });
         }
-
-        await interaction.reply("ok");
       } else {
-        const data = await response.json();
-        console.log(data);
-
-        await interaction.reply("ok");
+        const embed = new EmbedBuilder()
+              .setColor(0xf56565)
+              .setTitle("Não foi possível completar essa ação!")
+              .setDescription("Algo de errado aconteceu.")
+              .setThumbnail(
+                "https://www.pngfind.com/pngs/m/0-1420_red-cross-mark-clipart-green-checkmark-red-x.png"
+              )
+              .addFields(
+                { name: "Código do erro", value: "400", inline: false },
+                {
+                  name: "Mensagem do erro",
+                  value: "Não foi possivel atualizar o membro em questão!",
+                  inline: false,
+                }
+              );
+            return await interaction.reply({
+              content: "Não foi possível executar este comando",
+              ephemeral: true,
+              embeds: [embed],
+            });
       }
     } else {
       const embed = new EmbedBuilder()
@@ -150,12 +140,11 @@ export default new Command({
             inline: false,
           }
         );
-      await interaction.reply({
+      return await interaction.reply({
         content: "Não foi possível executar este comando",
         ephemeral: true,
         embeds: [embed],
       });
     }
-    return;
   },
 });
