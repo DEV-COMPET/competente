@@ -5,6 +5,5 @@ export function isScrum(
   next: NextFunction
 ) {
   const auth = request.headers.authorization;
-  console.log(auth);
   next();
 }
