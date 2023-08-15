@@ -1,8 +1,9 @@
 Certificamos que
 
-# alskjdalksdhl
+# kasdjhajksdhakjsdas
 
 participou do 
-&*blablabla, no período de %data% a %dataFinal%,
-cumprindo a 
-carga horária de %hora% horas semanais.
+&*COMPET CEFET-MG, no período de %data% a 
+%dataFinal%,
+cumprindo a carga horária de %hora% horas 
+semanais.
