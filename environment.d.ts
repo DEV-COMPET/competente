@@ -6,7 +6,7 @@ declare global {
       DISCORD_GUILD_ID: string;
       DISCORD_TOKEN: string;
       DISCORD_CLIENT_ID: string;
-      PUBLIC_KEY: string;
+      DISCORD_PUBLIC_KEY: string;
       environment: "development" | "production" | "debug";
       PORT?: string;
     }

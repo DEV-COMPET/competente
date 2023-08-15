@@ -1,50 +1,138 @@
-import { ApplicationCommandDataResolvable, Client, ClientEvents, Collection, GatewayIntentBits } from "discord.js";
+import {
+  ApplicationCommandDataResolvable,
+  Client,
+  ClientEvents,
+  Collection,
+  GatewayIntentBits,
+  Routes,
+  REST,
+  Webhook,
+  TextChannel,
+} from "discord.js";
 import { CommandType } from "../typings/Commands";
-import glob from "glob"
+import glob from "glob";
 import { promisify } from "util";
 import { RegisterCommandsOptions } from "../typings/client";
 import { Event } from "./Event";
-
+import * as dotenv from "dotenv";
+import * as path from "path";
+import { ModalType } from "../typings/Modals";
+dotenv.config();
+const appId = process.env.DISCORD_CLIENT_ID || "";
+const token = process.env.DISCORD_TOKEN;
+const rest = new REST({ version: "10" }).setToken(
+  process.env.DISCORD_TOKEN || ""
+);
 const globPromise = promisify(glob);
 export class ExtendedClient extends Client {
-  commands: Collection<string, CommandType> = new Collection()
+  commands: Collection<string, CommandType> = new Collection();
+  modals: Collection<string, ModalType> = new Collection();
+  webhook?: Webhook;
   constructor() {
-    super({ intents: [GatewayIntentBits.Guilds]})
+    super({ intents: [GatewayIntentBits.Guilds] });
   }
-  start() {
-    this.registerModules()
-    this.login(process.env.DISCORD_TOKEN)
+  async start() {
+    await this.registerModules();
+    await this.login(token);
   }
   async importFile(filepath: string) {
-    return (await import(filepath))?.default
+    return (await import(filepath))?.default;
   }
   async registerCommands({ guildId, commands }: RegisterCommandsOptions) {
     if (guildId) {
-      this.guilds.cache.get(guildId)?.commands.set(commands)
-      console.log(`Registering commands for ${guildId}`)
+      await rest.put(Routes.applicationGuildCommands(appId, guildId), {
+        body: commands,
+      });
+      await this.guilds.cache.get(guildId)?.commands.set(commands);
     } else {
-      this.application?.commands.set(commands);
-      console.log(`Registering global commands`);
+      await rest.put(Routes.applicationCommands(appId), { body: commands });
+      await this.application?.commands.set(commands);
     }
   }
   async registerModules() {
-    const slashCommands: ApplicationCommandDataResolvable[] = []
-    const commandFiles = await globPromise(`${__dirname}/../commands/*/*{.ts,.js}`)
-    console.log({ commandFiles });
-    commandFiles.forEach(async filepath => {
-      const command: CommandType = await this.importFile(filepath)
-      if (!command) return
-      console.log(command);
-      
-      this.commands.set(command.name, command)
-      slashCommands.push(command)
-
-      //events
-      const eventFiles = await globPromise(`${__dirname}/../events/*{.ts,.js}`)
-      eventFiles.forEach(async filepath => {
-        const event: Event<keyof ClientEvents> = await this.importFile(filepath)
-        this.on(event.event, event.run)
-      })
-    })
+    const slashCommands: ApplicationCommandDataResolvable[] = [];
+    try {
+      const pattern = "**/*{.ts,.js}";
+      const directory = path.join(__dirname, "..", "commands");
+      const commandFiles = await globPromise(pattern, { cwd: directory });
+      commandFiles.forEach(async (filepath) => {
+        const command: CommandType = await this.importFile(
+          path.join(directory, filepath)
+        );
+        if (!command) return;
+        this.commands.set(command.name, command);
+        slashCommands.push(command);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    // import events
+    try {
+      const pattern = "*{.ts,.js}";
+      const directory = path.join(__dirname, "..", "events");
+      const eventFiles = await globPromise(pattern, { cwd: directory });
+      eventFiles.forEach(async (filepath) => {
+        const event: Event<keyof ClientEvents> = await this.importFile(
+          path.join(directory, filepath)
+        );
+        if (event.typeEvent === "on") this.on(event.event, event.run);
+        else this.once(event.event, event.run);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    const createdCommands = this.commands.map((command) => command);
+    await this.registerCommands({ commands: createdCommands });
+    await this.registerModals();
+  }
+  async registerModals() {
+    try {
+      const pattern = "**/*{.ts,.js}";
+      const directory = path.join(__dirname, "..", "modals");
+      const modalFiles = await globPromise(pattern, { cwd: directory });
+      console.log({ modalFiles });
+      modalFiles.forEach(async (filepath) => {
+        const modal: ModalType = await this.importFile(
+          path.join(directory, filepath)
+        );
+        if (!modal) return;
+        this.modals.set(modal.customId, modal);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  async createWebhook({
+    webhookName,
+    channelName,
+  }: {
+    webhookName: string;
+    channelName: string;
+  }) {
+    const guildId = process.env.DISCORD_GUILD_ID || "";
+    const guild = this.guilds.cache.get(guildId);
+    if (!guild) {
+      throw new Error("Servidor não encontrado.");
+    }
+    const channels = guild.channels.cache.find(
+      (c) => c.name.toLowerCase() === channelName.toLocaleLowerCase()
+    ) as TextChannel;
+    if (!channels) {
+      throw new Error(`Nenhum canal ${channelName} encontrado.`);
+    }
+    const webhooks = await channels.fetchWebhooks();
+    const existingWebhook = webhooks.find(
+      (webhook) => webhook.name === webhookName
+    );
+    if (!existingWebhook) {
+      const webhook = await channels.createWebhook({
+        name: webhookName,
+        avatar: "https://i.ibb.co/rpkBgxZ/msg-1183775647-43870.jpg",
+        reason:
+          "Um Webhook para ajudar no processo de assinatura de certificados",
+      });
+      this.webhook = webhook;
+    }
+    this.webhook = existingWebhook;
   }
 }

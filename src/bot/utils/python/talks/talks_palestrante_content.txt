@@ -1,0 +1,9 @@
+Concedemos a
+ 
+# %nome%
+ 
+o presente certificado  pela apresentação da palestra
+ &*%evento%,
+ durante o evento COMPET Talks, organizado pelo COMPET,
+grupo PET de Engenharia de Computação do CEFET-MG, realizado no dia
+%data%, durante %hora% horas e %minutos% minutos.

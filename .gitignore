@@ -1,3 +1,6 @@
 node_modules
 .env
 dist
+*.production.json
+tmp
+*.development.json

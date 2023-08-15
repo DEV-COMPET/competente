@@ -6,8 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
     "start": "node dist/src/api/server.ts",
-    "dev": "npx nodemon src/api/server.ts",
-    "discord": "ts-node src/bot/index.ts"
+    "api:dev": "npx nodemon src/api/server.ts",
+    "bot:dev": "npx nodemon src/bot/index.ts",
+    "generate": "graphql-codegen"
   },
   "contributors": [
     {
@@ -24,21 +25,43 @@
   "author": "Compet",
   "license": "MIT",
   "dependencies": {
-    "@types/uuid": "^9.0.0",
+    "@types/nodemailer": "^6.4.7",
+    "awesome-graphql-client": "^0.13.0",
+    "blob-util": "^2.0.2",
     "body-parser": "^1.20.1",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "extract-files": "^13.0.0",
     "glob": "^8.0.3",
+    "googleapis": "^105.0.0",
+    "graphql": "^16.6.0",
     "mongoose": "^6.8.2",
+    "ngrok": "^4.3.3",
+    "node-fetch": "^2.6.9",
+    "nodemailer": "^6.9.1",
+    "python-shell": "^5.0.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/client-preset": "^2.1.1",
+    "@graphql-codegen/typescript": "^3.0.2",
+    "@graphql-codegen/typescript-resolvers": "^3.1.1",
+    "@types/apollo-upload-client": "^17.0.2",
     "@types/express": "^4.17.15",
+    "@types/form-data": "^2.5.0",
     "@types/glob": "^8.0.0",
+    "@types/graphql": "^14.5.0",
     "@types/node": "^18.11.18",
+    "@types/node-fetch": "^2.6.2",
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
+    "eslint": "^8.46.0",
+    "graphql-tag": "^2.12.6",
     "nodemon": "^2.0.20",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.5"
   }
 }
