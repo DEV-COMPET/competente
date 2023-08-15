@@ -31,7 +31,7 @@ export default new Command({
       if (response.status >= 200 && response.status < 300) {
         const data: CompetianoType = await response.json();
         if (!data.scrum_master) {
-          const response = await fetch(`${url}${data.nome}`, {
+          const response = await fetch(`${url}/${data.nome}`, {
             method: "put",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ scrum_master: true }),
@@ -64,7 +64,7 @@ export default new Command({
                   "https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png"
                 );
             embed.setTimestamp();
-            await interaction.reply({
+            return await interaction.reply({
               content: "O mais novo scrum tá na área",
               ephemeral: false,
               embeds: [embed],
@@ -115,12 +115,6 @@ export default new Command({
             embeds: [embed],
           });
         }
-
-        await interaction.reply("ok");
-      } else {
-        const data = await response.json();
-
-        await interaction.reply("ok");
       }
     } else {
       const embed = new EmbedBuilder()
@@ -139,12 +133,11 @@ export default new Command({
             inline: false,
           }
         );
-      await interaction.reply({
+    return await interaction.reply({
         content: "Não foi possível executar este comando",
         ephemeral: true,
         embeds: [embed],
       });
     }
-    return;
   },
 });
