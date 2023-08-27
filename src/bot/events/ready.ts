@@ -13,7 +13,7 @@ export default new Event("ready", "once", async function () {
   if (!webhook) return;
   try {
     const url =
-      process.env.environment === "development"
+      process.env.ENVIRONMENT === "development"
         ? "http://localhost:4444"
         : process.env.HOST;
     const response = await fetch(`${url}/webhooks/discord/`, {

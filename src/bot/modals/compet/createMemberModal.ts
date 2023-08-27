@@ -60,7 +60,7 @@ export default new Modal({
   customId: "addmember",
   run: async ({ interaction }) => {
     const createMemberUrl =
-      process.env.environment === "development"
+      process.env.ENVIRONMENT === "development"
         ? "http://localhost:4444/competianos/"
         : `${process.env.HOST}/competianos` ||
           "http://localhost:4444/competianos/";

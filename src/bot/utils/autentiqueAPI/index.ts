@@ -17,7 +17,7 @@ import nodeFetch from "node-fetch";
 import { DocumentNode, print } from "graphql";
 import { CertificatePositionAssign } from "../../typings/talks";
 dotenv.config();
-const environment = process.env.environment || "development";
+const environment = process.env.ENVIRONMENT || "development";
 const API_URL = process.env.AUTENTIQUE_URL || "";
 const authToken = process.env.AUTENTIQUE_TOKEN;
 interface CreateDocumentProps {
