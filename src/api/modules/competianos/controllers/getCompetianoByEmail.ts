@@ -9,7 +9,7 @@ const userEmailBodySchema = z.object({
 
 export async function getCompetianoByEmail(request: FastifyRequest, reply: FastifyReply) {
 
-	const { email } = userEmailBodySchema.parse(request.body);
+	const { email } = userEmailBodySchema.parse(request.params);
 
 	if (!validateEmail(email))
 		return reply

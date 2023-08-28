@@ -8,7 +8,7 @@ export const getWebhookByGuildCBodySchema = z.object({
 
 export async function getWebhookByGuildController(request: FastifyRequest, reply: FastifyReply) {
 
-	const { guildId } = getWebhookByGuildCBodySchema.parse(request.body);
+	const { guildId } = getWebhookByGuildCBodySchema.parse(request.params);
 
 	const createCertificateUseCase = makeGetWebhookByGuildUseCase()
 
