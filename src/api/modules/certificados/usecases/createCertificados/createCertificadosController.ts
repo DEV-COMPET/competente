@@ -15,7 +15,7 @@ export const createUserBodySchema = z.object({
 	certificates
 });
 
-export async function createCertificados(request: FastifyRequest, reply: FastifyReply) {
+export async function createCertificadosController(request: FastifyRequest, reply: FastifyReply) {
 
 	const { certificates } = createUserBodySchema.parse(request.body);
 

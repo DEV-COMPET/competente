@@ -7,7 +7,7 @@ export const getCertificadoByTitleBodySchema = z.object({
 	titulo: string()
 });	
 
-export async function createCertificados(request: FastifyRequest, reply: FastifyReply) {
+export async function getCertificadosByTitleController(request: FastifyRequest, reply: FastifyReply) {
 
 	const { titulo } = getCertificadoByTitleBodySchema.parse(request.params);
 

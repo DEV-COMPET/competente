@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { makeGetCertificadosUseCase } from './makeGetCertificadosseCase';
 
 
-export async function createCertificados(request: FastifyRequest, reply: FastifyReply) {
+export async function getCertificadosController(request: FastifyRequest, reply: FastifyReply) {
 
 	const getCertificadoByTitleUseCase = makeGetCertificadosUseCase()
 
