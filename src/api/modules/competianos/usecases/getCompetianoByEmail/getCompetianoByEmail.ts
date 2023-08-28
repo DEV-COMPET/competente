@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { makeGetCompetianoByEmailUseCase } from '../usecases/factories/makeGetCompetianoByEmailUseCase';
-import { validateEmail } from '../validators';
+import { validateEmail } from '../../validators';
+import { makeGetCompetianoByEmailUseCase } from './makeGetCompetianoByEmailUseCase';
 
 const userEmailBodySchema = z.object({
 	email: z.string()

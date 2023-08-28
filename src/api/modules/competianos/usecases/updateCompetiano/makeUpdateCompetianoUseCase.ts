@@ -1,9 +1,9 @@
 import { CompetianoMongoDBRepository } from "../../repositories/defaultMongoDBRepository/competianoRepository"
-import { ListCompetianoUseCase } from "../source/listCompetianoUseCase"
+import { UpdateCompetianoUseCase } from "./updateCompetianoUseCase"
 
-export function makeListCompetianoUseCase() {
+export function makeUpdateCompetianoUseCase() {
     const usersRepository = new CompetianoMongoDBRepository()
-    const useCase = new ListCompetianoUseCase(usersRepository)
+    const useCase = new UpdateCompetianoUseCase(usersRepository)
 
     return useCase
 }

@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
-import { makeListCompetianoUseCase } from '../usecases/factories/makeListCompetianoUseCase';
+import { makeListCompetianoUseCase } from './makeListCompetianoUseCase';
 
 export async function listCompetiano(request: FastifyRequest, reply: FastifyReply) {
 

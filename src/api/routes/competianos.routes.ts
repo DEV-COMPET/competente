@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
-import { getCompetianoByEmail } from "../modules/competianos/controllers/getCompetianoByEmail";
-import { createCompetiano } from "../modules/competianos/controllers/createCompetiano";
-import { updateCompetiano } from "../modules/competianos/controllers/updateCompetiano";
-import { deleteCompetiano } from "../modules/competianos/controllers/deleteCompetiano";
-import { listCompetiano } from "../modules/competianos/controllers/listCompetiano";
+import { listCompetiano } from '../modules/competianos/usecases/listCompetiano/listCompetiano';
+import { getCompetianoByEmail } from '../modules/competianos/usecases/getCompetianoByEmail/getCompetianoByEmail';
+import { createCompetiano } from '../modules/competianos/usecases/createCompetiano/createCompetiano';
+import { updateCompetiano } from '../modules/competianos/usecases/updateCompetiano/updateCompetiano';
+import { deleteCompetiano } from '../modules/competianos/usecases/deleteCompetiano/deleteCompetiano';
 
 export async function competianosRoutes(app: FastifyInstance) {
     app.get('/', listCompetiano)

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { makeUpdateCompetianoUseCase } from '../usecases/factories/makeUpdateCompetianoUseCase';
+import { makeUpdateCompetianoUseCase } from './makeUpdateCompetianoUseCase';
 
 const updateUserDateParamsSchema = z.object({
     nome: z.string().optional(),

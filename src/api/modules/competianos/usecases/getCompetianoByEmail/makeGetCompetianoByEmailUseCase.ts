@@ -1,5 +1,5 @@
 import { CompetianoMongoDBRepository } from "../../repositories/defaultMongoDBRepository/competianoRepository"
-import { GetCompetianoByEmailUseCase } from "../source/getCompetianoByEmailUseCase"
+import { GetCompetianoByEmailUseCase } from "./getCompetianoByEmailUseCase"
 
 export function makeGetCompetianoByEmailUseCase() {
     const usersRepository = new CompetianoMongoDBRepository()

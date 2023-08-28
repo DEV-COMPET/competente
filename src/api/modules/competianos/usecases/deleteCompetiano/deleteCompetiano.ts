@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { makeDeleteCompetianoUseCase } from '../usecases/factories/makeDeleteCompetianoUseCase';
+import { makeDeleteCompetianoUseCase } from './makeDeleteCompetianoUseCase';
 
 export const deleteUserBodySchema = z.object({
 	nome: z.string(),

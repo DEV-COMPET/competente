@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
-import { makeCreateCompetianoUseCase } from '../usecases/factories/makeCreateCompetianoUseCase';
-import { validateEmail, validateImgUrl, validateLinkedin } from '../validators';
+import { makeCreateCompetianoUseCase } from './makeCreateCompetianoUseCase';
+import { validateEmail, validateImgUrl, validateLinkedin } from '../../validators';
 
 export const createUserBodySchema = z.object({
 	nome: z.string(),
