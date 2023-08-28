@@ -1,11 +1,13 @@
 import { competianosRoutes } from "./routes/competianos.routes";
 import "../database"
 import fastify from "fastify";
+import { certificadosRoutes } from "./routes/certificados.routes";
 
 const port = (process.env.PORT || 4444) as number
 const app = fastify();
 
 app.register(competianosRoutes, { prefix: 'competianos' })
+app.register(certificadosRoutes, { prefix: 'certificados' })
 // app.register(certificadosRouter, { prefix: 'certificados' })
 // app.register(webhooksRouter, { prefix: 'webhooks' })
 
