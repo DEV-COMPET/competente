@@ -14,14 +14,14 @@ import glob from "glob";
 import { promisify } from "util";
 import { RegisterCommandsOptions } from "../typings/client";
 import { Event } from "./Event";
-import * as dotenv from "dotenv";
 import * as path from "path";
 import { ModalType } from "../typings/Modals";
-dotenv.config();
-const appId = process.env.DISCORD_CLIENT_ID || "";
-const token = process.env.DISCORD_TOKEN;
+import { env } from "@/env";
+
+const appId = env.DISCORD_CLIENT_ID;
+const token = env.DISCORD_TOKEN;
 const rest = new REST({ version: "10" }).setToken(
-  process.env.DISCORD_TOKEN || ""
+  env.DISCORD_TOKEN
 );
 const globPromise = promisify(glob);
 export class ExtendedClient extends Client {
@@ -109,7 +109,7 @@ export class ExtendedClient extends Client {
     webhookName: string;
     channelName: string;
   }) {
-    const guildId = process.env.DISCORD_GUILD_ID || "";
+    const guildId = env.DISCORD_GUILD_ID;
     const guild = this.guilds.cache.get(guildId);
     if (!guild) {
       throw new Error("Servidor não encontrado.");

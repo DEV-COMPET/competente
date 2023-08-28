@@ -1,10 +1,10 @@
 import path from 'path';
 import { google } from 'googleapis';
-import dotenv from "dotenv";
 import { FormInput, FormItemsId } from '../../typings/talks';
-dotenv.config();
-const competTalksFormId = process.env.GOOGLE_FORM_ID || "";
-const environment = process.env.ENVIRONMENT;
+import { env } from "@/env";
+
+const competTalksFormId = env.GOOGLE_FORM_ID;
+const environment = env.ENVIRONMENT;
 async function updateForm(formId: string, titulo: string) {
     const auth = new google.auth.GoogleAuth({
         keyFile: path.join(__dirname, `competente.${environment}.json`),

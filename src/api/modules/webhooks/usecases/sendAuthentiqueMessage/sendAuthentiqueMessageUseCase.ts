@@ -5,9 +5,9 @@ import { Either, left, right } from "@/api/@types/either";
 import { DatabaseInternalError } from "@/api/errors/databaseInternalError";
 import { AutentiqueApiResponse } from "@/api/@types/autentique";
 import { ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, WebhookClient, WebhookMessageCreateOptions } from "discord.js";
-import dotenv from "dotenv";
 import { ResourceNotFoundError } from "@/api/errors/resourceNotFoundError";
-dotenv.config();
+import { env } from "@/env";
+
 
 interface SendAuthentiqueMessageCaseRequest {
     apiResponse: AutentiqueApiResponse
@@ -28,7 +28,7 @@ export class SendAuthentiqueMessageCase {
 
     async execute({ apiResponse }: SendAuthentiqueMessageCaseRequest): Promise<SendAuthentiqueMessageCaseResponse> {
 
-        const guildId = process.env.DISCORD_GUILD_ID || "";
+        const guildId = env.DISCORD_GUILD_ID;
         const webhooks = await this.whRepository.listByName("Autentique Webhook");
         const existentWebhook = webhooks.find(
             (webhook) => webhook.guildId === guildId

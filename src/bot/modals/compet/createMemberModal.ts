@@ -8,6 +8,8 @@ import {
 } from "discord.js";
 import { Member } from "../../typings/Member";
 import { Modal } from "../../structures/Modals";
+import { env } from "@/env";
+
 const modal = new ModalBuilder()
   .setTitle("Adicione o mais novo membro do compet!")
   .setCustomId("addmember");
@@ -60,10 +62,7 @@ export default new Modal({
   customId: "addmember",
   run: async ({ interaction }) => {
     const createMemberUrl =
-      process.env.ENVIRONMENT === "development"
-        ? "http://localhost:4444/competianos/"
-        : `${process.env.HOST}/competianos` ||
-          "http://localhost:4444/competianos/";
+      env.ENVIRONMENT === "development" ? "http://localhost:4444/competianos/" : `${env.HOST}/competianos` || "http://localhost:4444/competianos/";
     const nome = interaction.fields.getTextInputValue(
       nameInput.data.custom_id || ""
     );

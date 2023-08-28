@@ -1,10 +1,10 @@
 import { FormResponseTalks, FormInput } from "../../typings/talks";
 import path from 'path';
 import { google } from 'googleapis';
-import dotenv from "dotenv";
-dotenv.config();
-const competTalksFormId = process.env.GOOGLE_FORM_ID ||"";
-const environment = process.env.ENVIRONMENT||"development";
+import { env } from "@/env";
+
+const competTalksFormId = env.GOOGLE_FORM_ID;
+const environment = env.ENVIRONMENT;
 async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]> {
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(__dirname, `competente.${environment}.json`),

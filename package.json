@@ -7,7 +7,7 @@
     "build": "npx tsc",
     "start": "node dist/src/api/server.ts",
     "api:dev": "npx nodemon --require tsconfig-paths/register src/api/server.ts",
-    "bot:dev": "npx nodemon src/bot/index.ts",
+    "bot:dev": "npx nodemon --require tsconfig-paths/register src/bot/index.ts",
     "generate": "graphql-codegen"
   },
   "contributors": [
