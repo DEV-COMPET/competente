@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { validateEmail } from "../../validators";
 import { IGetCompetianoByEmailUseCase } from "./getCompetianoByEmailUseCase";
+import { FastifyReply, FastifyRequest } from "fastify";
+
 interface IGetCompetianoByEmailController {
   handle: (request: Request, response: Response) => Promise<Response>;
 }
@@ -8,7 +10,7 @@ export class GetCompetianoByEmailController
   implements IGetCompetianoByEmailController
 {
   constructor(private useCase: IGetCompetianoByEmailUseCase) {}
-  async handle(request: Request, response: Response): Promise<Response> {
+  async handle(request: FastifyRequest, response: FastifyReply): Promise<Response> {
     const email = request.params.email;
     try {
       if (!validateEmail(email)) {
