@@ -82,7 +82,13 @@ export default new Modal({
       body: JSON.stringify({ nome, email, linkedin, url_imagem, data_inicio }),
       headers: { "Content-Type": "application/json" },
     };
+
+
     const response = await fetch(createMemberUrl, requestOptions);
+
+
+    console.log(response.status)
+
     if (interaction.channel === null) throw "Channel is not cached";
     if (response.status >= 200 && response.status < 300) {
       const data: Member = await response.json();
