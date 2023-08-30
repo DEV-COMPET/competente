@@ -6,15 +6,17 @@ import { validateEmail, validateImgUrl, validateLinkedin } from '../../validator
 export const createUserBodySchema = z.object({
 	nome: z.string(),
 	email: z.string(),
-	data_inicio: z.date(),
+	data_inicio: z.string(),
 	url_imagem: z.string().optional(),
 	linkedin: z.string().optional(),
 	lates: z.string().optional(),
 });
 
 export async function createCompetiano(request: FastifyRequest, reply: FastifyReply) {
-
+	
 	const { email, nome, data_inicio, lates, linkedin, url_imagem } = createUserBodySchema.parse(request.body);
+
+	const data_inicio_date = new Date(data_inicio);
 
 	if (!validateEmail(email))
 		return reply
@@ -42,7 +44,7 @@ export async function createCompetiano(request: FastifyRequest, reply: FastifyRe
 	const createUserUseCase = makeCreateCompetianoUseCase()
 
 	const user = await createUserUseCase.execute({
-		email, nome, data_inicio, lates, linkedin, url_imagem
+		email, nome, data_inicio: data_inicio_date, lates, linkedin, url_imagem
 	});
 
 	if (user.isLeft()) {

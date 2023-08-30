@@ -3,7 +3,7 @@
         {
           "label" : "Qual o nome do novo membro?",
           "placeholder" : "Sandro Renato Dias",
-          "customId" : "membernameinput",
+          "customId" : "nome",
           "required" : true,
           "minLength" : 3,
           "maxLength" : 161,
@@ -12,21 +12,21 @@
         {
           "label" : "Qual o email do novo membro?",
           "placeholder" : "Andrejogadorcarodacruz@gmail.com",
-          "customId" : "memberemailinput",
+          "customId" : "email",
           "required" : true,
           "style" : 1
         },
         {
           "label" : "Qual o linkedin do novo membro?",
           "placeholder" : "https://www.linkedin.com/in/NataliaBatista",
-          "customId" : "memberlinkedininput",
+          "customId" : "linkedin",
           "required" : false,
           "style" : 1
         },
         {
           "label" : "O link da foto do novo membro",
           "placeholder" : "https://i.ibb.co/j4PDk7n/btg3.jpg",
-          "customId" : "memberimageUrlinput",
+          "customId" : "url_imagem",
           "required" : false,
           "style" : 1
         }
