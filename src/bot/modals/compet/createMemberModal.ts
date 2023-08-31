@@ -3,29 +3,15 @@ import {
   ModalActionRowComponentBuilder,
   ModalBuilder,
   TextInputBuilder,
-  TextInputStyle,
   EmbedBuilder,
+  TextInputComponentData,
+  ModalComponentData,
 } from "discord.js";
 import { Member } from "../../typings/Member";
 import { Modal } from "../../structures/Modals";
 import { env } from "@/env";
 import * as fs from 'fs';
 import * as path from "path";
-
-interface inputFieldsRequest {
-  label?: string,
-  placeholder?: string,
-  customId?: string,
-  required?: boolean,
-  minLength?: number,
-  maxLength?: number,
-  style?: TextInputStyle,
-}
-
-interface modalBuilderRequest {
-  title: string,
-  customId: string
-}
 
 function readJsonFile(name: string) {
   const filePath = path.join(__dirname, name);
@@ -40,20 +26,11 @@ function readJsonFile(name: string) {
   }
 }
 
-function createMemberModal(inputFields: inputFieldsRequest[], modalBuilderRequestData: modalBuilderRequest) {
-  const modal = new ModalBuilder()
-    .setTitle(modalBuilderRequestData.title)
-    .setCustomId(modalBuilderRequestData.customId);
+function createMemberModal(inputFields: TextInputComponentData[], modalBuilderRequestData: ModalComponentData) {
+  const modal = new ModalBuilder(modalBuilderRequestData)
 
   const inputComponents = inputFields.map((field) => {
-    const inputBuilder = new TextInputBuilder()
-    if (field.required) inputBuilder.setRequired(field.required)
-    if (field.style) inputBuilder.setStyle(field.style)
-    if (field.placeholder) inputBuilder.setPlaceholder(field.placeholder)
-    if (field.label) inputBuilder.setLabel(field.label)
-    if (field.customId) inputBuilder.setCustomId(field.customId);
-    if (field.minLength) inputBuilder.setMinLength(field.minLength);
-    if (field.maxLength) inputBuilder.setMaxLength(field.maxLength);
+    const inputBuilder = new TextInputBuilder(field)
 
     return new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(inputBuilder);
   });
@@ -63,51 +40,40 @@ function createMemberModal(inputFields: inputFieldsRequest[], modalBuilderReques
   return modal;
 }
 
-const inputFields: inputFieldsRequest[] = readJsonFile('createMemberInputFields.json').inputFields
-const modalBuilderRequestData1: modalBuilderRequest = readJsonFile('modalBuilderRequest.json')
+const inputFields: TextInputComponentData[] = readJsonFile('createMemberInputFields.json').inputFields
+const modalBuilderRequestData1: ModalComponentData = readJsonFile('modalBuilderRequest.json')
 
 const modal = createMemberModal(inputFields, modalBuilderRequestData1);
 
-
 export default new Modal({
   customId: "addmember",
+
   run: async ({ interaction }) => {
-    const createMemberUrl = env.ENVIRONMENT === "development" ? "http://localhost:4444/competianos/" : `${env.HOST}/competianos` || "http://localhost:4444/competianos/";
+
+    if (interaction.channel === null) throw "Channel is not cached";
+
     const customIds = inputFields.map((field) => field.customId || "");
-    const data_inicio = new Date().toISOString();
-    
-    const data_to_send = customIds.map(i => ({
-      [i]: interaction.fields.getTextInputValue(i)
-    }));
-    
-    const combinedData = Object.assign({}, ...data_to_send, { data_inicio });
-    
+
+    const data_to_send = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
+    const combinedData = Object.assign({}, ...data_to_send, { data_inicio: new Date().toISOString() });
+
     const requestOptions = {
       method: "post",
       body: JSON.stringify(combinedData),
       headers: { "Content-Type": "application/json" },
     };
+    const createMemberUrl = env.ENVIRONMENT === "development" ? "http://localhost:4444/competianos/" : `${env.HOST}/competianos` || "http://localhost:4444/competianos/";
     const response = await fetch(createMemberUrl, requestOptions);
-
-
-    if (interaction.channel === null) throw "Channel is not cached";
 
     if (response.status >= 200 && response.status < 300) {
       const data: Member = await response.json();
-      const embed = new EmbedBuilder()
-        .setColor(0x19dd39)
-        .setTitle("Usuário criado")
-        .setAuthor({
+
+      const embed = new EmbedBuilder({
+        author: {
           name: interaction.user.username || "abc",
           iconURL: interaction.user.avatarURL() || undefined,
-        })
-        .setDescription(
-          "Abaixo você encontra as informações sobre o usuário criado"
-        )
-        .setThumbnail(
-          "https://www.pngfind.com/pngs/m/0-226_image-checkmark-green-check-mark-circle-hd-png.png"
-        )
-        .addFields(
+        },
+        fields: [
           { name: "Nome", value: data.nome, inline: false },
           { name: "Data de início", value: data.data_inicio, inline: false },
           {
@@ -116,12 +82,17 @@ export default new Modal({
             inline: false,
           },
           { name: "Email", value: data.email, inline: false }
-        );
+        ],
+        ...readJsonFile("embedSucessCreateUser.json")
+      })
 
-      const url_imagem = "memberimageUrlinput"
+      const url_imagem = interaction.fields.getTextInputValue("url_imagem")
 
-      url_imagem ? embed.setImage(url_imagem) : embed.setImage("https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png");
-      embed.setTimestamp();
+      url_imagem ? 
+        embed.setImage(url_imagem) : 
+        embed.setImage("https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png");
+      embed.setTimestamp(); // FIXME: desnecessário se passar nada?
+
       return await interaction.reply({
         content: "Seu envio foi realizado com sucesso!",
         ephemeral: true,
@@ -131,25 +102,26 @@ export default new Modal({
 
     const data: { code: number; message: string } = await response.json();
 
-    const embed = new EmbedBuilder()
-      .setColor(0xf56565)
-      .setTitle("Não foi possível criar o novo membro")
-      .setAuthor({
+    const embed = new EmbedBuilder({
+      author: {
         name: interaction.user.username.replaceAll("_", " ") || "abc",
         iconURL: interaction.user.avatarURL() || undefined,
-      })
-      .setDescription("Abaixo você encontra as informações sobre o erro")
-      .setThumbnail(
-        "https://www.pngfind.com/pngs/m/0-1420_red-cross-mark-clipart-green-checkmark-red-x.png"
-      )
-      .addFields(
+      },
+      fields: [
         {
           name: "Código do erro",
           value: data.code.toString(),
           inline: false,
         },
-        { name: "Mensagem do erro", value: data.message, inline: false }
-      );
+        {
+          name: "Mensagem do erro",
+          value: data.message,
+          inline: false
+        }
+      ],
+      ...readJsonFile("embedErrorCreateUser.jdatason")
+    })
+
     return await interaction.reply({
       content: "Não foi possível concluir o cadastro",
       ephemeral: true,
