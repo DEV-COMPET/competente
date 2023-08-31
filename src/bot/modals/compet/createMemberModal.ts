@@ -6,7 +6,6 @@ import {
   EmbedBuilder,
   TextInputComponentData,
   ModalComponentData,
-  EmbedData,
 } from "discord.js";
 import { Member } from "../../typings/Member";
 import { Modal } from "../../structures/Modals";
@@ -63,11 +62,14 @@ export default new Modal({
       body: JSON.stringify(combinedData),
       headers: { "Content-Type": "application/json" },
     };
+    
     const createMemberUrl = env.ENVIRONMENT === "development" ? "http://localhost:4444/competianos/" : `${env.HOST}/competianos` || "http://localhost:4444/competianos/";
     const response = await fetch(createMemberUrl, requestOptions);
 
     if (response.status >= 200 && response.status < 300) {
       const data: Member = await response.json();
+
+      const embedDataSucessJSON = readJsonFile("embedSucessCreateUser.json")
 
       const embed = new EmbedBuilder({
         author: {
@@ -84,7 +86,7 @@ export default new Modal({
           },
           { name: "Email", value: data.email, inline: false }
         ],
-        ...readJsonFile("embedSucessCreateUser.json")
+        ...embedDataSucessJSON
       })
 
       const url_imagem = interaction.fields.getTextInputValue("url_imagem")
@@ -105,7 +107,7 @@ export default new Modal({
 
     const embedDataErrorJSON = readJsonFile("embedErrorCreateUser.json");
 
-    const embedData: EmbedData = {
+    const embed = new EmbedBuilder({
       author: {
         name: interaction.user.username.replaceAll("_", " ") || "abc",
         icon_url: interaction.user.avatarURL() || undefined,
@@ -123,11 +125,7 @@ export default new Modal({
         },
       ],
       ...embedDataErrorJSON, // Merge properties from the JSON file
-    };
-
-    const embed = new EmbedBuilder(embedData)
-
-    console.log(embed.data)
+    })
 
     return await interaction.reply({
       content: "Não foi possível concluir o cadastro",
