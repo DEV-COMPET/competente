@@ -6,6 +6,7 @@ import {
   EmbedBuilder,
   TextInputComponentData,
   ModalComponentData,
+  EmbedData,
 } from "discord.js";
 import { Member } from "../../typings/Member";
 import { Modal } from "../../structures/Modals";
@@ -88,8 +89,8 @@ export default new Modal({
 
       const url_imagem = interaction.fields.getTextInputValue("url_imagem")
 
-      url_imagem ? 
-        embed.setImage(url_imagem) : 
+      url_imagem ?
+        embed.setImage(url_imagem) :
         embed.setImage("https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png");
       embed.setTimestamp(); // FIXME: desnecessário se passar nada?
 
@@ -102,10 +103,12 @@ export default new Modal({
 
     const data: { code: number; message: string } = await response.json();
 
-    const embed = new EmbedBuilder({
+    const embedDataErrorJSON = readJsonFile("embedErrorCreateUser.json");
+
+    const embedData: EmbedData = {
       author: {
         name: interaction.user.username.replaceAll("_", " ") || "abc",
-        iconURL: interaction.user.avatarURL() || undefined,
+        icon_url: interaction.user.avatarURL() || undefined,
       },
       fields: [
         {
@@ -116,11 +119,15 @@ export default new Modal({
         {
           name: "Mensagem do erro",
           value: data.message,
-          inline: false
-        }
+          inline: false,
+        },
       ],
-      ...readJsonFile("embedErrorCreateUser.jdatason")
-    })
+      ...embedDataErrorJSON, // Merge properties from the JSON file
+    };
+
+    const embed = new EmbedBuilder(embedData)
+
+    console.log(embed.data)
 
     return await interaction.reply({
       content: "Não foi possível concluir o cadastro",
