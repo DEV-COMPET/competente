@@ -1,19 +1,14 @@
-import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
+import { ChatInputApplicationCommandData, EmbedBuilder } from "discord.js";
 import { Command } from "../../structures/Command";
 import { updateTalks } from "../../utils/googleAPI/updateCompetTalks";
+import { readJsonFile } from "@/bot/utils/json";
+
+const data: ChatInputApplicationCommandData = readJsonFile(__dirname, "json/new-talks-forms.json");
 
 export default new Command({
-    name: "new-talks-forms",
-    description:
-        "Ãlteração do titulo do formulário do Talks",
-    options: [
-        {
-            name: "title",
-            description: "Titulo do Talks",
-            type: ApplicationCommandOptionType.String,
-            required: true,
-        },
-    ],
+    name: data.name,
+    description: data.description,
+    options: data.options,
     run: async ({ interaction }) => {
         const member = await interaction.guild?.members.fetch(
             interaction.user.id
@@ -51,6 +46,6 @@ export default new Command({
             ephemeral: true,
             embeds: [embed],
         });
-    
+
     },
 });
