@@ -1,38 +1,12 @@
-// def partial_to_full_path(path=""):
-//     from pathlib import Path
-// 
-//     parent = Path(__file__).parent
-//     for _ in range(path.count('../')):
-//         parent = parent.parent
-//     parent = str(parent)
-// 
-//     barras = path.count('../') * '../'
-//     parent += path[path.find(barras) + len(barras) - 1:]
-//     return parent
-
-// import * as path from "path";
-// 
-// function partial_to_full_path(dirname: string, partial: string) {
-// 
-//     const parent_count = (partial.match((/\/../g)) || [])?.length
-// 
-//     let parent = dirname
-// 
-//     for(let i=0; i<parent_count; i++) {
-//         parent = path.dirname(parent)
-//     }
-//  
-//     let barras = "" 
-//     
-//     for(let i=0; i<parent_count; i++) barras += '../'
-// 
-//     parent += 
-// }
-
 import * as fs from 'fs';
 import * as path from "path";
 
-export function readJsonFile(dirname: string, name: string) {
+export interface readJsonFileRequest {
+  dirname: string,
+  name: string
+}
+
+export function readJsonFile({ dirname, name }: readJsonFileRequest) {
   const filePath = path.join(dirname, name);
 
   try {
