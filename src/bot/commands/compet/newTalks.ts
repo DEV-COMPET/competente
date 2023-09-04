@@ -6,7 +6,7 @@ import { makeEmbed } from "@/bot/utils/embed/makeEmbed";
 
 const data: ChatInputApplicationCommandData = readJsonFile({ 
     dirname: __dirname, 
-    name: "json/new-talks-forms.json" 
+    partialPath: "json/new-talks-forms.json" 
 });
 
 export default new Command({
@@ -14,18 +14,16 @@ export default new Command({
     description: data.description,
     options: data.options,
     run: async ({ interaction }) => {
-        const member = await interaction.guild?.members.fetch(
-            interaction.user.id
-        );
+        const member = await interaction.guild?.members.fetch( interaction.user.id );
         const isADM = member?.permissions.has("Administrator");
 
         if (isADM) {
-            const email = interaction.options.get("title")?.value as string;
+            const title = interaction.options.get("title")?.value as string;
 
-            await updateTalks(email);
+            await updateTalks(title);
 
             return await interaction.reply({
-                content: "Titulo do Forms Alterado: https://docs.google.com/forms/d/e/1FAIpQLSeh2F82mKd8t6RAXuXdKU7kQiGxButW8xNK8FZSF4wCO-ZuHQ/viewform",
+                content: "Titulo do Forms Alterado. Link do forms: https://docs.google.com/forms/d/e/1FAIpQLSeh2F82mKd8t6RAXuXdKU7kQiGxButW8xNK8FZSF4wCO-ZuHQ/viewform",
                 ephemeral: true,
             });
         }
@@ -33,7 +31,7 @@ export default new Command({
         const errorEmbed = makeEmbed({
             json: {
                 dirname: __dirname,
-                name: "json/new-talks-embed-error.json"
+                partialPath: "json/new-talks-embed-error.json"
             }
         })
 
