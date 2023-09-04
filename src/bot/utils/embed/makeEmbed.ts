@@ -8,9 +8,14 @@ export interface makeEmbedRequest {
 
 export function makeEmbed({ data, json }: makeEmbedRequest) {
 
-    if(json) {
-        return new EmbedBuilder({...readJsonFile(json), data})
-    }
+    let embed: EmbedBuilder;
 
-    return new EmbedBuilder(data)
+    if(json) 
+        embed = new EmbedBuilder({...readJsonFile(json), data})
+
+    embed = new EmbedBuilder(data)
+
+    embed.setTimestamp()
+
+    return embed
 }
