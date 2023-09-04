@@ -32,9 +32,7 @@ export default new Command({
         }
 
         const title = interaction.options.get("title")?.value as string;
-        const result = await updateTalks(title);
-
-        console.log(result)
+        await updateTalks(title);
 
         const { content, ephemeral }: InteractionReplyOptions = readJsonFile({
             dirname: __dirname,

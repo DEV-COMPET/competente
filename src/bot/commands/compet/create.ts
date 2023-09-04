@@ -1,4 +1,4 @@
-import { modal } from "../../modals/compet/createMemberModal";
+import { modal } from "@/bot/modals/compet/createMemberModal/createMemberModal";
 import { Command } from "../../structures/Command";
 
 export default new Command({
