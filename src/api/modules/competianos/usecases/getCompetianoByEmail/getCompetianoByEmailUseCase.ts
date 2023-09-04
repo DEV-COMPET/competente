@@ -1,14 +1,28 @@
+import { Either, left, right } from "@/api/@types/either";
+import { ResourceNotFoundError } from "@/api/errors/resourceNotFoundError";
 import { CompetianoType } from "../../entities/competiano.entity";
 import { CompetianoRepository as InterfaceCompetianoRepository } from "../../repositories";
-export interface IGetCompetianoByEmailUseCase {
-  execute: (email: string) => Promise<CompetianoType | undefined>;
+
+interface GetCompetianoByEmailUseCaseRequest {
+    email: string
 }
-export class GetCompetianoByEmailUseCase
-  implements IGetCompetianoByEmailUseCase
-{
-  constructor(private readonly repository: InterfaceCompetianoRepository) {}
-  async execute(email: string): Promise<CompetianoType | undefined> {
-    const competiano = await this.repository.getByEmail(email);
-    return competiano;
-  }
+
+type GetCompetianoByEmailUseCaseResponse = Either<
+    ResourceNotFoundError,
+    { competiano: CompetianoType }
+>
+
+
+export class GetCompetianoByEmailUseCase {
+
+    constructor(private readonly repository: InterfaceCompetianoRepository) { }
+
+    async execute({ email }: GetCompetianoByEmailUseCaseRequest): Promise<GetCompetianoByEmailUseCaseResponse> {
+        const competiano = await this.repository.getByEmail(email);
+
+        if (!competiano)
+            return left(new ResourceNotFoundError("Competiano"))
+
+        return right({competiano});
+    }
 }

@@ -1,37 +1,38 @@
-import { Competiano, CompetianoType } from "../../entities/competiano.entity";
+import { ResourceAlreadyExistsError } from "@/api/errors/resourceAlreadyExistsError";
 import type { CompetianoRepository as InterfaceCreateCompetianoRepository } from "../../repositories";
-export interface InterfaceCreateCompetianoUseCase {
-  execute: (request: CompetianoType) => Promise<CompetianoType>;
+import { Either, left, right } from "@/api/@types/either";
+import { Competiano, CompetianoType } from "../../entities/competiano.entity";
+
+interface CreateCompetianoUseCaseRequest {
+    nome: string;
+    email: string;
+    data_inicio: Date;
+    url_imagem?: string;
+    linkedin?: string;
+    lates?: string;
 }
-export class CreateCompetianoUseCase
-  implements InterfaceCreateCompetianoUseCase
-{
-  constructor(
-    private readonly repository: InterfaceCreateCompetianoRepository
-  ) {}
-  async execute({
-    nome,
-    email,
-    data_inicio,
-    url_imagem,
-    linkedin,
-    lates,
-  }: CompetianoType): Promise<CompetianoType> {
+
+type CreateCompetianoUseCaseResponse = Either<
+    ResourceAlreadyExistsError,
+    { competiano: CompetianoType }
+>
+
+export class CreateCompetianoUseCase  {
+  constructor(private readonly repository: InterfaceCreateCompetianoRepository) {}
+  
+  async execute({ nome, email, data_inicio, url_imagem, linkedin, lates }: CreateCompetianoUseCaseRequest): Promise<CreateCompetianoUseCaseResponse> {
+    
     const competianoExists = await this.repository.getByName(nome);
-    if (!competianoExists) {
-      const competiano = new Competiano({
-        data_inicio,
-        email,
-        nome,
-        url_imagem,
-        linkedin,
-        lates,
-      });
-      await this.repository.create(competiano);
-      return competiano;
-    }
-    throw new Error(
-      "O membro já se encontra cadastrado na nossa base de dados!"
-    );
+    
+    if (competianoExists) 
+        return left(new ResourceAlreadyExistsError("Competiano"))
+    
+
+    const competiano = new Competiano({
+        data_inicio, email, nome, url_imagem, linkedin, lates, 
+    });
+    
+    await this.repository.create(competiano);
+    return right({competiano});
   }
 }

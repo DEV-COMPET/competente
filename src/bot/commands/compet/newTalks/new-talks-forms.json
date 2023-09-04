@@ -1,0 +1,12 @@
+{
+    "name": "new-talks-forms",
+    "description": "Ãlteração do titulo do formulário do Talks",
+    "options": [
+        {
+            "name": "title",
+            "description": "Titulo do Talks",
+            "type": 3,
+            "required": true
+        }
+    ]
+}

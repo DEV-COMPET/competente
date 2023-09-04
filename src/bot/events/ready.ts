@@ -1,6 +1,8 @@
 import fetch from "node-fetch";
 import { client } from "..";
 import { Event } from "../structures/Event";
+import { env } from "@/env";
+
 export default new Event("ready", "once", async function () {
   let webhook = client.webhook;
   if (!webhook) {
@@ -12,10 +14,7 @@ export default new Event("ready", "once", async function () {
   }
   if (!webhook) return;
   try {
-    const url =
-      process.env.ENVIRONMENT === "development"
-        ? "http://localhost:4444"
-        : process.env.HOST;
+    const url = env.ENVIRONMENT === "development" ? "http://localhost:4444" : env.HOST;
     const response = await fetch(`${url}/webhooks/discord/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

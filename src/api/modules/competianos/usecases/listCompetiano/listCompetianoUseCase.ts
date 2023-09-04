@@ -1,13 +1,18 @@
+import { Either, right } from "@/api/@types/either";
 import { CompetianoType } from "../../entities/competiano.entity";
-import type { CompetianoRepository as InterfaceListCompetianoRepository } from "../../repositories";
+import { CompetianoRepository as InterfaceCompetianoRepository } from "../../repositories";
 
-export interface InterfaceListCompetianoUseCase {
-  execute: () => Promise<CompetianoType[]>;
-}
-export class ListCompetianoUseCase implements InterfaceListCompetianoUseCase {
-  constructor(private readonly repository: InterfaceListCompetianoRepository) {}
-  async execute(): Promise<CompetianoType[]> {
-    const competiano = await this.repository.list();
-    return competiano;
+type ListCompetianoUseCaseResponse = Either<
+    null,
+    { competianos: CompetianoType[] }
+>
+
+export class ListCompetianoUseCase {
+
+    constructor(private readonly repository: InterfaceCompetianoRepository) {}
+
+    async execute(): Promise<ListCompetianoUseCaseResponse> {
+      const competianos = await this.repository.list();
+      return right({competianos});
+    }
   }
-}

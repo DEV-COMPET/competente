@@ -1,6 +1,5 @@
 import { gql } from "graphql-tag";
 import FormData from "form-data";
-import dotenv from "dotenv";
 import fs from "fs";
 import {
   ActionEnum,
@@ -16,10 +15,11 @@ import { AwesomeGraphQLClient } from "awesome-graphql-client";
 import nodeFetch from "node-fetch";
 import { DocumentNode, print } from "graphql";
 import { CertificatePositionAssign } from "../../typings/talks";
-dotenv.config();
-const environment = process.env.ENVIRONMENT || "development";
-const API_URL = process.env.AUTENTIQUE_URL || "";
-const authToken = process.env.AUTENTIQUE_TOKEN;
+import { env } from "@/env";
+
+const environment = env.ENVIRONMENT;
+const API_URL = env.AUTENTIQUE_URL;
+const authToken = env.AUTENTIQUE_TOKEN;
 interface CreateDocumentProps {
   filePath: string;
   numPages: number;
