@@ -89,7 +89,9 @@ async function createCertificate({
     args
   }
   try {
+
     const response = await PythonShell.run(scriptPath, options);
+
     return response
 
   } catch (error) {
@@ -99,7 +101,9 @@ async function createCertificate({
 export async function createTalksPdf({ titulo, listaNomes, horas = "1", minutos = "30", data }: ITalksProps): Promise<string> {
   const text_dir = talksDirectories.content // Arquivo de texto que contém o texto do certificado
   const template_dir = talksDirectories.template // Imagem que contém o template do certificado
+ 
   const response = await createCertificate({ data, titulo, horas, minutos, listaNomes, template_dir, text_dir})
+  
   if (!response) throw new Error("Erro na criação do certificado!");
   const path_to_certificate: string = response[0]
   return path_to_certificate

@@ -1,5 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+import importlib
+import time
+from reportlab.pdfgen import canvas
+import sys
+import argparse
+import re
+import os
+from datetime import datetime
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
 desc = """
 Esta é uma versão atualizada do programa geradorCertificados para python3
 
@@ -45,16 +57,6 @@ Exemplos de Uso:
 ./geradorCertificados.py planilha.csv modelo.txt imagem.jpg -v -d "./Meus_Certificados.pdf"
 """
 
-import importlib
-import time
-from reportlab.pdfgen import canvas
-import sys
-import argparse
-import re
-import os
-from datetime import datetime
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 #Código para acionar opções pelo prompt de comando
 def data_legivel(data):
     meses = [
@@ -70,74 +72,79 @@ def data_legivel(data):
 parser = argparse.ArgumentParser(description=desc,
                                  epilog=exp,
                                  formatter_class=argparse.RawTextHelpFormatter)
+def setup_parser():
+    parser.add_argument("texto",
+                        help="Texto base utilizado no certificado",
+                        nargs="?")
+    parser.add_argument("imagem",
+                        help="Imagem de fundo utilizada no certificado",
+                        nargs="?")
+    parser.add_argument("evento", help="O nome do evento", type=str, nargs="?")
+    parser.add_argument("data",
+                        help="A data em que o evento foi realizado",
+                        type=str,
+                        nargs="?")
+    parser.add_argument("hora",
+                        help="A quantidade de horas que o evento durou",
+                        type=str,
+                        nargs="?")
+    parser.add_argument("minutos",
+                        help="A quantidade de minutos do evento",
+                        type=str,
+                        nargs="?")
+    parser.add_argument("dataFinal",
+                        help="A data final do evento",
+                        type=str,
+                        nargs="?")
+    parser.add_argument("listaNomes",
+                        help="Uma lista contendo os participantes do evento",
+                        type=str,
+                        nargs="+")
+    parser.add_argument(
+        "-d",
+        "--destino",
+        type=str,
+        help=
+        "Local e nome de onde e salvo o certificado. Caso não seja fornecido, é usado o local da execucao do script, sob o nome 'Certificados'"
+    )
+    parser.add_argument(
+        "-f",
+        "--fonte",
+        type=str,
+        help=
+        "Determina a fonte a ser utilizada no certificado. Por padrao, a fonte utilizada e 'Helvetica' Para uma lista de todas as fontes suportadas, execute geradorCertificados.py com a opção -lf"
+    )
+    parser.add_argument(
+        "-F",
+        "--fonteNegrito",
+        type=str,
+        help="Determina a fonte em negrito a ser utilizada no certificado.")
+    parser.add_argument(
+        "-lf",
+        "--listaFontes",
+        help=
+        "Printa uma lista das fontes utilizaveis para fabricacao de um certificado",
+        action="store_true")
+    parser.add_argument(
+        "-s",
+        "--separador",
+        type=str,
+        help=
+        "Especifica o caractere delimitador de colunas utilizado no arquivo CSV. Por padrao, o delimitador utilizado e ','"
+    )
+    parser.add_argument("-t", "--tamanho", type=int, help="Tamanho da fonte")
+    parser.add_argument("-v",
+                        "--verbose",
+                        help="Explica o que o programa faz durante execução",
+                        action="store_true")
+    
+setup_parser()
 
-parser.add_argument("texto",
-                    help="Texto base utilizado no certificado",
-                    nargs="?")
-parser.add_argument("imagem",
-                    help="Imagem de fundo utilizada no certificado",
-                    nargs="?")
-parser.add_argument("evento", help="O nome do evento", type=str, nargs="?")
-parser.add_argument("data",
-                    help="A data em que o evento foi realizado",
-                    type=str,
-                    nargs="?")
-parser.add_argument("hora",
-                    help="A quantidade de horas que o evento durou",
-                    type=str,
-                    nargs="?")
-parser.add_argument("minutos",
-                    help="A quantidade de minutos do evento",
-                    type=str,
-                    nargs="?")
-parser.add_argument("dataFinal",
-                    help="A data final do evento",
-                    type=str,
-                    nargs="?")
-parser.add_argument("listaNomes",
-                    help="Uma lista contendo os participantes do evento",
-                    type=str,
-                    nargs="+")
-parser.add_argument(
-    "-d",
-    "--destino",
-    type=str,
-    help=
-    "Local e nome de onde e salvo o certificado. Caso não seja fornecido, é usado o local da execucao do script, sob o nome 'Certificados'"
-)
-parser.add_argument(
-    "-f",
-    "--fonte",
-    type=str,
-    help=
-    "Determina a fonte a ser utilizada no certificado. Por padrao, a fonte utilizada e 'Helvetica' Para uma lista de todas as fontes suportadas, execute geradorCertificados.py com a opção -lf"
-)
-parser.add_argument(
-    "-F",
-    "--fonteNegrito",
-    type=str,
-    help="Determina a fonte em negrito a ser utilizada no certificado.")
-parser.add_argument(
-    "-lf",
-    "--listaFontes",
-    help=
-    "Printa uma lista das fontes utilizaveis para fabricacao de um certificado",
-    action="store_true")
-parser.add_argument(
-    "-s",
-    "--separador",
-    type=str,
-    help=
-    "Especifica o caractere delimitador de colunas utilizado no arquivo CSV. Por padrao, o delimitador utilizado e ','"
-)
-parser.add_argument("-t", "--tamanho", type=int, help="Tamanho da fonte")
-parser.add_argument("-v",
-                    "--verbose",
-                    help="Explica o que o programa faz durante execução",
-                    action="store_true")
 args = parser.parse_args()
 dirname = os.path.dirname(__file__)
 tmp_dir = os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(dirname))),"tmp")
+
+
 dest_path = os.path.join(tmp_dir, 'certificados.pdf')
 txt_name = os.path.join(dirname, args.texto)
 img_name = os.path.join(dirname, args.imagem)
@@ -228,6 +235,7 @@ if args.fonte:
 if args.fonteNegrito:
     fonte_bold = args.fonteNegrito in fontes or fonte_bold
 if args.tamanho: tam_fonte = args.tamanho
+
 def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader,dataFinal):
     fonte = "light"  # FONTE PADRÃO DO TEXTO
     fonte_bold = "negrito"
@@ -328,9 +336,13 @@ def gerar_pdf(txt_name,image_name,data,hora,minutos,evento,reader,dataFinal):
         #pdf.stringWidth(date, fnt, tam_fonte)
         pdf.setFont('light', 75)
         pdf.drawString(200, 600, "Belo Horizonte, " + data)
-        #pdf.drawString(2300,630,"andre")//localização da assinatura
+        # pdf.drawString(2300,630,"andre") #localização da assinatura
         pdf.showPage()
     
+    if not os.path.exists(tmp_dir):
+        os.makedirs(tmp_dir)
     pdf.save()
-    print (dest_path)
+    
+    print(dest_path)
+    
 gerar_pdf(txt_name,img_name,data,hora,minutos,evento,reader,dataFinal)
