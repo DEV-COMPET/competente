@@ -2,7 +2,7 @@ import { ChatInputApplicationCommandData, InteractionReplyOptions } from "discor
 import { Command } from "../../../structures/Command";
 import { updateTalks } from "../../../utils/googleAPI/updateCompetTalks";
 import { readJsonFile } from "@/bot/utils/json";
-import { makeEmbed } from "@/bot/utils/embed/makeEmbed";
+import { makeNotAdminEmbed } from "@/bot/utils/embed/makeNotAdminEmbed";
 
 const { name, description, options }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
@@ -15,21 +15,8 @@ export default new Command({
         const member = await interaction.guild?.members.fetch(interaction.user.id);
         const isADM = member?.permissions.has("Administrator");
 
-        if (!isADM) {
-
-            const errorEmbed = makeEmbed({
-                json: {
-                    dirname: __dirname,
-                    partialPath: "new-talks-embed-error.json"
-                }
-            })
-
-            return await interaction.reply({
-                content: "Não foi possível executar este comando",
-                ephemeral: true,
-                embeds: [errorEmbed],
-            });
-        }
+        if (!isADM)
+            return makeNotAdminEmbed(interaction)
 
         const title = interaction.options.get("title")?.value as string;
         await updateTalks(title);
@@ -38,7 +25,7 @@ export default new Command({
             dirname: __dirname,
             partialPath: "interactionReply.json"
         });
-        
+
         return await interaction.reply({ content, ephemeral });
     },
 });
