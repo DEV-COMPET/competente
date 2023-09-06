@@ -7,5 +7,5 @@ export async function listCompetiano(request: FastifyRequest, reply: FastifyRepl
 
 	const competianos = await listCompetianoUseCase.execute()
 
-	return reply.status(404).send(competianos);
+	return reply.status(200).send(competianos);
 }
