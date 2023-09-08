@@ -26,7 +26,6 @@ export default new Modal({
     const customIds = inputFields.map((field) => field.customId || "");
     const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
     const combinedData = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
-
     const requestOptions = {
       method: "post",
       body: JSON.stringify(combinedData),
