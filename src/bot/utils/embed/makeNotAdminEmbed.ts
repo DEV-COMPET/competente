@@ -1,7 +1,8 @@
 import { ExtendedInteraction } from "@/bot/typings/Commands";
+import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { EmbedBuilder } from "discord.js";
 
-export async function makeNotAdminEmbed(interaction: ExtendedInteraction) {
+export async function makeNotAdminEmbed(interaction: ExtendedInteraction | ExtendedModalInteraction) {
     const embed = new EmbedBuilder()
         .setColor(0xf56565)
         .setTitle("Não foi possível utilizar este comando!")
