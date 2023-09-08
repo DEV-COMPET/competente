@@ -59,7 +59,7 @@ export class CompetianoMongoDBRepository
     if (!deletedMember) {
       return;
     }
-    await deletedMember.delete();
+    await deletedMember.deleteOne();
     return deletedMember.toJSON<CompetianoType>();
   }
   public async update(

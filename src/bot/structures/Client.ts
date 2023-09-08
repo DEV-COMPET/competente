@@ -11,20 +11,21 @@ import {
     TextChannel,
 } from "discord.js";
 import { CommandType } from "../typings/Commands";
-import glob from "glob";
-import { promisify } from "util";
 import { RegisterCommandsOptions } from "../typings/client";
 import { Event } from "./Event";
 import * as path from "path";
 import { ModalType } from "../typings/Modals";
 import { env } from "@/env";
 
+import { glob } from 'glob'
+
+
 const appId = env.DISCORD_CLIENT_ID;
 const token = env.DISCORD_TOKEN;
 const rest = new REST({ version: "10" }).setToken(
     env.DISCORD_TOKEN
 );
-const globPromise = promisify(glob);
+//const globPromise = promisify(glob);
 
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
@@ -38,7 +39,10 @@ export class ExtendedClient extends Client {
     private async folderFiles(dir: string) {
         const pattern = "**/*{.ts,.js}";
         const directory = path.join(__dirname, "..", dir);
-        const dirFiles = await globPromise(pattern, { cwd: directory });
+        const dirFiles = await glob(pattern, { cwd: directory });
+
+        //const jsfiles = await glob('**/*.js', { ignore: 'node_modules/**' })
+
         return { dirFiles, directory }
     }
 

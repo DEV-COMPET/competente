@@ -12,10 +12,13 @@ import {
   SignerInput,
 } from "./graphql/resolvers-types";
 import { AwesomeGraphQLClient } from "awesome-graphql-client";
-import nodeFetch from "node-fetch";
 import { DocumentNode, print } from "graphql";
 import { CertificatePositionAssign } from "../../typings/talks";
 import { env } from "@/env";
+import { RequestInfo, RequestInit } from 'node-fetch';
+
+const nodeFetch = (url: RequestInfo, init?: RequestInit) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(url, init));
 
 const environment = env.ENVIRONMENT;
 const API_URL = env.AUTENTIQUE_URL;
