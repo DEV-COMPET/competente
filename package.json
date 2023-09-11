@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && tsc-alias",
+    "postbuild": "rsync -r --include='*/' --include='*.json' --exclude='*' src/ dist/",
     "start:api": "node dist/api/server.js",
     "start:bot": "node dist/bot/index.js",
     "api:dev": "npx nodemon --require tsconfig-paths/register src/api/server.ts",
