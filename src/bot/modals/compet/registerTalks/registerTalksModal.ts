@@ -5,7 +5,7 @@ import {
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
-import { makeNotAdminEmbed } from "@/bot/utils/embed/makeNotAdminEmbed";
+import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
 import { createTalksPdf, formatarData } from "@/bot/utils/python";
 import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks";
@@ -40,11 +40,9 @@ export default new Modal({
 
     if (interaction.channel === null) throw "Channel is not cached";
 
-    const member = await interaction.guild?.members.fetch(interaction.user.id);
-    const isADM = member?.permissions.has("Administrator");
-
-    if (!isADM)
-      return makeNotAdminEmbed(interaction)
+    const isNotAdmin = await checkIfNotAdmin(interaction)
+    if ((isNotAdmin).isRight())
+      return isNotAdmin.value.response
 
     const customIds = inputFields.map((field) => field.customId || "");
     const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));

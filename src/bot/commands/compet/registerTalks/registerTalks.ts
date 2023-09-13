@@ -5,7 +5,7 @@ import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks";
 import { createTalksPdf, formatarData } from "@/bot/utils/python";
 import { readJsonFile } from "@/bot/utils/json";
-import { makeNotAdminEmbed } from "@/bot/utils/embed/makeNotAdminEmbed";
+import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
 import { modal } from "@/bot/modals/compet/registerTalks/registerTalksModal";
 
 function validateDriveLink(link: string): boolean {
@@ -29,11 +29,10 @@ export default new Command({
   description,
   //options,
   run: async ({ interaction }) => {
-    const member = await interaction.guild?.members.fetch(interaction.user.id);
-    const isADM = member?.permissions.has("Administrator");
 
-    if (!isADM)
-      return makeNotAdminEmbed(interaction)
+    const isNotAdmin = await checkIfNotAdmin(interaction)
+    if ((isNotAdmin).isRight())
+      return isNotAdmin.value.response
 
     const Mods = true
 

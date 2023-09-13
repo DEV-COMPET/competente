@@ -2,7 +2,7 @@ import { ChatInputApplicationCommandData, InteractionReplyOptions } from "discor
 import { Command } from "../../../structures/Command";
 import { updateTalks } from "../../../utils/googleAPI/updateCompetTalks";
 import { readJsonFile } from "@/bot/utils/json";
-import { makeNotAdminEmbed } from "@/bot/utils/embed/makeNotAdminEmbed";
+import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
 
 const { name, description, options }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
@@ -12,11 +12,10 @@ const { name, description, options }: ChatInputApplicationCommandData = readJson
 export default new Command({
     name, description, options,
     run: async ({ interaction }) => {
-        const member = await interaction.guild?.members.fetch(interaction.user.id);
-        const isADM = member?.permissions.has("Administrator");
 
-        if (!isADM)
-            return makeNotAdminEmbed(interaction)
+        const isNotAdmin = await checkIfNotAdmin(interaction)
+        if ((isNotAdmin).isRight())
+            return isNotAdmin.value.response
 
         const title = interaction.options.get("title")?.value as string;
         await updateTalks(title);
