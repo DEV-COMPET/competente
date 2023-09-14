@@ -63,7 +63,15 @@ export default new Command({
         await interaction.reply({ content: "boa", ephemeral: true });
         const titulo = interaction.options.get("titulo")?.value as string;
         const registration = await getCompetTalksRegistration(titulo);
-        const data = new Date(registration[0].createTime);
+        const data = registration.isRight() ? new Date(registration.value.eventRegistrations[0].createTime) : new Date();
+
+        if (registration.isLeft()) {
+          return await interaction.reply({
+            content: registration.value.error.message,
+            ephemeral: true
+          })
+        }
+
         const filePath = await createCertificadoTalksPalestrantes({
           titulo,
           listaNomes,
@@ -73,10 +81,10 @@ export default new Command({
         });
         const response = await submitToAutentique(
           {
-            numPages:listaNomes.length,
+            numPages: listaNomes.length,
             filePath,
             titulo,
-            signer:{email:assigner_mail,name:assigner_name}
+            signer: { email: assigner_mail, name: assigner_name }
           }
         );
       } catch (error: any) {
