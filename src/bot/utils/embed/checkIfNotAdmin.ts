@@ -8,6 +8,12 @@ type CheckIfNotAdminResponse = Either<
     IsAdminError,
     { response: InteractionResponse<boolean> }
 >
+
+/**
+ * @author Henrique de Paula Rodrigues
+ * @description Verifica se o usuário responsável pela interação possui privilégios de Admin
+ * @returns {Promise<CheckIfNotAdminResponse>} Erro ou Response do Discord 
+ */
 export async function checkIfNotAdmin(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotAdminResponse> {
     const member = await interaction.guild?.members.fetch(interaction.user.id);
     const isADM = member?.permissions.has("Administrator");
