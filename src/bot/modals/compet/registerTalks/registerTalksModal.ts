@@ -9,10 +9,10 @@ import { makeModal } from "@/bot/utils/modal/makeModal"
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
 import { createTalksPdf } from "@/bot/utils/python";
 import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks";
-import { CertificatesType } from "@/api/modules/certificados/entities/certificados.entity";
 import { env } from "@/env";
-import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { formatarData } from "@/bot/utils/formatting/formatarData";
+import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
+import { ExtractInputDataRequest, ExtractInputDataResponse, InputFieldsRequest, createCertificatesInDatabaseRequest, createCertificatesLocalAndDriveRequest } from "./interfaces";
 
 // import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 
@@ -27,34 +27,10 @@ function validateDriveLink(link: string): boolean {
   return regex.test(link);
 }
 
-interface InputFieldsRequest {
-  titulo: string,
-  email_assinante: string,
-  nome_assinante: string,
-  minutos_totais: number
-  link: string
-}
-
-interface ExtractInputDataRequest {
-  interaction: ExtendedModalInteraction,
-  inputFields: TextInputComponentData[]
-}
-
-interface ExtractInputDataResponse {
-  horas: string,
-  minutos: string,
-  link?: string,
-  email_assinante?: string
-  nome_assinante?: string
-  titulo: string
-}
-
-
-interface createCertificatesInDatabaseRequest {
-  body: CertificatesType
-  interaction: ExtendedModalInteraction
-}
-
+/**
+ * @author Henrique de Paula Rodrigues
+ * @description Cadastra certificados no banco de dados
+ */
 async function createCertificatesInDatabase({ body, interaction }: createCertificatesInDatabaseRequest) {
   if (!validateDriveLink(body.link)) {
     return await interaction.reply({
@@ -91,25 +67,13 @@ async function createCertificatesInDatabase({ body, interaction }: createCertifi
   });
 }
 
-interface ITalksPropsExtended {
-  titulo: string,
-  listaNomes: string[]
-  horas?: string,
-  minutos?: string
-  data: Date
-}
-
-interface createCertificatesLocallyRequest {
-  interaction: ExtendedModalInteraction
-  input: ITalksPropsExtended
-}
-
 const modal = makeModal(inputFields, modalBuilderRequest);
 
-/* Essa parte do código é responsável por gerar o pdf e enviar para o autentique,
-* no caso de um link não ter sido fornecido diretamente no input do comando
-*/
-async function createCertificatesLocally({ input, interaction }: createCertificatesLocallyRequest) {
+/**
+ * @author Henrique de Paula Rodrigues, Pedro Augusto de Portilho Ronzani
+ * @description Gera o PDF dos certificados, salva-os no Google Drive e Envia-os para o Autentique.
+ */
+async function createCertificatesLocalAndDrive({ input, interaction }: createCertificatesLocalAndDriveRequest) {
 
   const { data, listaNomes, titulo, horas, minutos } = input
 
@@ -119,9 +83,19 @@ async function createCertificatesLocally({ input, interaction }: createCertifica
 
     const filePath = await createTalksPdf({ titulo: titulo, data: formatarData(data), listaNomes, horas, minutos });
 
-    console.log(filePath)
+    if (filePath.isLeft())
+      throw filePath.value.error
+
+    console.log(`Certificados Locais: ${filePath.value.path_to_certificates}`)
 
     await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    const updateToFolderResponse = await uploadToFolder(filePath.value.path_to_certificates)
+
+    if (updateToFolderResponse.isLeft())
+      throw updateToFolderResponse.value.error
+
+    console.log(`Certificados no Google Drive: ${env.GOOGLE_DRIVE_FOLDER_ID}`)
 
     /*
         //const numPages = listaNomes.length;
@@ -143,7 +117,6 @@ async function createCertificatesLocally({ input, interaction }: createCertifica
       ephemeral: true,
     });
   }
-
 }
 
 function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -169,18 +142,18 @@ export default new Modal({
 
   run: async ({ interaction }) => {
 
-    if (interaction.channel === null) throw "Channel is not cached";
+    if (interaction.channel === null)
+      throw "Channel is not cached";
 
     const isNotAdmin = await checkIfNotAdmin(interaction)
     if ((isNotAdmin).isRight())
       return isNotAdmin.value.response
 
-    const { horas, minutos, titulo, /*email_assinante,*/ link, /*nome_assinante*/ } = extractInputData({ interaction, inputFields })
+    const { horas, minutos, titulo, link, /*nome_assinante,email_assinante*/ } = extractInputData({ interaction, inputFields })
 
     try {
 
       const registration = await getCompetTalksRegistration(titulo);
-
       if (registration.isLeft()) {
         const embed = new EmbedBuilder()
           .setColor(0xf56565)
@@ -210,7 +183,6 @@ export default new Modal({
       }
 
       const listaNomes = registration.value.eventRegistrations.map((registration) => registration.nome);
-
       const data = new Date(registration.value.eventRegistrations[0].createTime);
 
       if (link) return createCertificatesInDatabase({
@@ -222,7 +194,7 @@ export default new Modal({
         }
       })
 
-      return createCertificatesLocally({
+      return createCertificatesLocalAndDrive({
         interaction,
         input: {
           data, listaNomes, titulo, horas, minutos
