@@ -11,7 +11,9 @@
     "api:dev": "npx nodemon --require tsconfig-paths/register src/api/server.ts",
     "bot:dev": "npx nodemon --require tsconfig-paths/register src/bot/index.ts",
     "generate": "graphql-codegen",
-    "python": "source src/bot/utils/python/venv/bin/activate"
+    "python": "source src/bot/utils/python/venv/bin/activate",
+    "pm2:start": "pm2 start dist/api/server.js && pm2 start dist/bot/index.js",
+    "pm2:stop": "pm2 stop all"
   },
   "contributors": [
     {
