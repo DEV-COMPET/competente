@@ -1,10 +1,44 @@
 # Competente
 
-Para adicionar o competente no seu servidor do discord, basta clicar neste [link](https://discord.com/api/oauth2/authorize?client_id=1054755402346143816&permissions=8&scope=bot).
+Para adicionar o competente no seu servidor do discord, basta clicar neste [link](https://discord.com/api/oauth2/authorize?client_id=1054755402346143816&permissions=8&scope=bot). (NÃO FUNCIONA MAIS)
+
+# Como executar
+
+1. Seu programa deve atender aos [Pré Requisitos](#pré-requisitos) da aplicação.
+2. Depois congifurar o [Getting Started](#getting-started).
+3. Com isso voce pode executar a sua aplicação localmente, seguindo o [Running Locally](#running-locally)
+
+## Pré Requisitos
+
+- Para executar o bot completamente, é necessário ter instalado em sua máquina:
+
+<div align="center">
+  <table>
+    <tr>
+      <th>Tecnologia</th>
+      <th>Instalação</th>
+    </tr>
+    <tr>
+      <td>node</td>
+      <td><a href="https://nodejs.org/en/download">nodejs.org/en/download</a></td>
+    </tr>
+    <tr>
+      <td>python</td>
+      <td><a href="https://www.python.org/downloads/">python.org/downloads/</a></td>
+    </tr>
+  </table>
+</div>
+
 
 ## Getting Started
 
-Para rodar o bot em sua máquina e adicioná-lo ao seu servidor, siga esses passos:
+- Primeiramente, instale as dependências necessárias
+
+```
+npm i
+```
+
+- Para rodar o bot em sua máquina e adicioná-lo ao seu servidor, siga esses passos:
 
 ### Adicione o Bot Base
 
@@ -41,13 +75,28 @@ src/bot/utils/googleAPT/competente.development.example.json
 ```
 - para uma explicação mais detalhada, vá para a seção [google API](#googleAPI)
 
-## Running locally
+## Running Locally
 
-- em dois terminais separados exeucte
+- Abra dois terminais em sua máquina.
+- No primeiro execute:
 ```
 $ npm run api:dev
 ```
-e em seguida
+- no segundo execute dois comandos:
+- ative o ambiente virtual do python.
+
+#### Windows
+```
+.\src\bot\utils\python\venv\Scripts\activate
+```
+
+#### Linux
+```
+source src/bot/utils/python/venv/bin/activate
+```
+
+- e coloque o bot no ar:
+
 ```
 $ npm run bot:dev
 ```
