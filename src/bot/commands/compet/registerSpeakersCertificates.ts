@@ -2,10 +2,8 @@ import { ApplicationCommandOptionType } from "discord.js";
 import { Command } from "../../structures/Command";
 import { submitToAutentique } from "../../utils/autentiqueAPI";
 import { getCompetTalksRegistration } from "../../utils/googleAPI/getCompetTalks";
-import {
-  createCertificadoTalksPalestrantes,
-  formatarData,
-} from "../../utils/python";
+import { createCertificadoTalksPalestrantes } from "../../utils/python";
+import { formatarData } from "@/bot/utils/formatting/formatarData";
 
 export default new Command({
   name: "certificar-palestrantes",

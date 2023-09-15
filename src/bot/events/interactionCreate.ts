@@ -21,9 +21,11 @@ export default new Event("interactionCreate", "on", async (interaction) => {
         interaction: interaction as ExtendedInteraction,
       });
     } catch (error) {
-      await interaction.followUp(
-        "Houve um erro ao tentar executar esse comando"
-      );
+      await interaction.followUp({
+        content: "Houve um erro ao tentar executar esse comando",
+        ephemeral: true,
+      });
+      
     }
   } else if (interaction.isModalSubmit()) {
     const modalInteraction: ModalSubmitInteraction = interaction;

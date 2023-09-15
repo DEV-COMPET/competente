@@ -7,11 +7,12 @@ import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
-import { createTalksPdf, formatarData } from "@/bot/utils/python";
+import { createTalksPdf } from "@/bot/utils/python";
 import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks";
 import { CertificatesType } from "@/api/modules/certificados/entities/certificados.entity";
 import { env } from "@/env";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
+import { formatarData } from "@/bot/utils/formatting/formatarData";
 
 // import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 
@@ -48,7 +49,6 @@ interface ExtractInputDataResponse {
   titulo: string
 }
 
-const modal = makeModal(inputFields, modalBuilderRequest);
 
 interface createCertificatesInDatabaseRequest {
   body: CertificatesType
@@ -103,6 +103,8 @@ interface createCertificatesLocallyRequest {
   interaction: ExtendedModalInteraction
   input: ITalksPropsExtended
 }
+
+const modal = makeModal(inputFields, modalBuilderRequest);
 
 /* Essa parte do código é responsável por gerar o pdf e enviar para o autentique,
 * no caso de um link não ter sido fornecido diretamente no input do comando
