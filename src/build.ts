@@ -9,7 +9,7 @@ if (isLinux)
     command = "rsync -r --include='*/' --include='*.json' --exclude='*' src/ dist/"
 
 if (isWin)
-    command = `robocopy src dist *.json /e`;
+    command = `robocopy src dist *.json *.md *.py *.ttf *.txt /e`;
 
 exec(command, (error, stderr) => {
     if (error) {

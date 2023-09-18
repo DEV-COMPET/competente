@@ -12,9 +12,55 @@ import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks
 import { env } from "@/env";
 import { formatarData } from "@/bot/utils/formatting/formatarData";
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
-import { ExtractInputDataRequest, ExtractInputDataResponse, InputFieldsRequest, createCertificatesInDatabaseRequest, createCertificatesLocalAndDriveRequest } from "./interfaces";
+import { ExtendedModalInteraction } from "@/bot/typings/Modals";
+import { CertificatesType } from "@/api/modules/certificados/entities/certificados.entity";
 
 // import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
+
+
+
+export interface InputFieldsRequest {
+  titulo: string,
+  email_assinante: string,
+  nome_assinante: string,
+  minutos_totais: number
+  link: string
+}
+
+export interface ExtractInputDataRequest {
+  interaction: ExtendedModalInteraction,
+  inputFields: TextInputComponentData[]
+}
+
+export interface ExtractInputDataResponse {
+  horas: string,
+  minutos: string,
+  link?: string,
+  email_assinante?: string
+  nome_assinante?: string
+  titulo: string
+}
+
+export interface createCertificatesInDatabaseRequest {
+  body: CertificatesType
+  interaction: ExtendedModalInteraction
+}
+
+export interface ITalksPropsExtended {
+  titulo: string,
+  listaNomes: string[]
+  horas?: string,
+  minutos?: string
+  data: Date
+}
+
+export interface createCertificatesLocalAndDriveRequest {
+  interaction: ExtendedModalInteraction
+  input: ITalksPropsExtended
+}
+
+
+
 
 const { inputFields, modalBuilderRequest }: {
   inputFields: TextInputComponentData[];
