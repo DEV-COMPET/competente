@@ -6,7 +6,7 @@
     "postinstall": "tsx src/bot/utils/python/venv.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && tsc-alias",
-    "postbuild": "node dist/build.js",
+    "postbuild": "tsx src/build.ts",
     "api:start": "node dist/api/server.js",
     "bot:start": "node dist/bot/index.js",
     "api:dev": "npx nodemon --require tsconfig-paths/register src/api/server.ts",

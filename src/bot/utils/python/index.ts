@@ -1,5 +1,4 @@
 import { PythonShell, PythonShellError } from 'python-shell';
-import path from 'path';
 import { execSync } from 'child_process';
 import { talksDirectories } from './constants';
 import { Either, left, right } from '@/api/@types/either';
@@ -7,6 +6,7 @@ import { NotCreatedError } from '@/bot/errors/notCreatedError';
 import { formatarData } from '../formatting/formatarData';
 import { ICreateCertificateProps, ITalksProps } from './interfaces';
 import { ResourceNotFoundError } from '@/api/errors/resourceNotFoundError';
+import { partial_to_full_path, readJsonFileRequest } from '../json';
 
 type CreateTalksPdfResponse = Either<
   { error: NotCreatedError },
@@ -52,6 +52,35 @@ export async function createCertificate({
   data, horas, listaNomes, minutos = "0", template_dir, text_dir,
   titulo = "", data_final = formatarData(new Date(Date.now()))
 }: ICreateCertificateProps): Promise<CreateCertificateResponse> {
+  const aux_args: string[] = [text_dir, template_dir, titulo, data, horas, minutos, data_final];
+  const args = aux_args.concat(listaNomes);
+
+  const executePythonScriptResponse = executePythonScript({
+    args, pathRequest: {
+      dirname: __dirname,
+      partialPath: "script.py"
+    }
+  })
+
+  return executePythonScriptResponse
+}
+
+interface executePythonScriptRequest {
+  args?: string[],
+  pathRequest: readJsonFileRequest
+}
+
+type executePythonScriptResponse = Either<
+  { error: ResourceNotFoundError | PythonShellError },
+  { response: string[] }
+>
+
+export async function executePythonScript({ args, pathRequest }: executePythonScriptRequest): Promise<executePythonScriptResponse> {
+  
+  if(!args) args = []
+
+  const scriptPath = partial_to_full_path(pathRequest);
+
   const pythonPathResponse = getPythonPath();
   const pythonPath = pythonPathResponse.isRight() ? pythonPathResponse.value.python_path : "";
 
@@ -59,13 +88,14 @@ export async function createCertificate({
     return left({ error: pythonPathResponse.value.error });
   }
 
-  const aux_args: string[] = [text_dir, template_dir, titulo, data, horas, minutos, data_final];
-  const args = aux_args.concat(listaNomes);
   const options = { pythonPath, args };
 
+  // caminho para o arquivo script.py
+  // const scriptPath = path.resolve(__dirname, script);
+  
   try {
     const response = await PythonShell.run(scriptPath, options);
-    if (!response) 
+    if (!response)
       return left({ error: new PythonShellError() });
 
     return right({ response });
@@ -77,16 +107,12 @@ export async function createCertificate({
 }
 
 
-
-// caminho para o arquivo script.py
-const scriptPath = path.resolve(__dirname, "script.py");
-
 // retorna o path do certificado criado
 export async function createCertificadoTalksPalestrantes({ titulo, listaNomes, horas = "1", minutos = "30", data }: ITalksProps): Promise<string> {
   const text_dir = talksDirectories.palestrante_content // Arquivo de texto que contém o texto do certificado
   const template_dir = talksDirectories.template // Imagem que contém o template do certificado
   const response = await createCertificate({ data, titulo, horas, minutos, listaNomes, template_dir, text_dir })
-  if(response.isLeft()) 
+  if (response.isLeft())
     throw new Error("Erro na criação do certificado!");
 
   const path_to_certificate: string = (response.value.response[0])

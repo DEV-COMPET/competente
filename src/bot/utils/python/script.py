@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!./venv/bin/python
 # -*- coding: utf-8 -*-
 
 import importlib
@@ -144,8 +144,12 @@ args = parser.parse_args()
 dirname = os.path.dirname(__file__)
 tmp_dir = os.path.join(os.path.abspath(os.path.dirname(os.path.dirname(dirname))),"tmp")
 
+elementos = args.data.split("-")
 
-dest_path = os.path.join(tmp_dir, 'certificados.pdf')
+nome_underline = str(args.evento).replace(' ', '_')
+path_new = f"{elementos[2]}_{elementos[1]}_{elementos[0]}-{nome_underline}"
+
+dest_path = os.path.join(tmp_dir, f'{path_new}.pdf')
 txt_name = os.path.join(dirname, args.texto)
 img_name = os.path.join(dirname, args.imagem)
 reader = args.listaNomes
@@ -206,11 +210,21 @@ mes_ext = {
     11: 'Novembro',
     12: 'Dezembro'
 }
+
+
+data = elementos[0]
+data += " de "
+data += mes_ext[int(elementos[1])]
+data += " de "
+data += elementos[2]
+
+"""
 data = time.strftime("%d")
 data += " de "
 data += mes_ext[int(time.strftime("%m"))]
 data += " de "
 data += time.strftime("%Y")
+"""
 
 #variaveis auxiliares
 x = width

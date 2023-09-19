@@ -1,36 +1,4 @@
 {
     "name": "registrar-talks",
-    "description": "Registra os certificados assinados do talks em questão",
-    "options": [
-        {
-            "name": "titulo",
-            "description": "O titulo do talks a ser registrado",
-            "type": 3,
-            "required": true
-        },
-        {
-            "name": "email-assinante",
-            "description": "O email de quem deve assinar o certificado",
-            "type": 3,
-            "required": true
-        },
-        {
-            "name": "nome-assinante",
-            "description": "O nome de quem deve assinar o certificado",
-            "type": 3,
-            "required": true
-        },
-        {
-            "name": "minutos",
-            "description": "O tempo do talks em minutos",
-            "type": 10,
-            "required": true
-        },
-        {
-            "name": "link",
-            "description": "O link do drive que contem os certificados",
-            "type": 3,
-            "required": false
-        }
-    ]
+    "description": "Registra os certificados assinados do talks em questão"
 }

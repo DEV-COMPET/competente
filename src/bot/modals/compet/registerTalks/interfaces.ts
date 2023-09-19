@@ -4,6 +4,7 @@ import { TextInputComponentData } from "discord.js"
 
 export interface InputFieldsRequest {
     titulo: string,
+    data_new: string
     email_assinante: string,
     nome_assinante: string,
     minutos_totais: number
@@ -22,6 +23,7 @@ export interface ExtractInputDataResponse {
     email_assinante?: string
     nome_assinante?: string
     titulo: string
+    data_new: string
 }
 
 export interface createCertificatesInDatabaseRequest {

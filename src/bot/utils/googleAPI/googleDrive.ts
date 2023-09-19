@@ -46,7 +46,7 @@ export async function uploadToFolder(path_to_certificates: string): Promise<Uplo
 
   const folderId = "12kwuE0lalYPWzcE6gCyYg0fTdXoT33eh"
   const fileMetadata = {
-    name: 'certificados.pdf',
+    name: path_to_certificates.split('/').pop(),
     parents: [folderId],
   };
   const media = {

@@ -95,7 +95,7 @@ async function createCertificatesLocalAndDrive({ input, interaction }: createCer
     if (updateToFolderResponse.isLeft())
       throw updateToFolderResponse.value.error
 
-    console.log(`Certificados no Google Drive: ${env.GOOGLE_DRIVE_FOLDER_ID}`)
+    console.log(`Certificados no Google Drive: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}`)
 
     /*
         //const numPages = listaNomes.length;
@@ -122,7 +122,7 @@ async function createCertificatesLocalAndDrive({ input, interaction }: createCer
 function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
   const customIds = inputFields.map((field) => field.customId || "");
   const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
-  const { /*email_assinante,*/ link, minutos_totais, /*nome_assinante,*/ titulo }: InputFieldsRequest = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
+  const { /*email_assinante,*/ link, minutos_totais, /*nome_assinante,*/ titulo, data_new }: InputFieldsRequest = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
 
   const minutos_input = minutos_totais as number;
   const timing: { horas: unknown; minutos: unknown } = {
@@ -134,7 +134,7 @@ function extractInputData({ inputFields, interaction }: ExtractInputDataRequest)
     minutos: timing.minutos as string,
   };
 
-  return { horas, link, minutos, titulo }
+  return { horas, link, minutos, titulo, data_new }
 }
 
 export default new Modal({
@@ -149,7 +149,7 @@ export default new Modal({
     if ((isNotAdmin).isRight())
       return isNotAdmin.value.response
 
-    const { horas, minutos, titulo, link, /*nome_assinante,email_assinante*/ } = extractInputData({ interaction, inputFields })
+    const { horas, minutos, titulo, link, data_new, /*nome_assinante,email_assinante*/ } = extractInputData({ interaction, inputFields })
 
     try {
 
@@ -183,7 +183,17 @@ export default new Modal({
       }
 
       const listaNomes = registration.value.eventRegistrations.map((registration) => registration.nome);
-      const data = new Date(registration.value.eventRegistrations[0].createTime);
+      // TODO: const data = new Date(registration.value.eventRegistrations[0].createTime);
+
+      const parts = data_new.split("-"); // Split the string into parts
+      const day = parseInt(parts[0], 10); // Parse day as an integer
+      const month = parseInt(parts[1], 10) - 1; // Parse month as an integer (months are 0-indexed)
+      const year = parseInt(parts[2], 10); // Parse year as an integer
+
+      const data = new Date(year, month, day);
+
+      console.log("Data1: " + data)
+      console.log("Data2: " + data_new)
 
       if (link) return createCertificatesInDatabase({
         interaction,

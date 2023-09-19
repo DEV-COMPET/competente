@@ -33,10 +33,10 @@
             "style": 1
         },
         {
-            "label": "Qual o link do drive com os certificados?",
-            "placeholder": "drive.com.br",
-            "customId": "link",
-            "required": false,
+            "label": "Qual a data do talks realizado?",
+            "placeholder": "01-02-2023",
+            "customId": "data_new",
+            "required": true,
             "style": 1
         }
     ]
