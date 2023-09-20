@@ -12,9 +12,56 @@ import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks
 import { env } from "@/env";
 import { formatarData } from "@/bot/utils/formatting/formatarData";
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
-import { ExtractInputDataRequest, ExtractInputDataResponse, InputFieldsRequest, createCertificatesInDatabaseRequest, createCertificatesLocalAndDriveRequest } from "./interfaces";
 
 // import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
+
+import { CertificatesType } from "@/api/modules/certificados/entities/certificados.entity"
+import { ExtendedModalInteraction } from "@/bot/typings/Modals"
+
+interface InputFieldsRequest {
+    titulo: string,
+    data_new: string
+    email_assinante: string,
+    nome_assinante: string,
+    minutos_totais: number
+    link: string
+}
+
+interface ExtractInputDataRequest {
+    interaction: ExtendedModalInteraction,
+    inputFields: TextInputComponentData[]
+}
+
+interface ExtractInputDataResponse {
+    horas: string,
+    minutos: string,
+    link?: string,
+    email_assinante?: string
+    nome_assinante?: string
+    titulo: string
+    data_new: string
+}
+
+interface createCertificatesInDatabaseRequest {
+    body: CertificatesType
+    interaction: ExtendedModalInteraction
+}
+
+interface ITalksPropsExtended {
+    titulo: string,
+    listaNomes: string[]
+    horas?: string,
+    minutos?: string
+    data: Date
+}
+
+interface createCertificatesLocalAndDriveRequest {
+    interaction: ExtendedModalInteraction
+    input: ITalksPropsExtended
+}
+
+
+
 
 const { inputFields, modalBuilderRequest }: {
   inputFields: TextInputComponentData[];
@@ -86,7 +133,7 @@ async function createCertificatesLocalAndDrive({ input, interaction }: createCer
     if (filePath.isLeft())
       throw filePath.value.error
 
-    console.log(`Certificados Locais: ${filePath.value.path_to_certificates}`)
+    console.log(`\nCertificados Locais: ${filePath.value.path_to_certificates}`)
 
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
@@ -95,11 +142,10 @@ async function createCertificatesLocalAndDrive({ input, interaction }: createCer
     if (updateToFolderResponse.isLeft())
       throw updateToFolderResponse.value.error
 
-    console.log(`Certificados no Google Drive: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}`)
+    console.log(`\nCertificados no Google Drive: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}`)
 
     /*
         //const numPages = listaNomes.length;
-    
     
         // await submitToAutentique({
         //   numPages,
@@ -191,9 +237,6 @@ export default new Modal({
       const year = parseInt(parts[2], 10); // Parse year as an integer
 
       const data = new Date(year, month, day);
-
-      console.log("Data1: " + data)
-      console.log("Data2: " + data_new)
 
       if (link) return createCertificatesInDatabase({
         interaction,
