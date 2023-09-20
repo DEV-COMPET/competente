@@ -53,5 +53,7 @@ export async function createCompetiano(request: FastifyRequest, reply: FastifyRe
 			.send({ error_message: user.value.message })
 	}
 
-	return reply.status(201).send({ created_user: user.value.competiano });
+	return reply
+		.status(201)
+		.send(user.value.competiano);
 }
