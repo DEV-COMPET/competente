@@ -10,11 +10,8 @@ export function makeEmbed({ data, json }: makeEmbedRequest) {
 
     let embed: EmbedBuilder;
 
-    if(json) 
-        embed = new EmbedBuilder(Object.assign({}, readJsonFile(json), data))
-
-    else 
-        embed = new EmbedBuilder(data)
+    if(json) embed = new EmbedBuilder(Object.assign({}, readJsonFile(json), data))
+    else     embed = new EmbedBuilder(data)
 
     embed.setTimestamp()
 

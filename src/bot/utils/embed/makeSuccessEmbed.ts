@@ -5,58 +5,25 @@ import { makeEmbed } from "./makeEmbed";
 export interface makeEmbedRequest {
     json?: readJsonFileRequest
     interaction: ExtendedModalInteraction
-    error: {
-        code: number,
-        message: string
-    }
+    description?: string 
+    title: string
 }
 
-export function makeSuccessEmbed({ interaction, error, json }: makeEmbedRequest) {
-
-    const { code, message } = error
-
-    if (json) {
-        return makeEmbed({
-            data: {
-                author: {
-                    name: interaction.user.username.replaceAll("_", " ") || "abc",
-                    iconURL: interaction.user.avatarURL() || undefined,
-                },
-                fields: [
-                    {
-                        name: "Código do erro",
-                        value: code.toString(),
-                        inline: false,
-                    },
-                    {
-                        name: "Mensagem do erro",
-                        value: message,
-                        inline: false,
-                    },
-                ],
-            },
-            json
-        })
-    }
+export function makeSuccessEmbed({ interaction, description, json, title }: makeEmbedRequest) {
 
     return makeEmbed({
         data: {
+            title: title ? title : "Ação realizada com sucesso!",
+            color: 1683593,
             author: {
                 name: interaction.user.username.replaceAll("_", " ") || "abc",
                 iconURL: interaction.user.avatarURL() || undefined,
             },
-            fields: [
-                {
-                    name: "Código do erro",
-                    value: code.toString(),
-                    inline: false,
-                },
-                {
-                    name: "Mensagem do erro",
-                    value: message,
-                    inline: false,
-                },
-            ],
+            thumbnail: {
+                url: "https://www.pngfind.com/pngs/m/0-226_image-checkmark-green-check-mark-circle-hd-png.png",
+            },
+            description
         },
-    })
+        json
+    });
 }

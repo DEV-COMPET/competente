@@ -7,6 +7,7 @@ import { formatarData } from '../formatting/formatarData';
 import { ICreateCertificateProps, ITalksProps } from './interfaces';
 import { ResourceNotFoundError } from '@/api/errors/resourceNotFoundError';
 import { partial_to_full_path, readJsonFileRequest } from '../json';
+import { PythonVenvNotActivatedError } from '@/bot/errors/pythonVenvNotActivatedError';
 
 type CreateTalksPdfResponse = Either<
   { error: NotCreatedError },
@@ -71,13 +72,13 @@ interface executePythonScriptRequest {
 }
 
 type executePythonScriptResponse = Either<
-  { error: ResourceNotFoundError | PythonShellError },
+  { error: ResourceNotFoundError | PythonShellError | Error },
   { response: string[] }
 >
 
 export async function executePythonScript({ args, pathRequest }: executePythonScriptRequest): Promise<executePythonScriptResponse> {
-  
-  if(!args) args = []
+
+  if (!args) args = []
 
   const scriptPath = partial_to_full_path(pathRequest);
 
@@ -90,9 +91,6 @@ export async function executePythonScript({ args, pathRequest }: executePythonSc
 
   const options = { pythonPath, args };
 
-  // caminho para o arquivo script.py
-  // const scriptPath = path.resolve(__dirname, script);
-  
   try {
     const response = await PythonShell.run(scriptPath, options);
     if (!response)
@@ -100,22 +98,27 @@ export async function executePythonScript({ args, pathRequest }: executePythonSc
 
     return right({ response });
 
-  } catch (error) {
-    console.error(error);
-    return left({ error: new PythonShellError() });
+  } catch (error: any) {
+    // console.error(error);
+    if (error.message.includes("No module named 'reportlab'") || error.stack.includes("No module named 'reportlab'"))
+      return left({ error: new PythonVenvNotActivatedError() });
+    return left({ error: error })
   }
 }
 
-
+type createCertificadoTalksPalestrantesResponse = Either<
+  { error: NotCreatedError },
+  { path_to_certificate: string }
+>
 // retorna o path do certificado criado
-export async function createCertificadoTalksPalestrantes({ titulo, listaNomes, horas = "1", minutos = "30", data }: ITalksProps): Promise<string> {
+export async function createCertificadoTalksPalestrantes({ titulo, listaNomes, horas = "1", minutos = "30", data }: ITalksProps): Promise<createCertificadoTalksPalestrantesResponse> {
   const text_dir = talksDirectories.palestrante_content // Arquivo de texto que contém o texto do certificado
   const template_dir = talksDirectories.template // Imagem que contém o template do certificado
+  
   const response = await createCertificate({ data, titulo, horas, minutos, listaNomes, template_dir, text_dir })
   if (response.isLeft())
-    throw new Error("Erro na criação do certificado!");
+    return left({ error: response.value.error })
 
-  const path_to_certificate: string = (response.value.response[0])
-  return path_to_certificate
+  return right({ path_to_certificate: response.value.response[0] })
 }
 

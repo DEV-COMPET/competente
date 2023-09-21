@@ -1,6 +1,7 @@
 import { readJsonFileRequest } from "../json";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { makeEmbed } from "./makeEmbed";
+import { EmbedData } from "discord.js";
 
 export interface makeEmbedRequest {
     json?: readJsonFileRequest
@@ -9,54 +10,36 @@ export interface makeEmbedRequest {
         code: number,
         message: string
     }
+    title?: string
 }
 
-export function makeErrorEmbed({ interaction, error, json }: makeEmbedRequest) {
-
-    const { code, message } = error
-
-    if (json) {
-        return makeEmbed({
-            data: {
-                author: {
-                    name: interaction.user.username.replaceAll("_", " ") || "abc",
-                    iconURL: interaction.user.avatarURL() || undefined,
-                },
-                fields: [
-                    {
-                        name: "Código do erro",
-                        value: code.toString(),
-                        inline: false,
-                    },
-                    {
-                        name: "Mensagem do erro",
-                        value: message,
-                        inline: false,
-                    },
-                ],
-            },
-            json
-        })
-    }
+export function makeErrorEmbed({ interaction, error, json, title }: makeEmbedRequest) {
 
     return makeEmbed({
         data: {
+            title: title ? title : "Não foi possível completar essa ação!",
+            color: 0xf56565,
             author: {
                 name: interaction.user.username.replaceAll("_", " ") || "abc",
                 iconURL: interaction.user.avatarURL() || undefined,
             },
+            thumbnail: {
+                url: "https://www.pngfind.com/pngs/m/0-1420_red-cross-mark-clipart-green-checkmark-red-x.png",
+            },
             fields: [
                 {
                     name: "Código do erro",
-                    value: code.toString(),
+                    value: error.code.toString(),
                     inline: false,
                 },
                 {
                     name: "Mensagem do erro",
-                    value: message,
+                    value: error.message,
                     inline: false,
                 },
             ],
         },
-    })
+        json
+    });
+
 }

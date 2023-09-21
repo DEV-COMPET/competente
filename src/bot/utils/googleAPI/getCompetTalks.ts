@@ -56,8 +56,8 @@ export async function getCompetTalksRegistration(talksEventName: string): Promis
 
   // O código abaixo remove os caracteres especiais
   const eventRegistrations = registrations.value.certificados.filter(registration => registration.event?.toLowerCase() === talksEventName.toLowerCase())
-  if (eventRegistrations.length === 0)
+  if (eventRegistrations.length === 0) 
     return left({ error: new ResourceNotFoundError(`O evento ${talksEventName} não existe ou não possui nenhum aluno apto a receber o certificado`) })
-  //throw new Error(`O evento ${talksEventName} não existe ou não possui nenhum aluno apto a receber o certificado`)
+
   return right({ eventRegistrations })
 }

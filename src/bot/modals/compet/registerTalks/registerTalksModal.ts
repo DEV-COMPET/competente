@@ -1,8 +1,4 @@
-import {
-  TextInputComponentData,
-  ModalComponentData,
-  EmbedBuilder,
-} from "discord.js";
+import { TextInputComponentData, ModalComponentData } from "discord.js";
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
@@ -17,47 +13,50 @@ import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 
 import { CertificatesType } from "@/api/modules/certificados/entities/certificados.entity"
 import { ExtendedModalInteraction } from "@/bot/typings/Modals"
+import { PythonShellError } from "python-shell";
+import { PythonVenvNotActivatedError } from "@/bot/errors/pythonVenvNotActivatedError";
+import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 
 interface InputFieldsRequest {
-    titulo: string,
-    data_new: string
-    email_assinante: string,
-    nome_assinante: string,
-    minutos_totais: number
-    link: string
+  titulo: string,
+  data_new: string
+  email_assinante: string,
+  nome_assinante: string,
+  minutos_totais: number
+  link: string
 }
 
 interface ExtractInputDataRequest {
-    interaction: ExtendedModalInteraction,
-    inputFields: TextInputComponentData[]
+  interaction: ExtendedModalInteraction,
+  inputFields: TextInputComponentData[]
 }
 
 interface ExtractInputDataResponse {
-    horas: string,
-    minutos: string,
-    link?: string,
-    email_assinante?: string
-    nome_assinante?: string
-    titulo: string
-    data_new: string
+  horas: string,
+  minutos: string,
+  link?: string,
+  email_assinante?: string
+  nome_assinante?: string
+  titulo: string
+  data_new: string
 }
 
 interface createCertificatesInDatabaseRequest {
-    body: CertificatesType
-    interaction: ExtendedModalInteraction
+  body: CertificatesType
+  interaction: ExtendedModalInteraction
 }
 
 interface ITalksPropsExtended {
-    titulo: string,
-    listaNomes: string[]
-    horas?: string,
-    minutos?: string
-    data: Date
+  titulo: string,
+  listaNomes: string[]
+  horas?: string,
+  minutos?: string
+  data: Date
 }
 
 interface createCertificatesLocalAndDriveRequest {
-    interaction: ExtendedModalInteraction
-    input: ITalksPropsExtended
+  interaction: ExtendedModalInteraction
+  input: ITalksPropsExtended
 }
 
 
@@ -124,45 +123,36 @@ async function createCertificatesLocalAndDrive({ input, interaction }: createCer
 
   const { data, listaNomes, titulo, horas, minutos } = input
 
-  try {
+  const filePath = await createTalksPdf({ titulo: titulo, data: formatarData(data), listaNomes, horas, minutos });
 
-    await interaction.reply({ content: "boa", ephemeral: true });
+  if (filePath.isLeft()) {
+    console.error(filePath.value.error.message)
+    if (filePath.value.error instanceof PythonShellError)
+      return await interaction.editReply(`Erro do Python não identificado`)
 
-    const filePath = await createTalksPdf({ titulo: titulo, data: formatarData(data), listaNomes, horas, minutos });
+    if (filePath.value.error instanceof PythonVenvNotActivatedError)
+      return await interaction.editReply(`Ambiente virtual do Pythonn não ativado.`)
 
-    if (filePath.isLeft())
-      throw filePath.value.error
-
-    console.log(`\nCertificados Locais: ${filePath.value.path_to_certificates}`)
-
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    const updateToFolderResponse = await uploadToFolder(filePath.value.path_to_certificates)
-
-    if (updateToFolderResponse.isLeft())
-      throw updateToFolderResponse.value.error
-
-    console.log(`\nCertificados no Google Drive: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}`)
-
-    /*
-        //const numPages = listaNomes.length;
-    
-        // await submitToAutentique({
-        //   numPages,
-        //   titulo: titulo as string,
-        //   filePath,
-        //   signer: { name: nome_assinante, email: email_assinante },
-        // });
-    */
-    return;
-
-  } catch (error: any) {
-    console.error(error);
-    return await interaction.reply({
-      content: error.message,
-      ephemeral: true,
-    });
+    return await interaction.editReply(`Erro não previsto. Verifique o log para mais informações.`)
   }
+
+  const updateToFolderResponse = await uploadToFolder(filePath.value.path_to_certificates)
+
+  if (updateToFolderResponse.isLeft())
+    return await interaction.editReply(`Erro durante a geração de certificados (Python provavelmente)`)
+
+  /*
+      //const numPages = listaNomes.length;
+  
+      // await submitToAutentique({
+      //   numPages,
+      //   titulo: titulo as string,
+      //   filePath,
+      //   signer: { name: nome_assinante, email: email_assinante },
+      // });
+  */
+  return await interaction.editReply(`Certificados de presença gerados com sucesso! Disponiveis em: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}.`)
+
 }
 
 function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -199,33 +189,19 @@ export default new Modal({
 
     try {
 
+      await interaction.deferReply({ ephemeral: true })
+
       const registration = await getCompetTalksRegistration(titulo);
       if (registration.isLeft()) {
-        const embed = new EmbedBuilder()
-          .setColor(0xf56565)
-          .setTitle("Não foi possível completar essa ação!")
-          .setDescription(registration.value.error.message)
-          .setThumbnail(
-            "https://www.pngfind.com/pngs/m/0-1420_red-cross-mark-clipart-green-checkmark-red-x.png"
-          )
-          .addFields(
-            {
-              name: "Código do erro",
-              value: "401",
-              inline: false
-            },
-            {
-              name: "Mensagem do erro",
-              value: registration.value.error.message,
-              inline: false,
-            }
-          );
-
-        return await interaction.reply({
-          content: "Não foi possível executar este comando",
-          ephemeral: true,
-          embeds: [embed],
-        });
+        if (registration.isLeft())
+                return await interaction.editReply({
+                    embeds: [
+                        makeErrorEmbed({
+                            error: { code: 401, message: registration.value.error.message },
+                            interaction, title: "Titulo de Talks Invalido!"
+                        })
+                    ]
+                })
       }
 
       const listaNomes = registration.value.eventRegistrations.map((registration) => registration.nome);
@@ -255,10 +231,7 @@ export default new Modal({
       })
 
     } catch (error: any) {
-      return await interaction.reply({
-        content: error.message,
-        ephemeral: true
-      });
+      await interaction.editReply({content: "Erro"})
     }
 
   }
