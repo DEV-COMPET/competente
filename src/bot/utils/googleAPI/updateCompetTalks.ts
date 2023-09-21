@@ -5,6 +5,13 @@ import { env } from "@/env";
 
 const competTalksFormId = env.GOOGLE_FORM_ID;
 const environment = env.ENVIRONMENT;
+
+export function validateDriveLink(link: string): boolean {
+    const regex =
+        /^https:\/\/drive\.google\.com\/file\/d\/[a-zA-Z0-9_-]+(\/view)?(\?usp=share_link)?$/;
+    return regex.test(link);
+}
+
 async function updateForm(formId: string, titulo: string) {
     const auth = new google.auth.GoogleAuth({
         keyFile: path.join(__dirname, `competente.${environment}.json`),

@@ -32,7 +32,7 @@ export default new Modal({
         if ((isNotAdmin).isRight())
             return isNotAdmin.value.response
 
-        const { nomes, titulo, data_completa, email_assinante, horas, minutos } = extractInputData({ interaction, inputFields })
+        const { nomes, titulo, data_completa, /*email_assinante,*/ horas, minutos } = extractInputData({ interaction, inputFields })
 
         const registration = await getCompetTalksRegistration(titulo);
         if (registration.isLeft())
