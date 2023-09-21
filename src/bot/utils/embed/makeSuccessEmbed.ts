@@ -1,15 +1,18 @@
 import { readJsonFileRequest } from "../json";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { makeEmbed } from "./makeEmbed";
+import { APIEmbedField, EmbedAssetData } from "discord.js";
 
 export interface makeEmbedRequest {
     json?: readJsonFileRequest
     interaction: ExtendedModalInteraction
     description?: string 
-    title: string
+    title?: string
+    fields?: APIEmbedField[]
+    url_imagem?: string 
 }
 
-export function makeSuccessEmbed({ interaction, description, json, title }: makeEmbedRequest) {
+export function makeSuccessEmbed({ interaction, description, json, title, fields, url_imagem }: makeEmbedRequest) {
 
     return makeEmbed({
         data: {
@@ -22,7 +25,9 @@ export function makeSuccessEmbed({ interaction, description, json, title }: make
             thumbnail: {
                 url: "https://www.pngfind.com/pngs/m/0-226_image-checkmark-green-check-mark-circle-hd-png.png",
             },
-            description
+            fields,
+            description,
+            image: url_imagem ? { url: url_imagem } as EmbedAssetData : undefined
         },
         json
     });
