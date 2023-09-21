@@ -16,6 +16,7 @@ import { ExtendedModalInteraction } from "@/bot/typings/Modals"
 import { PythonShellError } from "python-shell";
 import { PythonVenvNotActivatedError } from "@/bot/errors/pythonVenvNotActivatedError";
 import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
+import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
 
 interface InputFieldsRequest {
   titulo: string,
@@ -151,8 +152,24 @@ async function createCertificatesLocalAndDrive({ input, interaction }: createCer
       //   signer: { name: nome_assinante, email: email_assinante },
       // });
   */
-  return await interaction.editReply(`Certificados de presença gerados com sucesso! Disponiveis em: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}.`)
-
+  return await interaction.editReply({
+    embeds: [
+      makeSuccessEmbed({
+        title: "Certificados de Presença gerados com sucesso!",
+        fields: [
+          {
+            name: "Nome do Evento",
+            value: `${titulo}`
+          },
+          {
+            name: "Link do Google Drive",
+            value: `https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}`
+          }
+        ],
+        interaction
+      })
+    ]
+  })
 }
 
 function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -194,14 +211,14 @@ export default new Modal({
       const registration = await getCompetTalksRegistration(titulo);
       if (registration.isLeft()) {
         if (registration.isLeft())
-                return await interaction.editReply({
-                    embeds: [
-                        makeErrorEmbed({
-                            error: { code: 401, message: registration.value.error.message },
-                            interaction, title: "Titulo de Talks Invalido!"
-                        })
-                    ]
-                })
+          return await interaction.editReply({
+            embeds: [
+              makeErrorEmbed({
+                error: { code: 401, message: registration.value.error.message },
+                interaction, title: "Titulo de Talks Invalido!"
+              })
+            ]
+          })
       }
 
       const listaNomes = registration.value.eventRegistrations.map((registration) => registration.nome);
@@ -231,7 +248,7 @@ export default new Modal({
       })
 
     } catch (error: any) {
-      await interaction.editReply({content: "Erro"})
+      await interaction.editReply({ content: "Erro" })
     }
 
   }

@@ -65,7 +65,7 @@ export default new Modal({
                     makeErrorEmbed({
                         title: "Não foi possível enviar o arquivo para o Google Drive.",
                         error: { code: 401, message: updateToFolderResponse.value.error.message },
-                        interaction, 
+                        interaction,
                     })
                 ]
             })
@@ -84,7 +84,16 @@ export default new Modal({
             embeds: [
                 makeSuccessEmbed({
                     title: "Certificados de Palestrantes gerados com sucesso!",
-                    description: ` Disponiveis em: https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}.`,
+                    fields: [
+                        {
+                            name: "Nome do Evento",
+                            value: `${titulo}`
+                        },
+                        {
+                            name: "Link do Google Drive",
+                            value: `https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_FOLDER_ID}`
+                        }
+                    ],
                     interaction
                 })
             ]
