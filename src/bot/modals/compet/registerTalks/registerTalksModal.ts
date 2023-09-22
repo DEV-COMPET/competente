@@ -27,7 +27,7 @@ const { inputFields, modalBuilderRequest }: {
 } = readJsonFile({ dirname: __dirname, partialPath: 'registerTalksModalData.json' });
 
 
-const modal = makeModal(inputFields, modalBuilderRequest);
+const registerTalksModal = makeModal(inputFields, modalBuilderRequest);
 
 /**
  * @author Henrique de Paula Rodrigues, Pedro Augusto de Portilho Ronzani
@@ -252,7 +252,7 @@ async function createCertificatesInDatabase(body: CertificatesType): Promise<Cre
 
         const { code, message, status }: { code: number; message: string; status: number } = await response.clone().json();
         return left({
-            error: new FetchReponseError(code, status, message)
+            error: new FetchReponseError({ code, status, message })
         })
     }
 
@@ -261,4 +261,4 @@ async function createCertificatesInDatabase(body: CertificatesType): Promise<Cre
     })
 }
 
-export { modal };
+export { registerTalksModal };
