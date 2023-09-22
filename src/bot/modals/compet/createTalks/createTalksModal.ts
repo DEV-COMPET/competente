@@ -2,15 +2,16 @@ import { TextInputComponentData, ModalComponentData } from "discord.js";
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
-import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { env } from "@/env";
-import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 import { Either, left, right } from "@/api/@types/either";
 import { InvalidInputLinkError } from "@/bot/errors/invalidInputError";
 import { FetchReponseError } from "@/bot/errors/fetchReponseError";
 import { Talks } from "@/api/modules/talks/entities/talks.entity";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
+import { getAllRegistrations } from "@/bot/utils/googleAPI/getCompetTalks";
+import { FormResponseTalks } from "@/bot/typings/talks";
+import { sendEmail } from "@/bot/utils/googleAPI/email";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -28,48 +29,73 @@ export default new Modal({
             throw "Channel is not cached";
 
         await interaction.deferReply({ ephemeral: true })
+        /*
+            const isNotAdmin = await checkIfNotAdmin(interaction)
+            if ((isNotAdmin).isRight())
+                return isNotAdmin.value.response
+    
+            const inputData = extractInputData({ interaction, inputFields })
+            const validateInputDataResponse = validateInputData(inputData)
+            if (validateInputDataResponse.isLeft()) {
+                console.error(validateInputDataResponse.value.error)
+                return await interaction.editReply({
+                    embeds: [
+                        makeErrorEmbed({
+                            title: "Não foi possivel criar o talks devido a dados inválidos.",
+                            error: { code: 401, message: validateInputDataResponse.value.error.message },
+                            interaction,
+                        })
+                    ]
+                })
+            }
+    
+            const createTalksInDatabaseResponse = await createTalksInDatabase(inputData)
+            if (createTalksInDatabaseResponse.isLeft()) {
+                console.error(createTalksInDatabaseResponse.value.error)
+                return await interaction.editReply({
+                    embeds: [
+                        makeErrorEmbed({
+                            title: "Não foi possivel enviar o talks para o Banco de Dados",
+                            error: {
+                                code: 401,
+                                message: createTalksInDatabaseResponse.value.error.message
+                            },
+                            interaction,
+                        })
+                    ]
+                })
+            }
+        */
 
-        const isNotAdmin = await checkIfNotAdmin(interaction)
-        if ((isNotAdmin).isRight())
-            return isNotAdmin.value.response
+        await sendEmail()
 
-        const inputData = extractInputData({ interaction, inputFields })
-        const validateInputDataResponse = validateInputData(inputData)
-        if (validateInputDataResponse.isLeft()) {
-            console.error(validateInputDataResponse.value.error)
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        title: "Não foi possivel criar o talks devido a dados inválidos.",
-                        error: { code: 401, message: validateInputDataResponse.value.error.message },
-                        interaction,
-                    })
-                ]
-            })
-        }
-
-        const createTalksInDatabaseResponse = await createTalksInDatabase(inputData)
-        if (createTalksInDatabaseResponse.isLeft())
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        title: "Não foi possivel enviar o talks para o Banco de Dados",
-                        error: { code: 401, message: createTalksInDatabaseResponse.value.error.message },
-                        interaction,
-                    })
-                ]
-            })
-
+        /*
+                try {
+                    scheduleYoutubeVideo()
+                } catch (error: any) {
+                    console.error(error)
+                    return await interaction.editReply("Deu ruim hein")
+                }
+        */
         return await interaction.editReply({
             embeds: [
                 makeSuccessEmbed({
-                    title: "Até o momento tamo sussa.",
-                    interaction
+                    title: "Ate o momento cria",
+                    interaction,
                 })
             ]
         })
     }
 });
+
+async function sendEmail3() {
+    const registrations = await getAllRegistrations(env.GOOGLE_FORM_ID);
+
+    if (registrations.isRight()) {
+        const uniqueEmails = [...new Set(registrations.value.certificados.map(certificado => certificado.email).filter(Boolean))];
+        console.dir(uniqueEmails);
+    }
+}
 
 
 async function createTalksInDatabase(inputData: ExtractInputDataResponse): Promise<CreateTalksInDatabaseResponse> {

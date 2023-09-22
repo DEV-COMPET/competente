@@ -30,7 +30,7 @@ export async function createTalksController(request: FastifyRequest, reply: Fast
 	if (talksCreated.isLeft()) {
 		return reply
 			.status(400)
-			.send({ error_message: talksCreated.value.message })
+			.send( talksCreated.value )
 	}
 
 	return reply.status(201).send(talksCreated.value.createdTalks);
