@@ -3,13 +3,13 @@ import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
-import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks";
 import { createCertificadoTalksPalestrantes } from "@/bot/utils/python";
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 import { env } from "@/env";
 import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
+import { extractInputData } from "./utils/extractInputData";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -101,41 +101,5 @@ export default new Modal({
 
     }
 });
-
-interface ExtractInputDataRequest {
-    interaction: ExtendedModalInteraction,
-    inputFields: TextInputComponentData[]
-}
-
-function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
-    const customIds = inputFields.map((field) => field.customId || "");
-    const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
-
-    interface InputFieldsRequest {
-        nomes: string
-        titulo: string
-        minutos_totais: number
-        email_assinante: string
-        data_completa: string
-    }
-
-    const { nomes, titulo, data_completa, email_assinante, minutos_totais }: InputFieldsRequest = Object.assign({}, ...input_data);
-
-    const minutos = Math.trunc(minutos_totais % 60).toString()
-    const horas = Math.trunc(minutos_totais / 60).toString()
-
-    const nomes_separados = nomes.split(',').map(nome => { return nome.trim() })
-
-    return { nomes: nomes_separados, titulo, data_completa, email_assinante, horas, minutos }
-}
-
-interface ExtractInputDataResponse {
-    nomes: string[]
-    titulo: string
-    minutos: string
-    horas: string
-    email_assinante: string
-    data_completa: string
-}
 
 export { registerSpeakersCertificatesModal };
