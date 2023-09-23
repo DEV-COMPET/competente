@@ -4,14 +4,13 @@ import {
   InteractionResponse,
 } from "discord.js";
 import { Modal } from "@/bot/structures/Modals";
-import { env } from "@/env";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
 import { makeEmbed } from "@/bot/utils/embed/makeEmbed";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
-import { CompetianoType } from "@/api/modules/competianos/entities/competiano.entity";
 import { Member } from "@/bot/typings/Member";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
+import { extractInputData } from "./utils/extractInputData";
 
 const { inputFields, modalBuilderRequest }: {
   inputFields: TextInputComponentData[];
@@ -28,7 +27,7 @@ export default new Modal({
     if (interaction.channel === null)
       throw "Channel is not cached";
 
-    const { createMemberUrl, requestOptions } = extractInputData(interaction)
+    const { createMemberUrl, requestOptions } = extractInputData({ inputFields, interaction })
 
     const response = await fetch(createMemberUrl, requestOptions);
 
@@ -39,38 +38,10 @@ export default new Modal({
   },
 });
 
-interface ExtractInputDataResponse {
-  createMemberUrl: string
-  requestOptions: {
-    method: string;
-    body: string;
-    headers: {
-      "Content-Type": string;
-    };
-  }
-}
-
-function extractInputData(interaction: ExtendedModalInteraction): ExtractInputDataResponse {
-
-  const customIds = inputFields.map((field) => field.customId || "");
-  const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
-  const combinedData: CompetianoType = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
-  const requestOptions = {
-    method: "post",
-    body: JSON.stringify(combinedData),
-    headers: { "Content-Type": "application/json" },
-  };
-
-  const createMemberUrl = env.ENVIRONMENT === "development" ? "http://localhost:4444/competianos" : `${env.HOST}/competianos` || "http://localhost:4444/competianos/";
-  
-  return { createMemberUrl, requestOptions }
-}
-
-
 async function sucessReply(interaction: ExtendedModalInteraction, response: Response): Promise<InteractionResponse<boolean>> {
 
   const { nome, data_inicio, linkedin, email, url_imagem }: Member = await response.json();
-  
+
   // const url_imagem = interaction.fields.getTextInputValue("url_imagem")
 
   const embed = makeSuccessEmbed({
@@ -144,12 +115,3 @@ async function errorReply(interaction: ExtendedModalInteraction, response: Respo
 }
 
 export { createMemberModal };
-
-
-
-
-
-
-
-
-

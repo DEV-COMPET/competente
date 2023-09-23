@@ -13,7 +13,7 @@ type GetAllRegistrationsResponse = Either<
   { certificados: FormResponseTalks[] }
 >
 
-async function getAllRegistrations(formID: string): Promise<GetAllRegistrationsResponse> {
+export async function getAllRegistrations(formID: string): Promise<GetAllRegistrationsResponse> {
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(__dirname, `competente.${environment}.json`),
     scopes: 'https://www.googleapis.com/auth/forms.responses.readonly',

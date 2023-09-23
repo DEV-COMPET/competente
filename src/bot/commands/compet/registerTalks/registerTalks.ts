@@ -2,7 +2,7 @@ import { ChatInputApplicationCommandData } from "discord.js";
 import { Command } from "@/bot/structures/Command";
 import { readJsonFile } from "@/bot/utils/json";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
-import { modal } from "@/bot/modals/compet/registerTalks/registerTalksModal";
+import { registerTalksModal } from "@/bot/modals/compet/registerTalks/registerTalksModal";
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
   dirname: __dirname,
@@ -23,6 +23,6 @@ export default new Command({
     if ((isNotAdmin).isRight())
       return isNotAdmin.value.response
 
-    await interaction.showModal(modal)
+    await interaction.showModal(registerTalksModal)
   },
 });

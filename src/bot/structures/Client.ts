@@ -101,6 +101,10 @@ export class ExtendedClient extends Client {
 
         const commands = this.commands.map((command) => command); // TODO: por que não só criar um vetor de commands mais cedo
 
+        const { dirFiles } = await this.folderFiles("commands")
+
+        console.log({commands: dirFiles})
+
         if (guildId) {
             await rest.put(Routes.applicationGuildCommands(appId, guildId), {
                 body: commands,

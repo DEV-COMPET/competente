@@ -11,7 +11,7 @@ export default new Event("interactionCreate", "on", async (interaction) => {
 
     const command = client.commands.get(interaction.commandName);
     if (!command) {
-      await interaction.followUp("Você usou um comando não existente");
+      await interaction.followUp("Você usou um comando não existente!");
       return;
     }
     try {

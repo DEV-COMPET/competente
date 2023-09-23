@@ -1,7 +1,6 @@
 import { readJsonFileRequest } from "../json";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { makeEmbed } from "./makeEmbed";
-import { EmbedData } from "discord.js";
 
 export interface makeEmbedRequest {
     json?: readJsonFileRequest
