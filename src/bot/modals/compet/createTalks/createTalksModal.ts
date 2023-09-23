@@ -8,6 +8,7 @@ import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { createTalksInDatabase } from "./utils/createTalksInDatabase";
+import { sendMail } from "./utils/sendEmail";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -62,9 +63,28 @@ export default new Modal({
             })
         }
 
-        // TODO: agendar video no youtube
+        const sendMailResponse = await sendMail({
+            subject: "Test subject from API",
+            text: "Test text from API",
+            emailsTest: ["pedroaugustogabironzani@gmail.com", "pedroaugustogabironzani@hotmail.com", "pedroapr1804@gmail.com", "pedroapr1804@hotmail.com"]
+        })
+        if(sendMailResponse.isLeft()) {
+            console.error(sendMailResponse.value.error)
+            return await interaction.editReply({
+                embeds: [
+                    makeErrorEmbed({
+                        title: "Não foi possivel enviar os emails",
+                        error: {
+                            code: 401,
+                            message: sendMailResponse.value.error.message
+                        },
+                        interaction,
+                    })
+                ]
+            })
+        }
 
-        // TODO: mandar email 
+        // TODO: agendar video no youtube
 
         return await interaction.editReply({
             embeds: [
