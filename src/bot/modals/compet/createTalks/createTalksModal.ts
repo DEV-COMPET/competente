@@ -8,8 +8,9 @@ import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { createTalksInDatabase } from "./utils/createTalksInDatabase";
-import { sendMail } from "./utils/sendEmail";
+import { getEmails, sendMail } from "./utils/sendEmail";
 import { updateInscricaoTalks, updateTalks } from "@/bot/utils/googleAPI/updateCompetTalks";
+import { parser } from "@/bot/utils/googleAPI/getTalksInscriptions";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -64,12 +65,16 @@ export default new Modal({
             })
         }
 
+        const emails = await getEmails()
+        if (emails.isRight())
+            console.dir(emails.value.emails.length)
+
         const sendMailResponse = await sendMail({
             subject: "Test subject from API",
             text: "Test text from API",
             emailsTest: ["pedroaugustogabironzani@gmail.com", "pedroaugustogabironzani@hotmail.com", "pedroapr1804@gmail.com", "pedroapr1804@hotmail.com"]
         })
-        if(sendMailResponse.isLeft()) {
+        if (sendMailResponse.isLeft()) {
             console.error(sendMailResponse.value.error)
             return await interaction.editReply({
                 embeds: [
@@ -86,7 +91,7 @@ export default new Modal({
         }
 
         const updateCertificateResponse = await updateTalks(inputData.titulo);
-        if(updateCertificateResponse.isLeft()) {
+        if (updateCertificateResponse.isLeft()) {
             console.error(updateCertificateResponse.value.error)
             return await interaction.editReply({
                 embeds: [
@@ -100,7 +105,7 @@ export default new Modal({
         }
 
         const updateInscricaoTalksResponse = await updateInscricaoTalks(inputData.titulo);
-        if(updateInscricaoTalksResponse.isLeft()) {
+        if (updateInscricaoTalksResponse.isLeft()) {
             console.error(updateInscricaoTalksResponse.value.error)
             return await interaction.editReply({
                 embeds: [

@@ -114,13 +114,14 @@ export async function parser(inputs: possibleInputs[]) {
             }
         }
 
-        if(retorno) return retorno;
-    });
+        return retorno;
+    }).filter(retorno => Object.keys(retorno).length > 0);
 
-    saveDataToJson(retorno_list, 'dados.json');
+    // saveDataToJson(retorno_list, 'dados.json');
 
     return retorno_list;
 }
+
 
 
 export async function salvador() {
