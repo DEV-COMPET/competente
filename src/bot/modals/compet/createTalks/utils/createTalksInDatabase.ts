@@ -2,14 +2,14 @@ import { Either, left, right } from "@/api/@types/either";
 import { Talks } from "@/api/modules/talks/entities/talks.entity";
 import { FetchReponseError } from "@/bot/errors/fetchReponseError";
 import { env } from "@/env";
-import { ExtractInputDataResponse } from "./extractInputData";
+import { ValidateInputDataRightResponse } from "./validateInputData";
 
 type CreateTalksInDatabaseResponse = Either<
     { error: FetchReponseError },
     { createdTalks: Talks }
 >
 
-export async function createTalksInDatabase(inputData: ExtractInputDataResponse): Promise<CreateTalksInDatabaseResponse> {
+export async function createTalksInDatabase(inputData: ValidateInputDataRightResponse): Promise<CreateTalksInDatabaseResponse> {
 
     const requestOptions = {
         method: "post",

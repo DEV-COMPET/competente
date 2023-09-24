@@ -9,6 +9,7 @@ const envSchema = z.object({
     DISCORD_TOKEN: z.string(),
     ENVIRONMENT: z.enum(["development" , "production" , "debug"]).default("development"),
     GOOGLE_FORM_ID: z.string(),
+    GOOGLE_FORM_INSCRICAO_ID: z.string(),
     GOOGLE_DRIVE_FOLDER_ID: z.string(),
     AUTENTIQUE_TOKEN: z.string(),
     AUTENTIQUE_URL: z.string(),

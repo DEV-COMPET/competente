@@ -9,6 +9,7 @@ import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { createTalksInDatabase } from "./utils/createTalksInDatabase";
 import { sendMail } from "./utils/sendEmail";
+import { updateInscricaoTalks, updateTalks } from "@/bot/utils/googleAPI/updateCompetTalks";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -46,7 +47,7 @@ export default new Modal({
             })
         }
 
-        const createTalksInDatabaseResponse = await createTalksInDatabase(inputData)
+        const createTalksInDatabaseResponse = await createTalksInDatabase(validateInputDataResponse.value.inputData)
         if (createTalksInDatabaseResponse.isLeft()) {
             console.error(createTalksInDatabaseResponse.value.error)
             return await interaction.editReply({
@@ -84,12 +85,40 @@ export default new Modal({
             })
         }
 
+        const updateCertificateResponse = await updateTalks(inputData.titulo);
+        if(updateCertificateResponse.isLeft()) {
+            console.error(updateCertificateResponse.value.error)
+            return await interaction.editReply({
+                embeds: [
+                    makeErrorEmbed({
+                        title: "Não foi possivel atualizar o titulo do Forms de Certificados.",
+                        error: { code: 401, message: updateCertificateResponse.value.error.message },
+                        interaction,
+                    })
+                ]
+            })
+        }
+
+        const updateInscricaoTalksResponse = await updateInscricaoTalks(inputData.titulo);
+        if(updateInscricaoTalksResponse.isLeft()) {
+            console.error(updateInscricaoTalksResponse.value.error)
+            return await interaction.editReply({
+                embeds: [
+                    makeErrorEmbed({
+                        title: "Não foi possivel atualizar o titulo do Forms de Inscrição.",
+                        error: { code: 401, message: updateInscricaoTalksResponse.value.error.message },
+                        interaction,
+                    })
+                ]
+            })
+        }
+
         // TODO: agendar video no youtube
 
         return await interaction.editReply({
             embeds: [
                 makeSuccessEmbed({
-                    title: "Ate o momento cria",
+                    title: "Novo Talks cadastrado e Divulgado com Sucesso!!",
                     interaction,
                 })
             ]
