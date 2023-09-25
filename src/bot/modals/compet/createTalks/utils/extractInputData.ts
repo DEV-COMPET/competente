@@ -10,6 +10,7 @@ export interface ExtractInputDataResponse {
     palestrantes: string[]
     titulo: string
     data: string
+    hora: string
 }
 
 export function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -20,11 +21,12 @@ export function extractInputData({ inputFields, interaction }: ExtractInputDataR
         palestrantes: string
         titulo: string
         data: string
+        hora: string
     }
 
-    const { palestrantes, titulo, data }: InputFieldsRequest = Object.assign({}, ...input_data);
+    const { palestrantes, titulo, data, hora }: InputFieldsRequest = Object.assign({}, ...input_data);
 
     const palestrantes_separados = palestrantes.split(',').map(nome => { return nome.trim() })
 
-    return { palestrantes: palestrantes_separados, data, titulo }
+    return { palestrantes: palestrantes_separados, data, titulo, hora }
 }

@@ -24,6 +24,13 @@
             "customId": "data",
             "required": true,
             "style": 1
+        },
+        {
+            "label": "Qual o horario do talks?",
+            "placeholder": "12:30",
+            "customId": "hora",
+            "required": true,
+            "style": 1
         }
     ]
 }

@@ -19,6 +19,11 @@ const { inputFields, modalBuilderRequest }: {
 
 const createTalksModal = makeModal(inputFields, modalBuilderRequest);
 
+/**
+ * @author Pedro Augusto de Portilho Ronzani 
+ * @description Criação de um novo Talks.
+ * Caso o usuário seja admin, um novo talks é salvo no banco de dados, emails são enviados para pessoas que ja se inscreveram em talks anteriores, e atualiza os titulos dos formulários de inscrição e emissão de certificados.  
+ */
 export default new Modal({
     customId: "createtalks",
 
