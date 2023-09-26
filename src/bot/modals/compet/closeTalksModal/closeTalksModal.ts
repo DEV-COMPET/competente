@@ -3,7 +3,6 @@ import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
-import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
@@ -13,6 +12,8 @@ import { generateInscriptionCertificate } from "./utils/generateInscriptionCerti
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 import { generateSpeakerCertificate } from "./utils/generateSpeakerCertificate";
 import { makeLoadingEmbed } from "@/bot/utils/embed/makeLoadingEmbed";
+import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
+import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -53,154 +54,95 @@ export default new Modal({
         })
 
         const validateInputDataResponse = await validateInputData(inputData)
-        if (validateInputDataResponse.isLeft()) {
-            console.error(validateInputDataResponse.value.error)
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        title: "Finalizar o talks devido a dados inválidos.",
-                        error: { code: 401, message: validateInputDataResponse.value.error.message },
-                        interaction,
-                    })
-                ]
+        if (validateInputDataResponse.isLeft())
+            return await editErrorReply({
+                interaction,
+                title: "Finalizar o talks devido a dados inválidos.",
+                error: validateInputDataResponse.value.error
             })
-        }
 
-        await interaction.editReply({
-            embeds: [
-                makeLoadingEmbed({
-                    title: "Talks cadastrado. Gerando certificado de visualização",
-                    interaction,
-                })
-            ]
+        await editLoadingReply({
+            interaction, title: "Talks cadastrado. Gerando certificado de visualização"
         })
 
         const { data, titulo, minutos, palestrantes } = validateInputDataResponse.value.inputData.talks
 
         const generateInscriptionCertificateResponse = await generateInscriptionCertificate({ titulo, data, minutos: minutos as number })
         if (generateInscriptionCertificateResponse.isLeft()) {
-            console.error(generateInscriptionCertificateResponse.value.error.message)
             if (generateInscriptionCertificateResponse.value.error instanceof PythonShellError)
-                return await interaction.editReply({
-                    embeds: [
-                        makeErrorEmbed({
-                            error: { code: 401, message: generateInscriptionCertificateResponse.value.error.message },
-                            interaction, title: `Erro do Python não identificado`
-                        })
-                    ]
+                return await editErrorReply({
+                    interaction,
+                    title: "Erro do Python não identificado",
+                    error: generateInscriptionCertificateResponse.value.error
                 })
 
             if (generateInscriptionCertificateResponse.value.error instanceof PythonVenvNotActivatedError)
-                return await interaction.editReply({
-                    embeds: [
-                        makeErrorEmbed({
-                            error: { code: 401, message: generateInscriptionCertificateResponse.value.error.message },
-                            interaction, title: `Ambiente virtual do Pythonn não ativado.`
-                        })
-                    ]
+                return await editErrorReply({
+                    interaction,
+                    title: "Ambiente virtual do Pythonn não ativado.",
+                    error: generateInscriptionCertificateResponse.value.error
                 })
 
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        error: { code: 401, message: generateInscriptionCertificateResponse.value.error.message },
-                        interaction, title: `Erro não previsto. Verifique o log para mais informações.`
-                    })
-                ]
+            return await editErrorReply({
+                interaction,
+                title: "Erro não previsto. Verifique o log para mais informações.",
+                error: generateInscriptionCertificateResponse.value.error
             })
         }
 
-        await interaction.editReply({
-            embeds: [
-                makeLoadingEmbed({
-                    title: "Certificado de visualização gerado. Salvando-o na nuvem",
-                    interaction,
-                })
-            ]
+        await editLoadingReply({
+            interaction, title: "Certificado de visualização gerado. Salvando-o na nuvem"
         })
 
         const updateInscriptionCertificateToFolderResponse = await uploadToFolder(generateInscriptionCertificateResponse.value.path_to_certificates)
-        if (updateInscriptionCertificateToFolderResponse.isLeft()) {
-            console.error(updateInscriptionCertificateToFolderResponse.value.error)
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        error: { code: 401, message: updateInscriptionCertificateToFolderResponse.value.error.message },
-                        interaction, title: "Erro durante o envio do certificado para o Google Drive."
-                    })
-                ]
+        if (updateInscriptionCertificateToFolderResponse.isLeft())
+            return await editErrorReply({
+                interaction,
+                title: "Erro durante o envio do certificado para o Google Drive.",
+                error: updateInscriptionCertificateToFolderResponse.value.error
             })
-        }
 
-        await interaction.editReply({
-            embeds: [
-                makeLoadingEmbed({
-                    title: "Certificado de visualização na nuvem. Gerando certificado de palestrante",
-                    interaction,
-                })
-            ]
+        await editLoadingReply({
+            interaction, title: "Certificado de visualização na nuvem. Gerando certificado de palestrante"
         })
 
         const generateSpeakerCertificateResponse = await generateSpeakerCertificate({ titulo, data, minutos: minutos as number, palestrantes })
         if (generateSpeakerCertificateResponse.isLeft()) {
-            console.error(generateSpeakerCertificateResponse.value.error.message)
             if (generateSpeakerCertificateResponse.value.error instanceof PythonShellError)
-                return await interaction.editReply({
-                    embeds: [
-                        makeErrorEmbed({
-                            error: { code: 401, message: generateSpeakerCertificateResponse.value.error.message },
-                            interaction, title: `Erro do Python não identificado`
-                        })
-                    ]
+                return await editErrorReply({
+                    interaction,
+                    title: "Erro do Python não identificado",
+                    error: generateSpeakerCertificateResponse.value.error
                 })
 
             if (generateSpeakerCertificateResponse.value.error instanceof PythonVenvNotActivatedError)
-                return await interaction.editReply({
-                    embeds: [
-                        makeErrorEmbed({
-                            error: { code: 401, message: generateSpeakerCertificateResponse.value.error.message },
-                            interaction, title: `Ambiente virtual do Pythonn não ativado.`
-                        })
-                    ]
+                return await editErrorReply({
+                    interaction,
+                    title: "Ambiente virtual do Pythonn não ativado.",
+                    error: generateSpeakerCertificateResponse.value.error
                 })
 
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        error: { code: 401, message: generateSpeakerCertificateResponse.value.error.message },
-                        interaction, title: `Erro não previsto. Verifique o log para mais informações.`
-                    })
-                ]
+            return await editErrorReply({
+                interaction,
+                title: "Erro não previsto. Verifique o log para mais informações.",
+                error: generateSpeakerCertificateResponse.value.error
             })
         }
 
-        await interaction.editReply({
-            embeds: [
-                makeLoadingEmbed({
-                    title: "Certificado de palestrante gerado. Salvando na nuvem",
-                    interaction,
-                })
-            ]
+        await editLoadingReply({
+            interaction, title: "Certificado de palestrante gerado. Salvando na nuvem"
         })
 
         const updateSpeakerCertificateToFolderResponse = await uploadToFolder(generateSpeakerCertificateResponse.value.path_to_certificates)
         if (updateSpeakerCertificateToFolderResponse.isLeft())
-            return await interaction.editReply({
-                embeds: [
-                    makeErrorEmbed({
-                        error: { code: 401, message: updateSpeakerCertificateToFolderResponse.value.error.message },
-                        interaction, title: "Erro durante o envio do certificado para o Google Drive."
-                    })
-                ]
+            return await editErrorReply({
+                interaction,
+                title: "Erro durante o envio do certificado para o Google Drive.",
+                error: updateSpeakerCertificateToFolderResponse.value.error
             })
 
-        await interaction.editReply({
-            embeds: [
-                makeLoadingEmbed({
-                    title: "Certificado de palestrante na nuvem",
-                    interaction,
-                })
-            ]
+        await editLoadingReply({
+            interaction, title: "Certificado de palestrante na nuvem"
         })
 
         // TODO: enviar certificados para autentique
