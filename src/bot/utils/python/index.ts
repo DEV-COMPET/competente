@@ -2,7 +2,6 @@ import { PythonShell, PythonShellError } from 'python-shell';
 import { execSync } from 'child_process';
 import { talksDirectories } from './constants';
 import { Either, left, right } from '@/api/@types/either';
-import { NotCreatedError } from '@/bot/errors/notCreatedError';
 import { formatarData } from '../formatting/formatarData';
 import { ICreateCertificateProps, ITalksProps } from './interfaces';
 import { ResourceNotFoundError } from '@/api/errors/resourceNotFoundError';
@@ -10,7 +9,7 @@ import { partial_to_full_path, readJsonFileRequest } from '../json';
 import { PythonVenvNotActivatedError } from '@/bot/errors/pythonVenvNotActivatedError';
 
 type CreateTalksPdfResponse = Either<
-  { error: NotCreatedError },
+  { error:  ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error  },
   { path_to_certificates: string }
 >
 
@@ -45,7 +44,7 @@ function getPythonPath(): GetPythonPathResponse {
 }
 
 type CreateCertificateResponse = Either<
-  { error: ResourceNotFoundError | PythonShellError },
+  { error:  ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error },
   { response: string[] }
 >
 
@@ -72,7 +71,7 @@ interface executePythonScriptRequest {
 }
 
 type executePythonScriptResponse = Either<
-  { error: ResourceNotFoundError | PythonShellError | Error },
+  { error: ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error },
   { response: string[] }
 >
 
@@ -107,7 +106,7 @@ export async function executePythonScript({ args, pathRequest }: executePythonSc
 }
 
 type createCertificadoTalksPalestrantesResponse = Either<
-  { error: NotCreatedError },
+  { error:  ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error  },
   { path_to_certificate: string }
 >
 // retorna o path do certificado criado

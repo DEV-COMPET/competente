@@ -6,7 +6,7 @@ import { FetchReponseError } from "@/bot/errors/fetchReponseError"
 import { Talks } from "@/api/modules/talks/entities/talks.entity"
 
 export type ValidateInputDataRightResponse = {
-    talks: Talks 
+    talks: Talks
 }
 
 type ValidateInputDataResponse = Either<
@@ -14,12 +14,15 @@ type ValidateInputDataResponse = Either<
     { inputData: ValidateInputDataRightResponse }
 >
 
-export async function validateInputData({ titulo }: ExtractInputDataResponse): Promise<ValidateInputDataResponse> {
+export async function validateInputData({ titulo, minutos_totais }: ExtractInputDataResponse): Promise<ValidateInputDataResponse> {
 
     const invalidInputs: string[] = []
 
     if (!(titulo.includes("COMPET Talks")))
         invalidInputs.push("titulo")
+
+    if (invalidInputs.length > 0)
+        return left({ error: new InvalidInputLinkError(invalidInputs) })
 
 
     const requestOptions = {
@@ -37,10 +40,16 @@ export async function validateInputData({ titulo }: ExtractInputDataResponse): P
         return left({ error: new FetchReponseError({ code, message, status }) })
     }
 
-    const talks = await response.json();
+    const { data, palestrantes }: { data: string, palestrantes: string[], titulo: string } = await response.json()
 
-    if (invalidInputs.length > 0)
-        return left({ error: new InvalidInputLinkError(invalidInputs) })
-
-    return right({ inputData: { talks } })
+    return right({
+        inputData: {
+            talks: {
+                data: new Date(data),
+                palestrantes, 
+                titulo,
+                minutos: minutos_totais
+            }
+        }
+    })
 }

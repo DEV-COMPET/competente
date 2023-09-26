@@ -56,7 +56,7 @@ async function fetchDataFromSheet({ sheet }: FetchDataFromSheetRequest) {
     }
 }
 
-export function saveDataToJson(data: any[], fileName: string) {
+function saveDataToJson(data: any[], fileName: string) {
     try {
         const jsonString = JSON.stringify(data, null, 2);
         fs.writeFileSync(fileName, jsonString, 'utf-8');
@@ -70,22 +70,27 @@ type FormData = {
     [key: string]: string[];
 };
 
-type possibleInputs = "data" | "nome_evento" | "como_ficou_sabendo" | "nome" | "email" | "tipo_aluno" | "matricula" | "curso" | "ano" | "sugestoes" | "periodo"
 
-function getFormData(inputs: possibleInputs[]): FormData {
+function getFormData({ inputs, sheet }: ParseDataFromSheetRequest): FormData {
 
-    const formData: FormData = {
+    const formData: FormData = sheet === 'inscricao' ? {
         data: ["Carimbo de data/hora"],
         nome_evento: ["Nome do Evento 2", "Nome do Evento 15"],
-        como_ficou_sabendo: ["Como você ficou sabendo desse evento? 3"],
         nome: ["Nome 4"],
         email: ["Email: 5"],
-        tipo_aluno: ["Tipo de aluno: 6"],
         matricula: ["Matrícula: 7", "Matrícula: 11"],
+        como_ficou_sabendo: ["Como você ficou sabendo desse evento? 3"],
+        tipo_aluno: ["Tipo de aluno: 6"],
         curso: ["Qual curso você faz? 8", "Qual curso você faz? 12"],
         ano: ["Em que ano você está? 9"],
         sugestoes: ["Espaço reservado para sugestões 10", "Espaço reservado para sugestões 14"],
         periodo: ["Em que período você está? 13"]
+    } : {
+        data: ["Carimbo de data/hora"],
+        nome_evento: ["O nome do Evento 7"],
+        nome: ["Seu nome completo: 8"],
+        email: ["Seu email: 9"],
+        matricula: ["Seu número de matrícula: 10"]
     };
 
     const result: FormData = {};
@@ -99,9 +104,17 @@ function getFormData(inputs: possibleInputs[]): FormData {
     return result;
 }
 
-export async function parser(inputs: possibleInputs[]) {
-    const data = await fetchDataFromSheet({sheet: 'inscricao'}); // dados totais
-    const formData = getFormData(inputs);
+type possibleInputs =             "data" | "nome_evento" | "nome" | "email" | "matricula" | "como_ficou_sabendo" | "tipo_aluno" | "curso" | "ano" | "sugestoes" | "periodo";
+type possibleCertificatesInputs = "data" | "nome_evento" | "nome" | "email" | "matricula";
+
+interface ParseDataFromSheetRequest {
+    sheet: "inscricao" | "certificado";
+    inputs: (ParseDataFromSheetRequest['sheet'] extends "inscricao" ? possibleInputs[] : possibleCertificatesInputs[]);
+}
+export async function parseDataFromSheet({ inputs, sheet }: ParseDataFromSheetRequest) {
+
+    const data = await fetchDataFromSheet({ sheet }); // dados totais
+    const formData = getFormData({ inputs, sheet });
 
     const retorno_list = data.map(pessoa => {
         const retorno: { [key: string]: string } = {};
@@ -124,12 +137,4 @@ export async function parser(inputs: possibleInputs[]) {
     // saveDataToJson(retorno_list, 'dados.json');
 
     return retorno_list;
-}
-
-
-
-export async function salvador() {
-    const data = await fetchDataFromSheet({sheet: 'certificado'});
-
-    saveDataToJson(data, 'dados.json');
 }
