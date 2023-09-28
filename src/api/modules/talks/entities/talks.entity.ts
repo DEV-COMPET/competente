@@ -8,6 +8,7 @@ export type TalksType = {
     inscritos?: string[]
     solicitacoes_certificados?: string[]
     palestrantes: string[]
+    ativo: boolean
 }
 
 export class Talks implements TalksType {
@@ -18,12 +19,14 @@ export class Talks implements TalksType {
     inscritos?: string[]
     solicitacoes_certificados?: string[]
     palestrantes: string[]
+    ativo: boolean
 
     constructor(certificate: TalksType) {
         this.titulo = certificate.titulo
         this.data = new Date(certificate.data)
         this.youtube_link = certificate.youtube_link
         this.palestrantes = certificate.palestrantes
+        this.ativo = false
     }
 }
 
@@ -35,6 +38,7 @@ const schema = new mongoose.Schema<TalksType>({
     minutos: { type: Number, required: false },
     inscritos: { type: [String], required: false },
     solicitacoes_certificados: { type: [String], required: false },
+    ativo: { type: Boolean, required: false, default: false },
 },
     {
         versionKey: false,

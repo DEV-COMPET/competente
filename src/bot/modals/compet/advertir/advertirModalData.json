@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Finalize um Talks",
+        "customId": "advertir"
+    },
+    "inputFields": [
+        {
+            "label": "Quem será advertido?",
+            "placeholder": "André Rodrigues da Cruz",
+            "customId": "pessoas",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

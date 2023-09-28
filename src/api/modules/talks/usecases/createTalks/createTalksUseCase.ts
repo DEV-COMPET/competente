@@ -26,7 +26,7 @@ export class CreateTalksUseCase {
             return left(new ResourceAlreadyExistsError("Certificado no banco de Dados"))
 
         const createdTalks = new Talks({
-            titulo, data, palestrantes /*,TODO: youtube_link*/
+            titulo, data, palestrantes /*,TODO: youtube_link*/, ativo: false
         });
 
         try {

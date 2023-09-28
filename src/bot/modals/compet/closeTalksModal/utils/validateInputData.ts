@@ -48,7 +48,8 @@ export async function validateInputData({ titulo, minutos_totais }: ExtractInput
                 data: new Date(data),
                 palestrantes, 
                 titulo,
-                minutos: minutos_totais
+                minutos: minutos_totais,
+                ativo: false
             }
         }
     })

@@ -11,7 +11,7 @@ export type TalksData = {
     inscritos?: string[]
     solicitacoes_certificados?: string[]
     palestrantes?: string[]
-  };
+};
 
 
 export class TalksRepository extends DefaultMongoDBRepository<TalksType> implements InterfaceTalksRepository {
