@@ -32,7 +32,8 @@ export class CreateCompetianoUseCase  {
         data_inicio, email, nome, url_imagem, linkedin, lates, 
     });
 
-    // await this.repository.create(competiano);
+    await this.repository.create(competiano);
+    
     return right({competiano});
   }
 }
