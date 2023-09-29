@@ -79,7 +79,7 @@ export default new Modal({
             if (generateInscriptionCertificateResponse.value.error instanceof PythonVenvNotActivatedError)
                 return await editErrorReply({
                     interaction,
-                    title: "Ambiente virtual do Pythonn não ativado.",
+                    title: "Ambiente virtual do Python não ativado.",
                     error: generateInscriptionCertificateResponse.value.error
                 })
 
