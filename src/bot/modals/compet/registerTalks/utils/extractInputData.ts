@@ -19,7 +19,7 @@ export function extractInputData({ inputFields, interaction }: ExtractInputDataR
         link: string
     }
 
-    const { /*email_assinante,*/ link, minutos_totais, /*nome_assinante,*/ titulo, data_new }: InputFieldsRequest = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
+    const { email_assinante, link, minutos_totais, nome_assinante, titulo, data_new }: InputFieldsRequest = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
 
     const minutos_input = minutos_totais as number;
     const timing: { horas: unknown; minutos: unknown } = {
@@ -38,15 +38,15 @@ export function extractInputData({ inputFields, interaction }: ExtractInputDataR
 
     const data = new Date(year, month, day);
 
-    return { horas, link, minutos, titulo, data }
+    return { horas, link, minutos, titulo, data, email_assinante, nome_assinante }
 }
 
 interface ExtractInputDataResponse {
     horas: string,
     minutos: string,
     link?: string,
-    email_assinante?: string
-    nome_assinante?: string
+    email_assinante: string
+    nome_assinante: string
     titulo: string
     data: Date
 }

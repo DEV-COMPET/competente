@@ -7,9 +7,13 @@ import { ICreateCertificateProps, ITalksProps } from './interfaces';
 import { ResourceNotFoundError } from '@/api/errors/resourceNotFoundError';
 import { partial_to_full_path, readJsonFileRequest } from '../json';
 import { PythonVenvNotActivatedError } from '@/bot/errors/pythonVenvNotActivatedError';
+import fs from 'fs'
+import { resizeToPageFormat } from '../pdf/resizePDF';
+import { writeFile } from 'fs/promises'; // ou o módulo de arquivo que você estiver usando
+import { readPdfFile } from '../pdf/readPDF';
 
 type CreateTalksPdfResponse = Either<
-  { error:  ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error  },
+  { error: ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error },
   { path_to_certificates: string }
 >
 
@@ -44,7 +48,7 @@ function getPythonPath(): GetPythonPathResponse {
 }
 
 type CreateCertificateResponse = Either<
-  { error:  ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error },
+  { error: ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error },
   { response: string[] }
 >
 
@@ -55,14 +59,22 @@ export async function createCertificate({
   const aux_args: string[] = [text_dir, template_dir, titulo, data, horas, minutos, data_final];
   const args = aux_args.concat(listaNomes);
 
-  const executePythonScriptResponse = executePythonScript({
+  const executePythonScriptResponse = await executePythonScript({
     args, pathRequest: {
       dirname: __dirname,
       partialPath: "script.py"
     }
   })
+  if (executePythonScriptResponse.isLeft())
+    return left({ error: executePythonScriptResponse.value.error })
 
-  return executePythonScriptResponse
+  const pdfContent = await readPdfFile(executePythonScriptResponse.value.response[0]);
+
+  const resizedPdf = await resizeToPageFormat(pdfContent);
+
+  await writeFile(executePythonScriptResponse.value.response[0], resizedPdf);
+
+  return right({ response: executePythonScriptResponse.value.response})
 }
 
 interface executePythonScriptRequest {
@@ -106,14 +118,14 @@ export async function executePythonScript({ args, pathRequest }: executePythonSc
 }
 
 type createCertificadoTalksPalestrantesResponse = Either<
-  { error:  ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error  },
+  { error: ResourceNotFoundError | PythonShellError | PythonVenvNotActivatedError | Error },
   { path_to_certificate: string }
 >
 // retorna o path do certificado criado
 export async function createCertificadoTalksPalestrantes({ titulo, listaNomes, horas = "1", minutos = "30", data }: ITalksProps): Promise<createCertificadoTalksPalestrantesResponse> {
   const text_dir = talksDirectories.palestrante_content // Arquivo de texto que contém o texto do certificado
   const template_dir = talksDirectories.template // Imagem que contém o template do certificado
-  
+
   const response = await createCertificate({ data, titulo, horas, minutos, listaNomes, template_dir, text_dir })
   if (response.isLeft())
     return left({ error: response.value.error })

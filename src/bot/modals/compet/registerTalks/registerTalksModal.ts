@@ -14,6 +14,7 @@ import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
 import { extractInputData } from "./utils/extractInputData";
 import { createCertificatesInDatabase } from "./utils/createCertificatesInDB";
+import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 
 // import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 
@@ -43,7 +44,7 @@ export default new Modal({
         if ((isNotAdmin).isRight())
             return isNotAdmin.value.response
 
-        const { horas, minutos, titulo, link, data, /*nome_assinante,email_assinante*/ } = extractInputData({ interaction, inputFields })
+        const { horas, minutos, titulo, link, data, nome_assinante, email_assinante } = extractInputData({ interaction, inputFields })
 
         const registration = await getCompetTalksRegistration(titulo);
         if (registration.isLeft()) {
@@ -140,16 +141,16 @@ export default new Modal({
                 ]
             })
 
-        /*
-         const numPages = listaNomes.length;
-         
-          await submitToAutentique({
+        const numPages = listaNomes.length;
+
+        const submitToAutentiqueResponse = await submitToAutentique({
             numPages,
             titulo: titulo as string,
-            filePathResponse,
+            filePath: filePathResponse.value.path_to_certificates,
             signer: { name: nome_assinante, email: email_assinante },
-          });
-        */
+        });
+
+        console.dir({ response: submitToAutentiqueResponse })
 
         return await interaction.editReply({
             embeds: [
