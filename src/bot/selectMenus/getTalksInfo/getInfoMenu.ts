@@ -35,6 +35,6 @@ export default new SelectMenu({
             }
         })
 
-        interaction.showModal(getTalksInfoModal);
+        await interaction.showModal(getTalksInfoModal);
     }
 });
