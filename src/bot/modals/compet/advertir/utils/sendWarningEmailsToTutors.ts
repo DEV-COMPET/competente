@@ -33,7 +33,7 @@ export async function sendWarningEmailsToTutors({ advertidos }: SendWarningEmail
     const competianos: CompetianoType[] = await response.json();
 
     const tutores = competianos
-        .filter(competiano => competiano.tutor === true)
+        .filter(competiano => competiano.tutor === true && competiano.membro_ativo === true)
         .map(competiano => competiano);
 
     tutores.forEach(async (advertido) => {

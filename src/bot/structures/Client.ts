@@ -1,24 +1,12 @@
-
-import {
-    ApplicationCommandDataResolvable,
-    Client,
-    ClientEvents,
-    Collection,
-    GatewayIntentBits,
-    Routes,
-    REST,
-    Webhook,
-    TextChannel,
-} from "discord.js";
+import { Client, ClientEvents, Collection, GatewayIntentBits, Routes, REST, Webhook, TextChannel, IntentsBitField } from "discord.js";
 import { CommandType } from "../typings/Commands";
 import { RegisterCommandsOptions } from "../typings/client";
 import { Event } from "./Event";
 import * as path from "path";
 import { ModalType } from "../typings/Modals";
 import { env } from "@/env";
-
 import { glob } from 'glob'
-
+import { StringSelectMenuType } from "../typings/SelectMenu";
 
 const appId = env.DISCORD_CLIENT_ID;
 const token = env.DISCORD_TOKEN;
@@ -30,10 +18,11 @@ const rest = new REST({ version: "10" }).setToken(
 export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
     modals: Collection<string, ModalType> = new Collection();
+    selectMenus: Collection<string, StringSelectMenuType> = new Collection();
     webhook?: Webhook;
 
     constructor() {
-        super({ intents: [GatewayIntentBits.Guilds] });
+        super({ intents: [GatewayIntentBits.Guilds, IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMembers, IntentsBitField.Flags.GuildMessages] });
     }
 
     private async folderFiles(dir: string) {
@@ -54,12 +43,12 @@ export class ExtendedClient extends Client {
         await this.registerModules();
         await this.registerModals();
         await this.registerCommands({});
+        await this.registerSelectMenus();
 
         await this.login(token);
     }
 
     async registerModules() {
-        const slashCommands: ApplicationCommandDataResolvable[] = [];
 
         try {
             const { dirFiles, directory } = await this.folderFiles("commands")
@@ -72,7 +61,6 @@ export class ExtendedClient extends Client {
                 if (!command) return;
 
                 this.commands.set(command.name, command); // armazena em um map o comando e seu nome
-                slashCommands.push(command); // FIXME: pra que isso
             });
 
         } catch (error) {
@@ -94,6 +82,30 @@ export class ExtendedClient extends Client {
         }
     }
 
+
+    async registerSelectMenus() {
+        try {
+            const { dirFiles, directory } = await this.folderFiles("selectMenus")
+
+            console.log({ selectMenus: dirFiles });
+
+            dirFiles.forEach(async (filepath) => {
+
+                const selectmenu: StringSelectMenuType = await this.importFile(
+                    path.join(directory, filepath)
+                );
+                if (!selectmenu) {
+                    return;
+                }
+                this.selectMenus.set(selectmenu.customId, selectmenu);
+            });
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
     /**
    * Armazena no atributo this.modals os modais (interfaces) a serem utilizados pelos comandos.
    */
@@ -103,7 +115,7 @@ export class ExtendedClient extends Client {
 
         const { dirFiles } = await this.folderFiles("commands")
 
-        console.log({commands: dirFiles})
+        console.log({ commands: dirFiles })
 
         if (guildId) {
             await rest.put(Routes.applicationGuildCommands(appId, guildId), {

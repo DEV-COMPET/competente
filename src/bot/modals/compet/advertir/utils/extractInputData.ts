@@ -8,6 +8,7 @@ interface ExtractInputDataRequest {
 
 export interface ExtractInputDataResponse {
     advertidos: string[]
+    motivos: string[]
 }
 
 export function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -16,11 +17,13 @@ export function extractInputData({ inputFields, interaction }: ExtractInputDataR
 
     interface InputFieldsRequest {
         pessoas: string
+        motivos: string
     }
 
-    const { pessoas }: InputFieldsRequest = Object.assign({}, ...input_data);
+    const { pessoas, motivos }: InputFieldsRequest = Object.assign({}, ...input_data);
 
     const pessoas_arr = pessoas.split(',').map(pessoa => pessoa.trim())
+    const motivos_arr = motivos.split(';').map(motivo => motivo.trim())
 
-    return { advertidos: pessoas_arr }
+    return { advertidos: pessoas_arr, motivos: motivos_arr }
 }

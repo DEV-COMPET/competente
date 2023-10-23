@@ -1,6 +1,4 @@
 import {
-  CommandInteraction,
-  CommandInteractionOptionResolver,
   GuildMember,
   ModalSubmitInteraction,
 } from "discord.js";

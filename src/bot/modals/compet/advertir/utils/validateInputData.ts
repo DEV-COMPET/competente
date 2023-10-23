@@ -12,7 +12,8 @@ export type ValidateInputDataRightResponse = {
         nome: string
         email: string
         advertencias: number
-    }[];
+    }[],
+    motivos: string[]
 }
 
 type ValidateInputDataResponse = Either<
@@ -20,7 +21,7 @@ type ValidateInputDataResponse = Either<
     { inputData: ValidateInputDataRightResponse }
 >
 
-export async function validateInputData({ advertidos }: ExtractInputDataResponse): Promise<ValidateInputDataResponse> {
+export async function validateInputData({ advertidos, motivos }: ExtractInputDataResponse): Promise<ValidateInputDataResponse> {
 
     const requestOptions = {
         method: "get",
@@ -84,5 +85,5 @@ export async function validateInputData({ advertidos }: ExtractInputDataResponse
         .filter((competiano) => nomes_corretos.includes(competiano.nome))
         .map(({ nome, email, advertencias }) => ({ nome, email, advertencias: advertencias as number}));
 
-    return right({ inputData: { advertidos: contatos_advertidos } })
+    return right({ inputData: { advertidos: contatos_advertidos, motivos } })
 }

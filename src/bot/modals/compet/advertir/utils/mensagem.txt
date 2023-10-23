@@ -1,0 +1,17 @@
+Caro %nome%,
+
+Nosso grupo trabalha colaborativamente e com um gerenciamento dinâmico visando as atividades a serem desenvolvidas, a falha de um dos membros afeta todo o grupo, não só a tarefa não cumprida.
+
+É uma definição do grupo que membros que tivessem comportamento prejudicial (falta à reunião semanal, não realização de atividades ou feedback quanto a elas, dentre outros) deveriam ser advertidos inicialmente e posteriormente desligados ou ter sua bolsa alocada a outro membro.
+
+No seu caso especificamente, há pendências/falhas quanto a:
+
+%motivos%
+
+Viemos por meio deste e-mail, portanto, avisá-lo que você está recebendo sua advertência de número %numero%, de um total de 3 advertências possíveis.
+
+Atenciosamente,
+
+Sandro Renato Dias
+
+Tutor COMPET

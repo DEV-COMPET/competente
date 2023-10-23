@@ -52,7 +52,11 @@ export default new Modal({
                 interaction, title: "Não foi possivel advertir os membros"
             })
 
-        const sendWarningEmailsToCompetianosResponse = await sendWarningEmailsToCompetianos({ advertidos: advertirResponse.value.advertidos })
+
+        const sendWarningEmailsToCompetianosResponse = await sendWarningEmailsToCompetianos({
+            advertidos: advertirResponse.value.advertidos,
+            motivos: validateInputDataResponse.value.inputData.motivos
+        })
         if (sendWarningEmailsToCompetianosResponse.isLeft())
 
             // TODO: remover advertência do banco de dados
@@ -61,19 +65,19 @@ export default new Modal({
                 error: sendWarningEmailsToCompetianosResponse.value.error, interaction, title: "Não foi possível enviar emails para advertidos"
             })
 
-// COMENTADA PARA NÃO CORRER RISCCO DE ENVIAR EMAILS ERRADOS PARA TUTORES
+        // COMENTADA PARA NÃO CORRER RISCCO DE ENVIAR EMAILS ERRADOS PARA TUTORES
 
-/*
-        const sendWarningEmailsToTutorsResponse = await sendWarningEmailsToTutors({ advertidos: advertirResponse.value.advertidos })
-        if (sendWarningEmailsToTutorsResponse.isLeft())
-            return editErrorReply({
-                error: sendWarningEmailsToTutorsResponse.value.error, interaction, title: "Não foi possível enviar emails para tutores"
-            })
-*/
+        /*
+                const sendWarningEmailsToTutorsResponse = await sendWarningEmailsToTutors({ advertidos: advertirResponse.value.advertidos })
+                if (sendWarningEmailsToTutorsResponse.isLeft())
+                    return editErrorReply({
+                        error: sendWarningEmailsToTutorsResponse.value.error, interaction, title: "Não foi possível enviar emails para tutores"
+                    })
+        */
 
         const advertidos = validateInputDataResponse.value.inputData.advertidos.map(advertido => `- ${advertido.nome} (${advertido.advertencias})\n`).join()
 
-        return await editSucessReply( {
+        return await editSucessReply({
             interaction, title: `Membros advertidos com sucesso:\n\n${advertidos}`
         })
     }
