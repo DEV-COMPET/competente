@@ -55,7 +55,7 @@ async function fetchDataFromSheet({ sheet }: FetchDataFromSheetRequest) {
         return [];
     }
 }
-
+/*
 function saveDataToJson(data: any[], fileName: string) {
     try {
         const jsonString = JSON.stringify(data, null, 2);
@@ -65,6 +65,7 @@ function saveDataToJson(data: any[], fileName: string) {
         console.error('Erro ao salvar os dados em JSON:', error);
     }
 }
+*/
 
 type FormData = {
     [key: string]: string[];
@@ -104,12 +105,12 @@ function getFormData({ inputs, sheet }: ParseDataFromSheetRequest): FormData {
     return result;
 }
 
-type possibleInputs =             "data" | "nome_evento" | "nome" | "email" | "matricula" | "como_ficou_sabendo" | "tipo_aluno" | "curso" | "ano" | "sugestoes" | "periodo";
-type possibleCertificatesInputs = "data" | "nome_evento" | "nome" | "email" | "matricula";
+export type possibleInputs =             "data" | "nome_evento" | "nome" | "email" | "matricula" | "como_ficou_sabendo" | "tipo_aluno" | "curso" | "ano" | "sugestoes" | "periodo";
+export type possibleCertificatesInputs = "data" | "nome_evento" | "nome" | "email" | "matricula";
 
 interface ParseDataFromSheetRequest {
     sheet: "inscricao" | "certificado";
-    inputs: (ParseDataFromSheetRequest['sheet'] extends "inscricao" ? possibleInputs[] : possibleCertificatesInputs[]);
+    inputs: (possibleInputs | possibleCertificatesInputs)[];
 }
 export async function parseDataFromSheet({ inputs, sheet }: ParseDataFromSheetRequest) {
 

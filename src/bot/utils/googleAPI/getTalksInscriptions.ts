@@ -2,6 +2,8 @@ import { google } from 'googleapis';
 import * as fs from 'fs';
 import path from 'path';
 import { env } from '@/env';
+import { parseDataFromSheet } from './getSheetsData';
+import { partial_to_full_path } from '../json';
 
 interface FetchDataFromSheetRequest {
     sheet: "inscricao" | "certificado"
@@ -56,10 +58,15 @@ async function fetchDataFromSheet({ sheet }: FetchDataFromSheetRequest) {
     }
 }
 
-export function saveDataToJson(data: any[], fileName: string) {
+export function saveDataToJson(data: any[] | any, fileName: string) {
     try {
+
+        const path = partial_to_full_path({
+            dirname: __dirname, partialPath: "../../../../" + fileName
+        })
+
         const jsonString = JSON.stringify(data, null, 2);
-        fs.writeFileSync(fileName, jsonString, 'utf-8');
+        fs.writeFileSync(path, jsonString, 'utf-8');
         console.log(`Os dados foram salvos em ${fileName}`);
     } catch (error) {
         console.error('Erro ao salvar os dados em JSON:', error);
@@ -100,7 +107,7 @@ function getFormData(inputs: possibleInputs[]): FormData {
 }
 
 export async function parser(inputs: possibleInputs[]) {
-    const data = await fetchDataFromSheet({sheet: 'inscricao'}); // dados totais
+    const data = await fetchDataFromSheet({ sheet: 'inscricao' }); // dados totais
     const formData = getFormData(inputs);
 
     const retorno_list = data.map(pessoa => {
@@ -128,8 +135,12 @@ export async function parser(inputs: possibleInputs[]) {
 
 
 
-export async function salvador() {
-    const data = await fetchDataFromSheet({sheet: 'certificado'});
+export async function exemplo () {
 
-    saveDataToJson(data, 'dados.json');
+    const informacoes = await parseDataFromSheet({
+        inputs: ['nome', 'nome_evento', 'matricula'],
+        sheet: 'inscricao'
+    })
+
+    saveDataToJson(informacoes, 'dados.json');
 }
