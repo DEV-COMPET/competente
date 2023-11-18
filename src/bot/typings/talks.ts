@@ -11,6 +11,14 @@ export enum FormInput {
   EMAIL = "69f30e2c",
   MATRICULA = "3ee1b434",
 }
+
+export enum FormInputRegistration {
+  EVENTO = "5ae17d18",
+  NOME = "2780a2f6",
+  EMAIL = "0c736e90",
+  MATRICULA = "7c7a5e78",
+}
+
 export enum FormItemsId {
   NOME = "4c2c8a48",
   EMAIL = "2b605265",
