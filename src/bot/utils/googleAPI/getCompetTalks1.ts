@@ -6,6 +6,24 @@ import { env } from "@/env";
 const competTalksFormId = env.GOOGLE_FORM_ID;
 const environment = env.ENVIRONMENT;
 
+type QuestionAnswers = {
+  relevancia: string,
+  chanceIndicacao: string,
+  correspondenciaExpectativa: string,
+  nivelSatisfacao: string,
+  notaOrganizacao: string,
+  sugestao: string
+}
+
+type User = {
+  createTime: string,
+  email: string,
+  event: string,
+  matricula: string,
+  nome: string,
+  questionAnswers: QuestionAnswers
+}
+
 async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]> {
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(__dirname, `competente.${environment}.json`),
@@ -45,7 +63,7 @@ async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]>
   return certificados;
 }
 
-async function getAllCertificateResponses(formID: string): Promise<FormResponseTalks[] | null> {
+async function getAllCertificateResponses(formID: string): Promise<User[] | null> {
   const auth = new google.auth.GoogleAuth({
     keyFile: path.join(__dirname, `competente.${environment}.json`),
     scopes: [
@@ -72,8 +90,7 @@ async function getAllCertificateResponses(formID: string): Promise<FormResponseT
   let questions;
 
   if(formDefinition.data.items) {
-    questions = formDefinition.data.items.map(question => ({ itemId: question.itemId, title: question.title }));
-    console.log(questions);
+    questions = formDefinition.data.items.map(question => ({ questionId: question.questionItem?.question?.questionId, title: question.title }));
   }
 
   if(data !== undefined) {
@@ -84,15 +101,19 @@ async function getAllCertificateResponses(formID: string): Promise<FormResponseT
       return (dateA - dateB);
     });
 
-    console.log(data[data.length - 1].answers['71160225'].textAnswers)
+    // console.log(data[data.length - 1].answers)
 
-    // console.log(data[2]);
+    // // console.log(data[2]);
 
-    // console.log(data[2].answers['5d803f51']?.textAnswers)
-    // console.log(data[2].answers['11bba088']?.textAnswers)
-    // console.log(data[2].answers['2d1576f5']?.textAnswers)
-    // console.log(data[2].answers['502f0672']?.textAnswers)
-    // console.log(data[2].answers['55bb4b1f']?.textAnswers)
+    // console.log(data[data.length - 1].answers['71160225']?.textAnswers)
+    // console.log(data[data.length - 1].answers['15086fcb']?.textAnswers)
+    // console.log(data[data.length - 1].answers['69f30e2c']?.textAnswers)
+    // console.log(data[data.length - 1].answers['0e4af06f']?.textAnswers)
+    // console.log(data[data.length - 1].answers['5449dcbb']?.textAnswers)
+    // console.log(data[data.length - 1].answers['7e428446']?.textAnswers)
+    // console.log(data[data.length - 1].answers['459eff55']?.textAnswers)
+    // console.log(data[data.length - 1].answers['1b4928e1']?.textAnswers)
+    // console.log(data[data.length - 1].answers['3ee1b434']?.textAnswers)
 
   if (!data) throw new Error("Não foi possivel encontrar nenhuma resposta para o formulário requisitado!")
   const certificados = data.map(form => {
@@ -101,7 +122,13 @@ async function getAllCertificateResponses(formID: string): Promise<FormResponseT
     const email: string = form.answers[FormInput.EMAIL]?.textAnswers.answers[0].value
     const matricula: string = form.answers[FormInput.MATRICULA]?.textAnswers.answers[0].value
     const createTime: string = form.createTime
-    const certificado = { nome, email, event, matricula, createTime }
+    const questionAnswers = { relevancia: form.answers[FormInput.RELEVANCIA_TEMA]?.textAnswers.answers[0].value,
+                            chanceIndicacao: form.answers[FormInput.CHANCE_INDICAR]?.textAnswers.answers[0].value,
+                            correspondenciaExpectativa: form.answers[FormInput.CORRESPONDENCIA_EXPECTATIVAS]?.textAnswers.answers[0].value,
+                            nivelSatisfacao: form.answers[FormInput.NIVEL_SATISFACAO]?.textAnswers.answers[0].value,
+                            notaOrganizacao: form.answers[FormInput.NOTA_ORGANIZACAO]?.textAnswers.answers[0].value,
+                            sugestao: form.answers[FormInput.SUGESTAO]?.textAnswers.answers[0].value }
+    const certificado = { nome, email, event, matricula, createTime, questionAnswers }
     return certificado
   });
   return certificados;
@@ -133,18 +160,53 @@ export async function getCompetTalksEligibleCertificateRecipients(talksEventName
   else return null;
 }
 
-// export async function getAllAnswersGrade(eventName: string): Promise<void> {
-//   const certificateFormID = "1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w";
-//   const recipients = await getAllCertificateResponses(certificateFormID);
+export async function getAllAnswersGrade(eventName: string): Promise<QuestionAnswers[] | null> {
+  const certificateFormID = "1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w";
+  const recipients = await getAllCertificateResponses(certificateFormID);
 
-//   if(recipients !== null) {
-//     const eventCertificateRecipients = recipients.filter(registration => clearString(registration.event?.toLowerCase()) === clearString(eventName.toLowerCase()));
+  if(recipients !== null) {
+    const eventCertificateRecipients = recipients.filter(registration => clearString(registration.event?.toLowerCase()) === clearString(eventName.toLowerCase()));
+    const answersGrade = eventCertificateRecipients.map(recipient => ({ ...recipient.questionAnswers }));
+    return answersGrade;
+  }
+  return null;
+}
 
-//     eventCertificateRecipients.forEach(recipient => {
-//       console.log(recipient)
-//     })
-//   }
-// }
+export async function getAverageGradeOfEachQuestion(eventName: string): Promise<void> {
+  const answersGrade = await getAllAnswersGrade(eventName);
+
+  const averageGrade: {
+    relevancia: number,
+    chanceIndicacao: number,
+    correspondenciaExpectativa?: number,
+    nivelSatisfacao: number,
+    notaOrganizacao: number,
+    sugestao?: number
+  } = { relevancia: 0, chanceIndicacao: 0, correspondenciaExpectativa: 0, nivelSatisfacao: 0,
+        notaOrganizacao: 0 };
+
+  if (answersGrade) {
+    answersGrade.forEach(recipient => {
+      const answers: (keyof QuestionAnswers)[] = Object.keys(recipient) as (keyof QuestionAnswers)[];
+      answers.filter(answer => Object.keys(averageGrade).includes(answer))
+
+      for (const answer of answers) {
+        const value = Number(recipient[answer]);
+
+        averageGrade[answer] = (Number(averageGrade[answer]) ?? 0) + value;
+      }
+    });
+
+    // Calcular a média
+    const numberOfResponses = answersGrade.length;
+
+    for (const key of Object.keys(averageGrade) as (keyof typeof averageGrade)[]) {
+      averageGrade[key] = averageGrade[key]! / numberOfResponses;
+    }
+  }
+  console.log(averageGrade);
+}
+
 
 function clearString(str: string): string {
   if(str === undefined) return str;

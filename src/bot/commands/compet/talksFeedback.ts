@@ -1,7 +1,7 @@
 import { EmbedBuilder, Interaction, SelectMenuInteraction } from "discord.js";
 import { Command } from "../../structures/Command";
 import  selectEventNameMenuData from "../../selectMenus/getTalksInfo/selectEventNameMenuData.json"
-import { getCompetTalksEligibleCertificateRecipients, getCompetTalksRegistration } from "@/bot/utils/googleAPI/getCompetTalks1";
+import { getCompetTalksEligibleCertificateRecipients, getCompetTalksRegistration, getAverageGradeOfEachQuestion } from "@/bot/utils/googleAPI/getCompetTalks1";
 import { getAllEventNames } from "../../utils/googleAPI/getAllEventNames";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { makeEmbed } from "@/bot/utils/embed/makeEmbed";
@@ -87,7 +87,7 @@ export default new Command({
                 { name: "Quantidade de certificados preenchidos", value: `${qntCertificateRecipients}` }
                 );
 
-                // await getAllAnswersGrade(selectedOption);
+                await getAverageGradeOfEachQuestion(selectedOption);
 
                 // Enviar a resposta final
                 await selectInteraction.editReply({ content: 'Informações', embeds: [embed] });

@@ -10,6 +10,12 @@ export enum FormInput {
   NOME = "5449dcbb",
   EMAIL = "69f30e2c",
   MATRICULA = "3ee1b434",
+  RELEVANCIA_TEMA = "71160225",
+  CHANCE_INDICAR = "15086fcb",
+  CORRESPONDENCIA_EXPECTATIVAS = "0e4af06f",
+  NIVEL_SATISFACAO = "1b4928e1",
+  NOTA_ORGANIZACAO = "7e428446",
+  SUGESTAO = "5677c058"
 }
 
 export enum FormInputRegistration {
