@@ -33,8 +33,6 @@ export default new Command ({
         const targetUserId = interaction.options.get('target-user')?.value;
         const reason = interaction.options.get('reason')?.value || 'Nenhuma justificativa foi fornecida';
 
-        await interaction.deferReply();
-
         const targetUser = await interaction.guild?.members.fetch(`${targetUserId}`);
 
         if (!targetUser) {
@@ -47,19 +45,18 @@ export default new Command ({
             return;
         }
 
-        const targetUserRolePosition = targetUser.guild.roles.highest.position;
-        const requestUserRolePosition = interaction.guild?.members.me?.roles.highest.position;
+        // const targetUserRolePosition = targetUser.guild.roles.highest.position;
+        // const requestUserRolePosition = interaction.guild?.members.me?.roles.highest.position;
 
-        if (targetUserRolePosition >= requestUserRolePosition) {
-            await interaction.editReply("Você não tem autorização para explusar este usuário!");
-            return ;
-        }
+        // if (targetUserRolePosition >= requestUserRolePosition) {
+        //     await interaction.editReply("Você não tem autorização para explusar este usuário!");
+        //     return ;
+        // }
 
         try {
             await targetUser.kick();
             await interaction.editReply(
-                `usuário: ${targetUser} foi expulso
-                Reason: ${reason}`
+                `Usuário: ${targetUser} foi expulso\nReason: ${reason}`
             );
 
         } catch (error) {
