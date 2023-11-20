@@ -1,7 +1,7 @@
 import { EmbedBuilder, Interaction, SelectMenuInteraction } from "discord.js";
 import { Command } from "../../structures/Command";
 import  selectEventNameMenuData from "../../selectMenus/getTalksInfo/selectEventNameMenuData.json"
-import { getCompetTalksEligibleCertificateRecipients, getCompetTalksRegistration, getAverageGradeOfEachQuestion } from "@/bot/utils/googleAPI/getCompetTalks1";
+import { getCompetTalksEligibleCertificateRecipients, getCompetTalksRegistration, getAverageGradeOfEachQuestion, ClosedQuestionAnswers, getAllSugestions, getFrequencyOfAnswersOfEachClosedQuestion } from "@/bot/utils/googleAPI/getCompetTalks1";
 import { getAllEventNames } from "../../utils/googleAPI/getAllEventNames";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { makeEmbed } from "@/bot/utils/embed/makeEmbed";
@@ -23,15 +23,15 @@ export default new Command({
         return;
       }
 
-            const getAllEventNamesResponse = await getAllEventNames({ interaction });
-            if (getAllEventNamesResponse.isLeft())
-                return await editErrorReply({
-                    error: getAllEventNamesResponse.value.error,
-                    interaction,
-                    title: getAllEventNamesResponse.value.error.message
-                });
+    const getAllEventNamesResponse = await getAllEventNames({ interaction });
+    if (getAllEventNamesResponse.isLeft())
+        return await editErrorReply({
+            error: getAllEventNamesResponse.value.error,
+                interaction,
+                title: getAllEventNamesResponse.value.error.message
+        });
 
-            const { customId, minMax } = selectEventNameMenuData;
+    const { customId, minMax } = selectEventNameMenuData;
 
 
     const listEventNamesMenu = makeStringSelectMenu({
@@ -77,17 +77,36 @@ export default new Command({
                 const talksRegistrations = await getCompetTalksRegistration(selectedOption);
                 const qntRegistrations = talksRegistrations ? talksRegistrations.length : 0;
 
-                console.log("SELECTED OPTION: ", selectedOption)
 
                 const talksCertificateRecipients = await getCompetTalksEligibleCertificateRecipients(selectedOption);
                 const qntCertificateRecipients = talksCertificateRecipients ? talksCertificateRecipients.length : 0;
+                
+                const averageGrades = await getAverageGradeOfEachQuestion(selectedOption);
+                const frequencyOfAnswersOfEachQuestion = await getFrequencyOfAnswersOfEachClosedQuestion(selectedOption);
+                const sugestions = await getAllSugestions(selectedOption);
 
                 const embed = new EmbedBuilder().setTitle(`Informações de '${selectedOption}'`).addFields(
-                { name: "Quantidade de inscrições", value: `${qntRegistrations}` },
-                { name: "Quantidade de certificados preenchidos", value: `${qntCertificateRecipients}` }
+                { name: "Quantidade de inscrições:", value: `${qntRegistrations}` },
+                { name: "Quantidade de certificados preenchidos:", value: `${qntCertificateRecipients}` },
+                { name: "Notas médias de cada pergunta:", value: "\n\n"}
                 );
 
-                await getAverageGradeOfEachQuestion(selectedOption);
+                const averageGradesKeys = Object.keys(averageGrades) as (keyof ClosedQuestionAnswers)[];
+
+                for(const key of averageGradesKeys) {
+                    let value = `Nota média: ${(averageGrades[key]).toFixed(2)}\n`
+
+                    for(let i = 1; i <= 5; i++) {
+                        value += `Nota ${i}: ${frequencyOfAnswersOfEachQuestion[key][i - 1]}\n`
+                    }
+
+                    embed.addFields({ name: key, value: `${value}\n`, inline: true })
+                }
+
+                embed.addFields({
+                    name: 'Sugestões:', value: `${sugestions.join('\n')}`
+                })
+
 
                 // Enviar a resposta final
                 await selectInteraction.editReply({ content: 'Informações', embeds: [embed] });
