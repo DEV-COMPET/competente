@@ -23,6 +23,10 @@
     {
       "name": "Pedro Augusto de Portilho Ronzani",
       "email": "pedroaugustogabironzani@hotmail.com"
+    },
+    {
+      "name": "Lucas Andrade Brandão",
+      "email": "andradelucasbrandao@gmail.com"
     }
   ],
   "keywords": [
@@ -34,15 +38,18 @@
   "author": "Compet",
   "license": "MIT",
   "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
     "@types/nodemailer": "^6.4.10",
     "awesome-graphql-client": "^0.14.1",
     "blob-util": "^2.0.2",
     "body-parser": "^1.20.2",
+    "canvas": "^2.11.2",
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "extract-files": "^13.0.0",
     "fastify": "^4.22.2",
+    "fs.promises": "^0.1.2",
     "glob": "^10.3.4",
     "googleapis": "^126.0.1",
     "graphql": "^16.8.0",
