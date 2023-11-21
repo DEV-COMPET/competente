@@ -2,7 +2,7 @@ import { Command } from "@/bot/structures/Command";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { description, name } from "./kickMemberData.json"
 
-import { ApplicationCommandOptionType } from "discord.js"
+import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js"
 
 export default new Command ({
 
@@ -32,34 +32,41 @@ export default new Command ({
 
         const targetUserId = interaction.options.get('target-user')?.value;
         const reason = interaction.options.get('reason')?.value || 'Nenhuma justificativa foi fornecida';
-
         const targetUser = await interaction.guild?.members.fetch(`${targetUserId}`);
 
-        if (!targetUser) {
-        await interaction.editReply("Não foi possível encontrar o usuario no servidor ");
-            return;
+        try {
+            if (!targetUser) {
+                await interaction.editReply("Não foi possível encontrar o usuario no servidor ");
+                    return;
+                }
+        
+                if (targetUser.id === interaction.guild?.ownerId) {
+                await interaction.editReply("Você não pode *expulsar* o dono do servidor!");
+                    return;
+                }
+        } catch (error) {
+            await interaction.editReply("Erro ao executar o comando");
+            return ;
         }
 
-        if (targetUser.id === interaction.guild?.ownerId) {
-        await interaction.editReply("Você não pode *expulsar* o dono do servidor!");
-            return;
-        }
 
-        // const targetUserRolePosition = targetUser.guild.roles.highest.position;
-        // const requestUserRolePosition = interaction.guild?.members.me?.roles.highest.position;
-
-        // if (targetUserRolePosition >= requestUserRolePosition) {
-        //     await interaction.editReply("Você não tem autorização para explusar este usuário!");
-        //     return ;
-        // }
+        
 
         try {
             await targetUser.kick();
-            await interaction.editReply(
-                `Usuário: ${targetUser} foi expulso\nReason: ${reason}`
+            const embed = new EmbedBuilder().setTitle(`Remoção de ${targetUser.displayName}`);
+            embed.addFields(
+                {name: "Usuário: ", value: `${targetUser}`},
+                {name: "Motivo: ", value: `${reason}`}
             );
+            await interaction.editReply({embeds: [embed]});
 
         } catch (error) {
+            const embed = new EmbedBuilder().setTitle(`Remoção de ${targetUser.displayName}`);
+            embed.addFields(
+                {name: "Erro: ", value: `Erro ao kickar ${targetUser}`},
+            );
+            await interaction.editReply({ embeds: [embed] });
             console.log(`Erro ao tentar kickar usuario ${error}`);
         }
 
