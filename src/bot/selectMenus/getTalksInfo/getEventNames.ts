@@ -70,7 +70,7 @@ export default new SelectMenu({
     
         embed.addFields({
         name: "Sugestões:",
-        value: `${sugestions.length > 0? sugestions.join(','): 'Nenhuma sugestão'}`,
+        value: `${sugestions.length > 0? sugestions.join('\n'): 'Nenhuma sugestão'}`,
         });
     
         await interaction.editReply({ content: "Informações", embeds: [embed] });

@@ -67,7 +67,6 @@ export async function getAllEventNames({ interaction }: CreateRoleRequest): Prom
     const events = await getEventNames();
 
     const allEvents: Event[] = Array.from(events);
-    console.log(allEvents)
 
     return right({ events: allEvents })
 }
@@ -90,7 +89,10 @@ async function getEventNames(): Promise<NameDateSet> {
     if(data !== undefined) {
       const eventNames = new NameDateSet();
       data.forEach(dado => {
-        const event = dado.answers[FormInputRegistration.EVENTO]?.textAnswers.answers[0].value;
+        const eventOption1 = dado.answers[FormInputRegistration.EVENTO1]?.textAnswers.answers[0].value;
+        const eventOption2 = dado.answers[FormInputRegistration.EVENTO2]?.textAnswers.answers[0].value;
+
+        const event = eventOption1 !== undefined? eventOption1 : eventOption2;
         const date = dado.createTime;
         if(event !== undefined)
           eventNames.add({ name: event, date: new Date(date) });

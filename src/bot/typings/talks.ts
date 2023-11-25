@@ -15,11 +15,13 @@ export enum FormInput {
   CORRESPONDENCIA_EXPECTATIVAS = "0e4af06f",
   NIVEL_SATISFACAO = "1b4928e1",
   NOTA_ORGANIZACAO = "7e428446",
-  SUGESTAO = "5677c058"
+  SUGESTAO1 = "5677c058",
+  SUGESTAO2 = "0dea6769"
 }
 
 export enum FormInputRegistration {
-  EVENTO = "5ae17d18",
+  EVENTO1 = "5ae17d18",
+  EVENTO2 = "459eff55",
   NOME = "2780a2f6",
   EMAIL = "0c736e90",
   MATRICULA = "7c7a5e78",

@@ -59,7 +59,7 @@ async function getAllRegistrations(formID: string): Promise<FormResponseTalks[]>
 async function getAllCertificateResponses(formID: string): Promise<User[] | null> {
   const res = await getCertificateFormsResponses(formID);
 
-  const data: Array<any> | undefined = res.data.responses
+  const data: Array<any> | undefined = res.data.responses;
 
   if (!data) throw new Error("Não foi possivel encontrar nenhuma resposta para o formulário requisitado!")
   const certificados = data.map(form => {
@@ -73,8 +73,8 @@ async function getAllCertificateResponses(formID: string): Promise<User[] | null
 
 export async function getCompetTalksRegistration(talksEventName: string): Promise<FormResponseTalks[]> {
   const registrations = await getAllRegistrations(competTalksFormId);
-  const eventRegistrations = registrations.filter(registration => registration.event === talksEventName)
-  
+  const eventRegistrations = registrations.filter(registration => registration.event === talksEventName);
+
   if (eventRegistrations.length === 0) throw new Error(`O evento ${talksEventName} não existe ou não possui nenhum aluno apto a receber o certificado`)
   return eventRegistrations
 }
@@ -216,7 +216,10 @@ async function getCertificateFormsResponses(formID: string) {
 }
 
 function getRegistrationAttributes(form: any) {
-  const event: string = form.answers[FormInputRegistration.EVENTO]?.textAnswers.answers[0].value;
+  const eventOption1 = form.answers[FormInputRegistration.EVENTO1]?.textAnswers.answers[0].value;
+  const eventOption2 = form.answers[FormInputRegistration.EVENTO2]?.textAnswers.answers[0].value;
+
+  const event: string = eventOption1 !== undefined? eventOption1 : eventOption2;
   const nome: string = form.answers[FormInputRegistration.NOME]?.textAnswers.answers[0].value;
   const email: string = form.answers[FormInputRegistration.EMAIL]?.textAnswers.answers[0].value;
   const matricula: string = form.answers[FormInputRegistration.MATRICULA]?.textAnswers.answers[0].value;
@@ -240,8 +243,11 @@ function getCertificateRecipientAttributes(form: any) {
     notaOrganizacao: Number(form.answers[FormInput.NOTA_ORGANIZACAO]?.textAnswers.answers[0].value),
   }
 
+  const sugestionOption1 = form.answers[FormInput.SUGESTAO1]?.textAnswers.answers[0].value;
+  const sugestionOption2 = form.answers[FormInput.SUGESTAO2]?.textAnswers.answers[0].value;  
+
   const openQuestionAnswers: OpenQuestionAnswers = {
-    sugestao: form.answers[FormInput.SUGESTAO]?.textAnswers.answers[0].value
+    sugestao: (sugestionOption1 !== undefined? sugestionOption1 : sugestionOption2)
   }
 
   const questionAnswers = { closedQuestionAnswers, openQuestionAnswers };
