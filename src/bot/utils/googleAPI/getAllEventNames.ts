@@ -16,8 +16,44 @@ interface CreateRoleRequest {
 
 type CreateRoleResponse = Either<
     { error: DiscordError },
-    { events: EventNameStr[] }
+    { events: Event[] }
 >
+
+type Event = {
+  name: string;
+  date: Date;
+};
+
+class NameDateSet extends Set<{ name: string; date: Date }> {
+  add(value: { name: string; date: Date }): this {
+    if (this.isValidObject(value)) {
+      const existingObject = Array.from(this.values()).find(obj => obj.name === value.name);
+
+      if (existingObject) {
+        // Se o novo objeto tem uma data mais antiga, atualizamos a data
+        if (value.date < existingObject.date) {
+          existingObject.date = value.date;
+        }
+      } else {
+        super.add(value);
+      }
+    } else {
+      console.error("Objeto inválido: ele deve ter os atributos 'name' e 'date'");
+    }
+    return this;
+  }
+
+  private isValidObject(value: any): value is { name: string; date: Date } {
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "name" in value &&
+      typeof value.name === "string" &&
+      "date" in value &&
+      value.date instanceof Date
+    );
+  }
+}
 
 export async function getAllEventNames({ interaction }: CreateRoleRequest): Promise<CreateRoleResponse> {
 
@@ -30,16 +66,13 @@ export async function getAllEventNames({ interaction }: CreateRoleRequest): Prom
 
     const events = await getEventNames();
 
-    const allEvents: EventNameStr[] = Array.from(events);
+    const allEvents: Event[] = Array.from(events);
+    console.log(allEvents)
 
     return right({ events: allEvents })
 }
 
-type EventNameStr = {
-    name: string;
-};
-
-async function getEventNames(): Promise<Set<any>> {
+async function getEventNames(): Promise<NameDateSet> {
     const formID: string = competTalksFormId;
     const auth = new google.auth.GoogleAuth({
       keyFile: path.join(__dirname, `competente.${environment}.json`),
@@ -53,22 +86,18 @@ async function getEventNames(): Promise<Set<any>> {
       formId: formID,
     });
     const data: Array<any> | undefined = res.data.responses;
-    
-    
-  
+
     if(data !== undefined) {
-      // const eventNames = data.filter(resp => resp.answers[FormInputRegistration.EVENTO]?.textAnswers.answers[0].value !== undefined);
-      const eventNames = new Set();
+      const eventNames = new NameDateSet();
       data.forEach(dado => {
         const event = dado.answers[FormInputRegistration.EVENTO]?.textAnswers.answers[0].value;
+        const date = dado.createTime;
         if(event !== undefined)
-        eventNames.add(event);
+          eventNames.add({ name: event, date: new Date(date) });
       });
-    //   console.log(eventNames)
-  
   
       return eventNames;
     }
-    else return new Set();
+    else return new NameDateSet();
   }
   
