@@ -25,11 +25,19 @@ export default new SelectMenu({
         const talksRegistrations = await getCompetTalksRegistration(selectedOption);
         const qntRegistrations = talksRegistrations ? talksRegistrations.length : 0;
     
-        const talksCertificateRecipients =
-        await getCompetTalksEligibleCertificateRecipients(selectedOption);
+        let talksCertificateRecipients;
+
+        try {
+            talksCertificateRecipients =
+            await getCompetTalksEligibleCertificateRecipients(selectedOption);
+        }
+        catch(e) {
+            talksCertificateRecipients = [];
+        }
+
         const qntCertificateRecipients = talksCertificateRecipients
-        ? talksCertificateRecipients.length
-        : 0;
+            ? talksCertificateRecipients.length
+            : 0;
 
         const averageGrades = await getAverageGradeOfEachQuestion(selectedOption);
         const frequencyOfAnswersOfEachQuestion =
