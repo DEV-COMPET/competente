@@ -10,6 +10,7 @@ import { env } from "@/env";
 import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
 import { extractInputData } from "./utils/extractInputData";
+import { selectedOption } from "@/bot/selectMenus/getTalksInfo/getEventNames";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -26,13 +27,28 @@ export default new Modal({
         if (interaction.channel === null)
             throw "Channel is not cached";
 
+        // console.log("chegou aqui ==============================")
         await interaction.deferReply({ ephemeral: true })
 
         const isNotAdmin = await checkIfNotAdmin(interaction)
         if ((isNotAdmin).isRight())
             return isNotAdmin.value.response
 
-        const { nomes, titulo, data_completa, /*email_assinante,*/ horas, minutos } = extractInputData({ interaction, inputFields })
+        const { nomes, data_completa, /*email_assinante,*/ horas, minutos } = extractInputData({ interaction, inputFields })
+
+        
+        const titulo: string = selectedOption; console.log("O nome do evento:", titulo);
+
+        if(titulo === undefined)
+            return await interaction.editReply({
+                embeds: [
+                    makeErrorEmbed({
+                        title: "Erro na seleção de uma opção",
+                        error: { code: 401, message: "Opção undefined" },
+                        interaction
+                    })
+                ]
+            });
 
         const registration = await getCompetTalksRegistration(titulo);
         if (registration.isLeft())

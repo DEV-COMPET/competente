@@ -1,9 +1,11 @@
-import { ExtendedModalInteraction } from "@/bot/typings/Modals"
+import { ExtendedModalInteraction } from "@/bot/typings/Modals";
+import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
+import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { makeErrorEmbed } from "../embed/makeErrorEmbed"
 
 interface EditErrorReplyRequest {
     error: Error
-    interaction: ExtendedModalInteraction
+    interaction: ExtendedModalInteraction | ExtendedInteraction | ExtendedStringSelectMenuInteraction
     title: string
 }
 

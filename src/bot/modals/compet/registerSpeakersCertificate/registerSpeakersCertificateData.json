@@ -5,13 +5,6 @@
     },
     "inputFields": [
         {
-            "label": "Qual o titulo do evento?",
-            "placeholder": "COMPET Talks",
-            "customId": "titulo",
-            "required": true,
-            "style": 1
-        },
-        {
             "label": "Quais os nomes dos palestrantes?",
             "placeholder": "Sandro Renato, André Rodrigues, Natália Batista",
             "customId": "nomes",
