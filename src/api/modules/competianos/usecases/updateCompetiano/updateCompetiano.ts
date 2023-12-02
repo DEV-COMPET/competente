@@ -10,7 +10,7 @@ const updateUserDataBodySchema = z.object({
     tutor: z.boolean().optional(),
     scrum_master: z.boolean().optional(),
     intercambio: z.boolean().optional(),
-    data_fim: z.date().optional(),
+    data_fim: z.string().optional(),
     lates: z.string().optional(),
     linkedin: z.string().optional(),
     depoimentos: z.string().optional(),
@@ -29,9 +29,11 @@ export async function updateCompetiano(request: FastifyRequest, reply: FastifyRe
 
     const updateUserDateParamsSchema = updateUserDataBodySchema.parse(request.body);
 
+    const updatedDate = {...updateUserDateParamsSchema, data_fim: updateUserDateParamsSchema.data_fim ? new Date(updateUserDateParamsSchema.data_fim) : undefined}
+
     const updateUserUseCase = makeUpdateCompetianoUseCase()
 
-    const user = await updateUserUseCase.execute({ nome, updatedDate: updateUserDateParamsSchema })
+    const user = await updateUserUseCase.execute({ nome, updatedDate })
 
     if (user.isLeft()) {
         return reply
