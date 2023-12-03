@@ -34,7 +34,49 @@ type UploadToFolderResponse = Either<
   { file_id: string }
 >
 
-export async function uploadToFolder(path_to_certificates: string): Promise<UploadToFolderResponse> {
+export async function uploadToTalksFeedbackFolder(path_to_talks_feedback: string): Promise<UploadToFolderResponse> {
+  const auth = new google.auth.GoogleAuth({
+    keyFile: partial_to_full_path({
+      dirname: __dirname,
+      partialPath: `competente.${env.ENVIRONMENT}.json`
+    }),
+    scopes: 'https://www.googleapis.com/auth/drive',
+  });
+  const service = google.drive({ version: 'v3', auth });
+
+  const folderId = "1LbfvgkitxE68jItkQmSq9X4xAHs5ddo9";
+
+  const fileMetadata = {
+    name: path_to_talks_feedback.split('/').pop(),
+    mimeType: 'application/vnd.google-apps.document',
+    parents: [folderId],
+  };
+
+  const media = {
+    mimeType: 'application/vnd.google-apps.document',
+    body: fs.createReadStream(path_to_talks_feedback),
+  };
+
+  try {
+
+    const file = await service.files.create({
+      requestBody: fileMetadata,
+      media: media,
+      fields: 'id',
+    });
+
+    if (!file.data.id) {
+      return left({ error: new GoogleError("Erro na criação do arquivo") })
+    }
+
+    return right({ file_id: file.data.id })
+
+  } catch (error: any) {
+    return left({ error: new GoogleError(error.message) })
+  }
+}
+
+export async function uploadToCertificateFolder(path_to_certificates: string): Promise<UploadToFolderResponse> {
   const auth = new google.auth.GoogleAuth({
     keyFile: partial_to_full_path({
       dirname: __dirname,
