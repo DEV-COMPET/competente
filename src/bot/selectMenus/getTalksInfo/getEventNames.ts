@@ -9,6 +9,9 @@ import {
     getAllSugestions,
     getFrequencyOfAnswersOfEachClosedQuestion,
   } from "@/bot/utils/googleAPI/getCompetTalks1";
+import { createDocs } from "@/bot/utils/googleAPI/createTalksFeedbackDocs";
+import { ITalksFeedback } from "@/bot/utils/googleAPI/interfaces";
+import { uploadToTalksFeedbackFolder } from "@/bot/utils/googleAPI/googleDrive";
 
 /**
  * @author Pedro Vitor Melo Bitencourt
@@ -82,5 +85,41 @@ export default new SelectMenu({
         });
     
         await interaction.editReply({ content: "Informações", embeds: [embed] });
+
+        const evento: ITalksFeedback = {
+            event: selectedOption,
+            registrations: qntRegistrations,
+            certifications: qntCertificateRecipients,
+        }
+
+        // add avaliações        
+        for (const key of averageGradesKeys) {
+            let value: string;
+
+            if(isNaN(averageGrades[key])) {
+                value = `Não há dados`;
+            }
+
+            else {
+                value = `Nota média: ${(averageGrades[key]).toFixed(2)}\n`;
+            
+                for (let i = 1; i <= 5; i++) {
+                    if(frequencyOfAnswersOfEachQuestion[key][i - 1] === 0) continue;
+                    value += `Nota ${i}: ${frequencyOfAnswersOfEachQuestion[key][i - 1]}\n`;
+                }
+            }
+            
+            evento[key] = value;
+        }
+
+
+        const objectEither = await createDocs(evento);
+        
+        if(objectEither.isRight()) {
+            const object = objectEither.value;
+            console.log("object is", object);
+            const uploadResponse = await uploadToTalksFeedbackFolder(object.document);
+            console.log("Response:", uploadResponse)
+        }
     }
 });
