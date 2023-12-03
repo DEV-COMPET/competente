@@ -62,8 +62,6 @@ export async function uploadToTalksFeedbackFolder(document: GaxiosResponse<docs_
     body: data
   };
 
-  console.log("media is", media);
-
   try {
     // const response = await drive.files.list({
     //   q: "mimeType='application/vnd.google-apps.folder'", // Filtra apenas pastas

@@ -25,14 +25,12 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
   const docs = google.docs({ version: "v1", auth });
 
   try {
+    const title = `Feedback de ${iTalksFeedback.event}`;
     const document = await docs.documents.create({
       requestBody: {
-        title: `${iTalksFeedback.event} Talks Feedback Test1`,
+        title: `${title}`,
       },
     });
-    
-
-    console.log("create");
 
     const documentId = document.data.documentId;
     if (!documentId) {
@@ -40,31 +38,8 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
       return left({ error: new GoogleError("Error obtaining document ID") });
     }
 
-    const title = `Feedback do Talks: ${iTalksFeedback.event}`;
-    const qntRegistrations = `Quantidade de registros: ${iTalksFeedback.registrations}`;
-    const qntCertificateRecipients = `Quantidade de certificados: ${iTalksFeedback.certifications}`;
-    const notaMediaText = `Notas médias de cada pergunta:`;
-    const relevancia = `Relevância do evento: ${iTalksFeedback.relevancia? iTalksFeedback.relevancia : "Não há dados"}`;
-    const chanceIndicacao = `Chance de indicação: ${iTalksFeedback.chanceIndicacao? iTalksFeedback.chanceIndicacao : "Não há dados"}`;
-    const correspondenciaExpectativa = `Correspondência de expectativa: ${iTalksFeedback.correspondenciaExpectativa? iTalksFeedback.correspondenciaExpectativa : "Não há dados"}`;
-    const nivelSatisfacao = `Nível de satisfação: ${iTalksFeedback.nivelSatisfacao? iTalksFeedback.nivelSatisfacao : "Não há dados"}`;
-    const nivelOrganizacao = `Nível de organização: ${iTalksFeedback.nivelOrganizacao? iTalksFeedback.nivelSatisfacao : "Não há dados"}`;
-    
-    const sugestionsText = `Sugestões:`;
-    
-    let text = `${title}\n${qntRegistrations}\n${qntCertificateRecipients}\n\n${notaMediaText}\n${relevancia}\n${chanceIndicacao}\n`
-    text += `${correspondenciaExpectativa}\n${nivelSatisfacao}\n${nivelOrganizacao}\n\n${sugestionsText}`;
-    
-    const sugestions = iTalksFeedback.sugestoes;
-
-    if(sugestions && sugestions.length > 0) {
-      text += `\n`
-      for(const sugestion of sugestions) {
-        text += `${sugestion}\n`
-      }
-    }
-    else
-      text += ` Não há sugestões`
+    console.log(title, "\n")
+    const text = getText(iTalksFeedback, title);
     
     const content: docs_v1.Schema$Request[] = [
       {
@@ -76,34 +51,63 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
         },
       },
 
-      {
-        updateTextStyle: {
-          textStyle: {
-            bold: true,
-            underline: true,
-            fontSize: { magnitude: 16, unit: "PT" }
-          },
-          range: {
-            startIndex: 1,
-            endIndex: 1 + title.length
-          },
-          fields: "bold,underline,fontSize"
-        }
-      },
+      // {
+      //   updateTextStyle: {
+      //     textStyle: {
+      //       bold: true,
+      //       underline: true,
+      //       fontSize: { magnitude: 16, unit: "PT" }
+      //     },
+      //     range: {
+      //       startIndex: 1,
+      //       endIndex: 1 + title.length
+      //     },
+      //     fields: "bold,underline,fontSize"
+      //   }
+      // },
 
-      {
-        updateParagraphStyle: {
-          paragraphStyle: {
-            alignment: "CENTER"
-          },
-          range: {
-            startIndex: 1,
-            endIndex: title.length
-          },
-          fields: "alignment"
-        }
-      }
+      // {
+      //   updateParagraphStyle: {
+      //     paragraphStyle: {
+      //       alignment: "CENTER"
+      //     },
+      //     range: {
+      //       startIndex: 1,
+      //       endIndex: title.length
+      //     },
+      //     fields: "alignment"
+      //   }
+      // },
+
+      // {
+      //   updateTextStyle: {
+      //     textStyle: {
+      //       bold: true,
+      //     },
+      //     range: {
+      //       startIndex: title.length + 1,
+      //       endIndex: (title.length + 1) + qntRegistrations.length
+      //     },
+      //     fields: "bold,underline,fontSize"
+      //   }
+      // }, 
+
+      // {
+      //   updateTextStyle: {
+      //     textStyle: {
+      //       bold: true,
+      //     },
+      //     range: {
+      //       startIndex: (title.length + 1 + qntRegistrations.length) + 2,
+      //       endIndex: (title.length + 1 + qntRegistrations.length) + qntCertificateRecipients.length
+      //     },
+      //     fields: "bold,underline,fontSize"
+      //   }
+      // }
     ];
+
+    content.push(getTitleStyle(title));
+    content.push(getTextAlignment(title));
 
     await docs.documents.batchUpdate({
       documentId,
@@ -118,4 +122,73 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     console.error("Error creating document:", error.message);
     return left({ error: new GoogleError(`Error creating document: ${error.message}`) });
   }
+}
+
+
+function getText(iTalksFeedback: ITalksFeedback, title: string): string {
+    const qntRegistrations = `Quantidade de registros: ${iTalksFeedback.registrations}`;
+    const qntCertificateRecipients = `Quantidade de certificados: ${iTalksFeedback.certifications}`;
+    const notaMediaText = `Notas médias de cada pergunta:`;
+    const relevancia = `Relevância do evento: ${iTalksFeedback.relevancia? `\n${iTalksFeedback.relevancia}` : "Não há dados"}`;
+    const chanceIndicacao = `Chance de indicação: ${iTalksFeedback.chanceIndicacao? `\n${iTalksFeedback.chanceIndicacao}` : "Não há dados"}`;
+    const correspondenciaExpectativa = `Correspondência de expectativa: ${iTalksFeedback.correspondenciaExpectativa? `\n${iTalksFeedback.correspondenciaExpectativa}` : "Não há dados"}`;
+    const nivelSatisfacao = `Nível de satisfação: ${iTalksFeedback.nivelSatisfacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
+    const nivelOrganizacao = `Nível de organização: ${iTalksFeedback.nivelOrganizacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
+    
+    const sugestionsText = `Sugestões:`;
+    
+    let text = `${title}\n${qntRegistrations}\n${qntCertificateRecipients}\n\n${notaMediaText}\n${relevancia}\n${chanceIndicacao}\n`
+    text += `${correspondenciaExpectativa}\n${nivelSatisfacao}\n${nivelOrganizacao}\n\n${sugestionsText}`;
+    
+    const sugestions = iTalksFeedback.sugestoes;
+
+    if(sugestions === undefined) {
+      text += `Nenhuma sugestão`
+    }
+    else
+      text += `\n${sugestions}`;
+
+    return text;
+}
+
+function getTextAlignment(title: string) {
+  const alignment = {
+      updateParagraphStyle: {
+        paragraphStyle: {
+          alignment: "CENTER"
+        },
+        range: {
+          startIndex: 1,
+          endIndex: title.length
+        },
+        fields: "alignment"
+      }
+  }
+
+  return alignment;
+}
+
+function getTitleStyle(title: string) {
+  console.log(title)
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        underline: true,
+        fontSize: { magnitude: 16, unit: "PT" }
+      },
+      range: {
+        startIndex: 1,
+        endIndex: title.length + 1
+      },
+      fields: "bold,underline,fontSize"
+    }
+  }
+
+  return textStyle;
+}
+
+function getQntRegistrationsStyle() {
+  
 }

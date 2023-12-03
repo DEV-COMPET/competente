@@ -108,18 +108,17 @@ export default new SelectMenu({
                     value += `Nota ${i}: ${frequencyOfAnswersOfEachQuestion[key][i - 1]}\n`;
                 }
             }
-            
+
             evento[key] = value;
         }
 
+        evento['sugestoes'] = sugestions.length > 0? sugestions.join('\n'): undefined;
 
         const objectEither = await createDocs(evento);
         
         if(objectEither.isRight()) {
             const object = objectEither.value;
-            console.log("object is", object);
             const uploadResponse = await uploadToTalksFeedbackFolder(object.document);
-            console.log("Response:", uploadResponse)
         }
     }
 });

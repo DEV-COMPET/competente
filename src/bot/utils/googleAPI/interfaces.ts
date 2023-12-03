@@ -8,5 +8,5 @@ export interface ITalksFeedback {
     correspondenciaExpectativa?: string,
     nivelSatisfacao?: string,
     nivelOrganizacao?: string,
-    sugestoes?: string[]
+    sugestoes?: string
 }
