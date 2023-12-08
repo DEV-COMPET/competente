@@ -50,7 +50,6 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
   const auth = new google.auth.GoogleAuth({
     keyFile: partial_to_full_path({
       dirname: __dirname,
-      // partialPath: `../../../utils/googleAPI/competente.${env.ENVIRONMENT}.json`
       partialPath: `./competente.${env.ENVIRONMENT}.json`
     }),
     scopes: 'https://www.googleapis.com/auth/documents',
@@ -72,7 +71,6 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
       return left({ error: new GoogleError("Error obtaining document ID") });
     }
 
-    console.log(title, "\n")
     const text = getText(iTalksFeedback, title);
     
     const content: docs_v1.Schema$Request[] = [
@@ -84,60 +82,6 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
           },
         },
       },
-
-      // {
-      //   updateTextStyle: {
-      //     textStyle: {
-      //       bold: true,
-      //       underline: true,
-      //       fontSize: { magnitude: 16, unit: "PT" }
-      //     },
-      //     range: {
-      //       startIndex: 1,
-      //       endIndex: 1 + title.length
-      //     },
-      //     fields: "bold,underline,fontSize"
-      //   }
-      // },
-
-      // {
-      //   updateParagraphStyle: {
-      //     paragraphStyle: {
-      //       alignment: "CENTER"
-      //     },
-      //     range: {
-      //       startIndex: 1,
-      //       endIndex: title.length
-      //     },
-      //     fields: "alignment"
-      //   }
-      // },
-
-      // {
-      //   updateTextStyle: {
-      //     textStyle: {
-      //       bold: true,
-      //     },
-      //     range: {
-      //       startIndex: title.length + 1,
-      //       endIndex: (title.length + 1) + qntRegistrations.length
-      //     },
-      //     fields: "bold,underline,fontSize"
-      //   }
-      // }, 
-
-      // {
-      //   updateTextStyle: {
-      //     textStyle: {
-      //       bold: true,
-      //     },
-      //     range: {
-      //       startIndex: (title.length + 1 + qntRegistrations.length) + 2,
-      //       endIndex: (title.length + 1 + qntRegistrations.length) + qntCertificateRecipients.length
-      //     },
-      //     fields: "bold,underline,fontSize"
-      //   }
-      // }
     ];
 
     const titleStyleArray = getTitleStyle(title);
@@ -584,7 +528,6 @@ function getNivelOrganizacaoList(n: number, nivelOrganizacao: string): CustomLis
 function getSugestoesTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
   const endIndex = (n + 2) + (textObject.sugestionsText.length - (iTalksFeedback.sugestoes?.length !== undefined? iTalksFeedback.sugestoes?.length : "Não há dados".length));
-  console.log(textObject.sugestionsText, iTalksFeedback.sugestoes);
 
   const textStyle = {
     updateTextStyle: {
