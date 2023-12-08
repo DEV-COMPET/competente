@@ -12,6 +12,28 @@ type CreateTalksFeedbackDocs = Either<
   { document: GaxiosResponse<docs_v1.Schema$Document> }
 >;
 
+interface CustomArray {
+  0: {
+      updateTextStyle: {
+          textStyle: {
+              bold?: boolean;
+              underline?: boolean;
+              fontSize?: {
+                  magnitude: number;
+                  unit?: string;
+              };
+          };
+          range: {
+              startIndex: number;
+              endIndex: number;
+          };
+          fields: string;
+      };
+  };
+  1: number;
+}
+
+
 export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<CreateTalksFeedbackDocs> {
   const auth = new google.auth.GoogleAuth({
     keyFile: partial_to_full_path({
@@ -106,8 +128,58 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
       // }
     ];
 
-    content.push(getTitleStyle(title));
+    const titleStyleArray = getTitleStyle(title);
+    let nextStartIndex: number = titleStyleArray[1];  
+    content.push(titleStyleArray[0]);
     content.push(getTextAlignment(title));
+
+    const qntRegistrationsArray = getQntRegistrationsStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = qntRegistrationsArray[1];
+    content.push(qntRegistrationsArray[0]);
+
+    const qntCertificationsArray = getQntCertificationsStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = qntCertificationsArray[1];
+    content.push(qntCertificationsArray[0]);
+
+    const notaMediaTextArray = getNotaMediaTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = notaMediaTextArray[1];
+    content.push(notaMediaTextArray[0]);
+
+    const getRelevanciaTextStyleArray = getRelevanciaTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getRelevanciaTextStyleArray[1];
+    content.push(getRelevanciaTextStyleArray[0]);
+
+    if(iTalksFeedback.relevancia) {
+      const listItems = iTalksFeedback.relevancia.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+
+      const listContent = {
+        insertText: {
+          text: "Item One\n",
+          location: {
+            index: nextStartIndex
+          }
+        }
+      }
+      const totalLengthItems: number = listItems.reduce((acc, item) => acc *= item.length, 0);
+      const length = listItems.length * totalLengthItems;
+
+    
+      const listParagraph = {
+        createParagraphBullets: {
+          range: {
+            startIndex: nextStartIndex,
+            endIndex: nextStartIndex + totalLengthItems,
+          },
+          bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+        }
+      }
+
+      console.log("Total length =", totalLengthItems);
+
+      // BULLET_DISC_CIRCLE_SQUARE, BULLET_ARROW_DIAMOND_DISC
+      content.push(listParagraph);
+    }
+
 
     await docs.documents.batchUpdate({
       documentId,
@@ -124,29 +196,34 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
   }
 }
 
+function getTextObject(iTalksFeedback: ITalksFeedback) {
+    const qntRegistrationsText = `Quantidade de registros: ${iTalksFeedback.registrations}`;
+    const qntCertificateRecipientsText = `Quantidade de certificados: ${iTalksFeedback.certifications}`;
+    const notaMediaText = `Notas médias de cada pergunta:`;
+    const relevanciaText = `Relevância do evento: ${iTalksFeedback.relevancia? `\n${iTalksFeedback.relevancia}` : "Não há dados"}`;
+    const chanceIndicacaoText = `Chance de indicação: ${iTalksFeedback.chanceIndicacao? `\n${iTalksFeedback.chanceIndicacao}` : "Não há dados"}`;
+    const correspondenciaExpectativaText = `Correspondência de expectativa: ${iTalksFeedback.correspondenciaExpectativa? `\n${iTalksFeedback.correspondenciaExpectativa}` : "Não há dados"}`;
+    const nivelSatisfacaoText = `Nível de satisfação: ${iTalksFeedback.nivelSatisfacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
+    const nivelOrganizacaoText = `Nível de organização: ${iTalksFeedback.nivelOrganizacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
+    const sugestionsText = `Sugestões: ${iTalksFeedback.sugestoes !== undefined ? `\n${iTalksFeedback.sugestoes}` : "Não há dados"}`;
+
+    return { qntRegistrationsText, qntCertificateRecipientsText, notaMediaText, relevanciaText, chanceIndicacaoText, correspondenciaExpectativaText, nivelOrganizacaoText, nivelSatisfacaoText, sugestionsText }
+}
 
 function getText(iTalksFeedback: ITalksFeedback, title: string): string {
-    const qntRegistrations = `Quantidade de registros: ${iTalksFeedback.registrations}`;
-    const qntCertificateRecipients = `Quantidade de certificados: ${iTalksFeedback.certifications}`;
-    const notaMediaText = `Notas médias de cada pergunta:`;
-    const relevancia = `Relevância do evento: ${iTalksFeedback.relevancia? `\n${iTalksFeedback.relevancia}` : "Não há dados"}`;
-    const chanceIndicacao = `Chance de indicação: ${iTalksFeedback.chanceIndicacao? `\n${iTalksFeedback.chanceIndicacao}` : "Não há dados"}`;
-    const correspondenciaExpectativa = `Correspondência de expectativa: ${iTalksFeedback.correspondenciaExpectativa? `\n${iTalksFeedback.correspondenciaExpectativa}` : "Não há dados"}`;
-    const nivelSatisfacao = `Nível de satisfação: ${iTalksFeedback.nivelSatisfacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
-    const nivelOrganizacao = `Nível de organização: ${iTalksFeedback.nivelOrganizacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
-    
-    const sugestionsText = `Sugestões:`;
+    const objectText = getTextObject(iTalksFeedback);
+    const qntRegistrations = objectText.qntRegistrationsText;
+    const qntCertificateRecipients = objectText.qntCertificateRecipientsText;
+    const notaMediaText = objectText.notaMediaText;
+    const relevancia = objectText.relevanciaText;
+    const chanceIndicacao = objectText.chanceIndicacaoText;
+    const correspondenciaExpectativa = objectText.correspondenciaExpectativaText;
+    const nivelSatisfacao = objectText.nivelSatisfacaoText;
+    const nivelOrganizacao = objectText.nivelOrganizacaoText;
+    const sugestionsText = objectText.sugestionsText;
     
     let text = `${title}\n${qntRegistrations}\n${qntCertificateRecipients}\n\n${notaMediaText}\n${relevancia}\n${chanceIndicacao}\n`
-    text += `${correspondenciaExpectativa}\n${nivelSatisfacao}\n${nivelOrganizacao}\n\n${sugestionsText}`;
-    
-    const sugestions = iTalksFeedback.sugestoes;
-
-    if(sugestions === undefined) {
-      text += `Nenhuma sugestão`
-    }
-    else
-      text += `\n${sugestions}`;
+    text += `${correspondenciaExpectativa}\n${nivelSatisfacao}\n${nivelOrganizacao}\n\n${sugestionsText}`;    
 
     return text;
 }
@@ -168,7 +245,7 @@ function getTextAlignment(title: string) {
   return alignment;
 }
 
-function getTitleStyle(title: string) {
+function getTitleStyle(title: string): CustomArray {
   console.log(title)
 
   const textStyle = {
@@ -183,12 +260,103 @@ function getTitleStyle(title: string) {
         endIndex: title.length + 1
       },
       fields: "bold,underline,fontSize"
-    }
+    },
   }
 
-  return textStyle;
+  const arr : CustomArray = [ textStyle, title.length + 1 ];
+
+  return arr;
 }
 
-function getQntRegistrationsStyle() {
-  
+function getQntRegistrationsStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 1) + (textObject.qntRegistrationsText.length - iTalksFeedback.registrations.toString().length);
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 14, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 1,
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomArray = [ textStyle, endIndex + iTalksFeedback.registrations.toString().length ];
+
+  return arr;
+}
+
+function getQntCertificationsStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 1) + (textObject.qntRegistrationsText.length - iTalksFeedback.certifications.toString().length) + 1;
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 14, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 1,
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomArray = [ textStyle, endIndex + iTalksFeedback.registrations.toString().length  + 1];
+
+  return arr;
+}
+
+function getNotaMediaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 1) + (textObject.notaMediaText.length + 1);
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 14, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 1,
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomArray = [ textStyle, endIndex + 1];
+
+  return arr;
+}
+
+function getRelevanciaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 1) + (textObject.relevanciaText.length - (iTalksFeedback.relevancia?.length !== undefined? iTalksFeedback.relevancia?.length : 0));
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 12, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 1,
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomArray = [ textStyle, endIndex + 1];
+  console.log(iTalksFeedback.relevancia);
+
+  return arr;
 }
