@@ -12,7 +12,7 @@ type CreateTalksFeedbackDocs = Either<
   { document: GaxiosResponse<docs_v1.Schema$Document> }
 >;
 
-interface CustomArray {
+interface CustomStyleArray {
   0: {
       updateTextStyle: {
           textStyle: {
@@ -30,6 +30,18 @@ interface CustomArray {
           fields: string;
       };
   };
+  1: number;
+}
+interface CustomListStyleArray {
+  0: {
+    createParagraphBullets: {
+      range: {
+        startIndex: number,
+        endIndex: number,
+      },
+      bulletPreset: string
+    }
+  },
   1: number;
 }
 
@@ -150,35 +162,61 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     content.push(getRelevanciaTextStyleArray[0]);
 
     if(iTalksFeedback.relevancia) {
-      const listItems = iTalksFeedback.relevancia.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
-
-      const listContent = {
-        insertText: {
-          text: "Item One\n",
-          location: {
-            index: nextStartIndex
-          }
-        }
-      }
-      const totalLengthItems: number = listItems.reduce((acc, item) => acc *= item.length, 0);
-      const length = listItems.length * totalLengthItems;
-
-    
-      const listParagraph = {
-        createParagraphBullets: {
-          range: {
-            startIndex: nextStartIndex,
-            endIndex: nextStartIndex + totalLengthItems,
-          },
-          bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
-        }
-      }
-
-      console.log("Total length =", totalLengthItems);
-
-      // BULLET_DISC_CIRCLE_SQUARE, BULLET_ARROW_DIAMOND_DISC
-      content.push(listParagraph);
+      const relevanciaListStyle = getRelevanciaList(nextStartIndex, iTalksFeedback.relevancia);
+      nextStartIndex = relevanciaListStyle[1];
+      content.push(relevanciaListStyle[0]);
     }
+
+    const getChanceIndicacaoTextStyleArray = getChanceIndicacaoTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getChanceIndicacaoTextStyleArray[1];
+    content.push(getChanceIndicacaoTextStyleArray[0]);
+
+    if(iTalksFeedback.chanceIndicacao) {
+      const chanceIndicacaoStyle = getChanceIndicacaoList(nextStartIndex, iTalksFeedback.chanceIndicacao);
+      nextStartIndex = chanceIndicacaoStyle[1];
+      content.push(chanceIndicacaoStyle[0]);
+    }
+
+    const getCorrespondenciaExpectativaTextStyleArray = getCorrespondenciaExpectativaTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getCorrespondenciaExpectativaTextStyleArray[1];
+    content.push(getCorrespondenciaExpectativaTextStyleArray[0]);
+
+    if(iTalksFeedback.correspondenciaExpectativa) {
+      const correspondenciaExpectativaStyle = getCorrespondenciaExpectativaList(nextStartIndex, iTalksFeedback.correspondenciaExpectativa);
+      nextStartIndex = correspondenciaExpectativaStyle[1];
+      content.push(correspondenciaExpectativaStyle[0]);
+    }
+
+    const getNivelSatisfacaoTextStyleArray = getNivelSatisfacaoTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getNivelSatisfacaoTextStyleArray[1];
+    content.push(getNivelSatisfacaoTextStyleArray[0]);
+
+    if(iTalksFeedback.nivelSatisfacao) {
+      const nivelSatisfacaoStyle = getNivelSatisfacaoList(nextStartIndex, iTalksFeedback.nivelSatisfacao);
+      nextStartIndex = nivelSatisfacaoStyle[1];
+      content.push(nivelSatisfacaoStyle[0]);
+    }
+
+    const getNivelOrganizacaoTextStyleArray = getNivelOrganizacaoTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getNivelOrganizacaoTextStyleArray[1];
+    content.push(getNivelOrganizacaoTextStyleArray[0]);
+
+    if(iTalksFeedback.nivelOrganizacao) {
+      const nivelOrganizacaoStyle = getNivelOrganizacaoList(nextStartIndex, iTalksFeedback.nivelOrganizacao);
+      nextStartIndex = nivelOrganizacaoStyle[1];
+      content.push(nivelOrganizacaoStyle[0]);
+    }
+
+    const getSugestoesTextStyleArray = getSugestoesTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getSugestoesTextStyleArray[1];
+    content.push(getSugestoesTextStyleArray[0]);
+
+    if(iTalksFeedback.sugestoes) {
+      const getSugestoesStyle = getSugestoesList(nextStartIndex, iTalksFeedback.sugestoes);
+      nextStartIndex = getSugestoesStyle[1];
+      content.push(getSugestoesStyle[0]);
+    }
+
 
 
     await docs.documents.batchUpdate({
@@ -245,7 +283,7 @@ function getTextAlignment(title: string) {
   return alignment;
 }
 
-function getTitleStyle(title: string): CustomArray {
+function getTitleStyle(title: string): CustomStyleArray {
   console.log(title)
 
   const textStyle = {
@@ -263,12 +301,12 @@ function getTitleStyle(title: string): CustomArray {
     },
   }
 
-  const arr : CustomArray = [ textStyle, title.length + 1 ];
+  const arr : CustomStyleArray = [ textStyle, title.length + 1 ];
 
   return arr;
 }
 
-function getQntRegistrationsStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+function getQntRegistrationsStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
   const endIndex = (n + 1) + (textObject.qntRegistrationsText.length - iTalksFeedback.registrations.toString().length);
 
@@ -286,12 +324,12 @@ function getQntRegistrationsStyle(n: number, iTalksFeedback: ITalksFeedback): Cu
     },
   }
 
-  const arr: CustomArray = [ textStyle, endIndex + iTalksFeedback.registrations.toString().length ];
+  const arr: CustomStyleArray = [ textStyle, endIndex + iTalksFeedback.registrations.toString().length ];
 
   return arr;
 }
 
-function getQntCertificationsStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+function getQntCertificationsStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
   const endIndex = (n + 1) + (textObject.qntRegistrationsText.length - iTalksFeedback.certifications.toString().length) + 1;
 
@@ -309,12 +347,12 @@ function getQntCertificationsStyle(n: number, iTalksFeedback: ITalksFeedback): C
     },
   }
 
-  const arr: CustomArray = [ textStyle, endIndex + iTalksFeedback.registrations.toString().length  + 1];
+  const arr: CustomStyleArray = [ textStyle, endIndex + iTalksFeedback.registrations.toString().length  + 1];
 
   return arr;
 }
 
-function getNotaMediaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+function getNotaMediaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
   const endIndex = (n + 1) + (textObject.notaMediaText.length + 1);
 
@@ -332,12 +370,12 @@ function getNotaMediaTextStyle(n: number, iTalksFeedback: ITalksFeedback): Custo
     },
   }
 
-  const arr: CustomArray = [ textStyle, endIndex + 1];
+  const arr: CustomStyleArray = [ textStyle, endIndex + 1];
 
   return arr;
 }
 
-function getRelevanciaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomArray {
+function getRelevanciaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
   const endIndex = (n + 1) + (textObject.relevanciaText.length - (iTalksFeedback.relevancia?.length !== undefined? iTalksFeedback.relevancia?.length : 0));
 
@@ -355,8 +393,232 @@ function getRelevanciaTextStyle(n: number, iTalksFeedback: ITalksFeedback): Cust
     },
   }
 
-  const arr: CustomArray = [ textStyle, endIndex + 1];
+  const arr: CustomStyleArray = [ textStyle, endIndex + 1];
   console.log(iTalksFeedback.relevancia);
 
   return arr;
+}
+
+function getRelevanciaList(n: number, relevancia: string): CustomListStyleArray {
+  const listItems = relevancia.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+  const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
+  const endIndex = n + totalLengthItems;
+    
+  const listParagraph = {
+    createParagraphBullets: {
+      range: {
+        startIndex: n,
+        endIndex: n + totalLengthItems,
+      },
+      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+    }
+  }
+
+  return [ listParagraph, endIndex ];
+}
+
+function getChanceIndicacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 2) + (textObject.chanceIndicacaoText.length - (iTalksFeedback.chanceIndicacao?.length !== undefined? iTalksFeedback.chanceIndicacao?.length : 0));
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 12, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 2, // + 2 devido à quebra de linha
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomStyleArray = [ textStyle, endIndex + 3];
+
+  return arr;
+}
+
+function getChanceIndicacaoList(n: number, chanceIndicacao: string): CustomListStyleArray {
+  const listItems = chanceIndicacao.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+  const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
+  const endIndex = n + totalLengthItems;
+    
+  const listParagraph = {
+    createParagraphBullets: {
+      range: {
+        startIndex: n,
+        endIndex: n + totalLengthItems,
+      },
+      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+    }
+  }
+
+  return [ listParagraph, endIndex ];
+}
+
+function getCorrespondenciaExpectativaTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 2) + (textObject.correspondenciaExpectativaText.length - (iTalksFeedback.correspondenciaExpectativa?.length !== undefined? iTalksFeedback.correspondenciaExpectativa?.length : 0));
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 12, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 2, // + 2 devido à quebra de linha
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomStyleArray = [ textStyle, endIndex + 3];
+
+  return arr;
+}
+
+function getCorrespondenciaExpectativaList(n: number, correspondenciaExpectativa: string): CustomListStyleArray {
+  const listItems = correspondenciaExpectativa.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+  const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
+  const endIndex = n + totalLengthItems;
+    
+  const listParagraph = {
+    createParagraphBullets: {
+      range: {
+        startIndex: n,
+        endIndex: n + totalLengthItems,
+      },
+      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+    }
+  }
+
+  return [ listParagraph, endIndex ];
+}
+
+function getNivelSatisfacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 2) + (textObject.nivelSatisfacaoText.length - (iTalksFeedback.nivelSatisfacao?.length !== undefined? iTalksFeedback.nivelSatisfacao?.length : 0));
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 12, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 2, // + 2 devido à quebra de linha
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomStyleArray = [ textStyle, endIndex + 3];
+
+  return arr;
+}
+
+function getNivelSatisfacaoList(n: number, nivelSatisfacao: string): CustomListStyleArray {
+  const listItems = nivelSatisfacao.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+  const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
+  const endIndex = n + totalLengthItems;
+    
+  const listParagraph = {
+    createParagraphBullets: {
+      range: {
+        startIndex: n,
+        endIndex: n + totalLengthItems,
+      },
+      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+    }
+  }
+
+  return [ listParagraph, endIndex ];
+}
+
+function getNivelOrganizacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 2) + (textObject.nivelOrganizacaoText.length - (iTalksFeedback.nivelOrganizacao?.length !== undefined? iTalksFeedback.nivelOrganizacao?.length : "Não há dados".length));
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 12, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 2, // + 2 devido à quebra de linha
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomStyleArray = [ textStyle, endIndex + "Não há dados".length];
+
+  return arr;
+}
+
+function getNivelOrganizacaoList(n: number, nivelOrganizacao: string): CustomListStyleArray {
+  const listItems = nivelOrganizacao.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+  const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
+  const endIndex = n + totalLengthItems;
+    
+  const listParagraph = {
+    createParagraphBullets: {
+      range: {
+        startIndex: n,
+        endIndex: n + totalLengthItems,
+      },
+      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+    }
+  }
+
+  return [ listParagraph, endIndex ];
+}
+
+function getSugestoesTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
+  const textObject = getTextObject(iTalksFeedback);
+  const endIndex = (n + 2) + (textObject.sugestionsText.length - (iTalksFeedback.sugestoes?.length !== undefined? iTalksFeedback.sugestoes?.length : "Não há dados".length));
+  console.log(textObject.sugestionsText, iTalksFeedback.sugestoes);
+
+  const textStyle = {
+    updateTextStyle: {
+      textStyle: {
+        bold: true,
+        fontSize: { magnitude: 12, unit: "PT" }
+      },
+      range: {
+        startIndex: n + 2, // + 2 devido à quebra de linha
+        endIndex: endIndex
+      },
+      fields: "bold,fontSize"
+    },
+  }
+
+  const arr: CustomStyleArray = [ textStyle, endIndex + 1];
+
+  return arr;
+}
+
+function getSugestoesList(n: number, sugestions: string): CustomListStyleArray {
+  const listItems = sugestions.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
+  const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
+  const endIndex = n + totalLengthItems;
+    
+  const listParagraph = {
+    createParagraphBullets: {
+      range: {
+        startIndex: n,
+        endIndex: n + totalLengthItems,
+      },
+      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
+    }
+  }
+
+  return [ listParagraph, endIndex ];
 }
