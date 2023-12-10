@@ -7,6 +7,5 @@ export interface ITalksFeedback {
     notaOrganizacao?: string,
     correspondenciaExpectativa?: string,
     nivelSatisfacao?: string,
-    nivelOrganizacao?: string,
     sugestoes?: string
 }
