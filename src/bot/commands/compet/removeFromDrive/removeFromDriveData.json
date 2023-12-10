@@ -1,0 +1,15 @@
+{
+    "modalBuilderResquest": {
+        "title": "Informe o email do ex-competiano",
+        "customId": "useremail"
+    },
+    "inputFields": [
+        {
+            "label": "Email:",
+            "placeholder": "example@gmail.com",
+            "customId": "email",
+            "required": "true",
+            "style": 1
+        }
+    ]
+}
