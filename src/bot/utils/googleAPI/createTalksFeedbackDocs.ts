@@ -74,23 +74,14 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     const text = getText(iTalksFeedback, title);
     
     const content: docs_v1.Schema$Request[] = [
-      { insertText: { text: getText(iTalksFeedback, title), location: { index: 1 } } },
-      { ...getStyle(1, title.length + 1, 16), ...getTextAlignment(title) },
-      ...getStyle(nextStartIndex, iTalksFeedback.registrations.toString().length, 14),
-      ...getStyle(nextStartIndex, iTalksFeedback.certifications.toString().length, 14),
-      ...getStyle(nextStartIndex, 1, 14), // Notas médias de cada pergunta
-      ...getStyle(nextStartIndex, 1, 14), // Relevância do evento
-      ...(iTalksFeedback.relevancia ? getListStyle(nextStartIndex, iTalksFeedback.relevancia.split("\n")) : []),
-      ...getStyle(nextStartIndex, 1, 14), // Chance de indicação
-      ...(iTalksFeedback.chanceIndicacao ? getListStyle(nextStartIndex, iTalksFeedback.chanceIndicacao.split("\n")) : []),
-      ...getStyle(nextStartIndex, 1, 14), // Correspondência de expectativa
-      ...(iTalksFeedback.correspondenciaExpectativa ? getListStyle(nextStartIndex, iTalksFeedback.correspondenciaExpectativa.split("\n")) : []),
-      ...getStyle(nextStartIndex, 1, 14), // Nível de satisfação
-      ...(iTalksFeedback.nivelSatisfacao ? getListStyle(nextStartIndex, iTalksFeedback.nivelSatisfacao.split("\n")) : []),
-      ...getStyle(nextStartIndex, 1, 14), // Nível de organização
-      ...(iTalksFeedback.notaOrganizacao ? getListStyle(nextStartIndex, iTalksFeedback.notaOrganizacao.split("\n")) : []),
-      ...getStyle(nextStartIndex, 1, 14), // Sugestões
-      ...(iTalksFeedback.sugestoes ? getListStyle(nextStartIndex, iTalksFeedback.sugestoes.split("\n")) : []),
+      {
+        insertText: {
+          text: text,
+          location: {
+            index: 1,
+          },
+        },
+      },
     ];
 
     const titleStyleArray = getTitleStyle(title);
@@ -603,57 +594,4 @@ function getSugestoesList(n: number, sugestions: string): CustomListStyleArray {
   }
 
   return [ listParagraph, endIndex ];
-}
-
-// function getText(iTalksFeedback: ITalksFeedback, title: string): string {
-//   const objectText = getTextObject(iTalksFeedback);
-//   const sections = [
-//     title,
-//     objectText.qntRegistrationsText,
-//     objectText.qntCertificateRecipientsText,
-//     objectText.notaMediaText,
-//     objectText.relevanciaText,
-//     objectText.chanceIndicacaoText,
-//     objectText.correspondenciaExpectativaText,
-//     objectText.nivelSatisfacaoText,
-//     objectText.nivelOrganizacaoText,
-//     objectText.sugestionsText,
-//   ];
-
-//   return sections.join('\n\n');
-// }
-
-function getStyle(startIndex: number, endIndex: number, fontSize?: number): CustomStyleArray {
-  const textStyle = {
-    updateTextStyle: {
-      textStyle: {
-        bold: true,
-        fontSize: { magnitude: fontSize || 12, unit: "PT" }
-      },
-      range: {
-        startIndex,
-        endIndex
-      },
-      fields: "bold,fontSize"
-    },
-  };
-
-  return [textStyle, endIndex];
-}
-
-function getListStyle(startIndex: number, items: string[]): CustomListStyleArray {
-  const totalLengthItems = items.reduce((acc, item) => acc += item.length, 0);
-  const endIndex = startIndex + totalLengthItems;
-
-  const listParagraph = {
-    createParagraphBullets: {
-      range: {
-        startIndex,
-        endIndex,
-      },
-      bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
-    }
-  };
-
-  return [listParagraph, endIndex];
 }
