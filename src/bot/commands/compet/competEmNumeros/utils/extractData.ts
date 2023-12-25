@@ -1,4 +1,5 @@
 import { CompetianoType } from "@/api/modules/competianos/entities/competiano.entity";
+import { fetchDataFromSheet } from "@/bot/utils/googleAPI/fetchDataFromSheet";
 
 interface ExtractDataRequest {
     competianos: CompetianoType[]
@@ -15,6 +16,8 @@ interface ExtractDataResponse {
     tempoMedioPermanencia: string
     maiorTempo: string
     menorTempo: string
+    frequenciaPeriodos: string
+    frequenciaCursos: string
 }
 
 function getDateDifference(date1: Date, date2: Date) {
@@ -42,13 +45,13 @@ function daysIntoDate(days: number) {
 
     console.dir({ years, months, daysLeft })
 
-    const formatedDate = 
+    const formatedDate =
         `${years > 0 ? `${years} ano${years > 1 ? 's' : ""}` : ''} ${months > 0 ? `${months} mes${months > 1 ? 'es' : ""}` : ''} ${daysLeft > 0 ? `${daysLeft} dia${daysLeft > 1 ? 's' : ""}` : ''}`
 
     return formatedDate
 }
 
-export function extractData({ competianos }: ExtractDataRequest): ExtractDataResponse {
+export async function extractData({ competianos }: ExtractDataRequest): Promise<ExtractDataResponse> {
 
     const quantidadeMembrosAtuais = competianos
         .filter(competiano => competiano.membro_ativo)
@@ -150,6 +153,44 @@ export function extractData({ competianos }: ExtractDataRequest): ExtractDataRes
             }
         })
 
+    const inscricaoProcessoSeletivoData = await fetchDataFromSheet({
+        spreadsheetId: "1JiFIdKMl_kGI0aKtkzU6Tp80V5JJu0QVIrH4_F9eR8Q",
+        sheetName: "Respostas ao formulário 1"
+    })
+
+    console.dir({ inscricaoProcessoSeletivoData }, { depth: null })
+
+    const frequenciaCursosData = inscricaoProcessoSeletivoData
+        .map(row => row["Qual curso você faz? 12"])
+        .reduce((total, curso) => {
+            if (curso !== '') {
+                if (total[curso]) total[curso]++;
+                else total[curso] = 1;
+            }
+            return total;
+        }, {} as { [key: string]: number });
+
+    const frequenciaCursos = Object.entries(frequenciaCursosData)
+        .map(([curso, quantidade]) => `${curso}: ${quantidade}`)
+        .join('\n');
+
+    const frequenciaPeriodosData = inscricaoProcessoSeletivoData
+        .map(row => row["Em que período você está? 13"])
+        .reduce((total, periodo) => {
+            if (periodo !== '') {
+                if (total[periodo]) total[periodo]++;
+                else total[periodo] = 1;
+            }
+            return total;
+        }, {} as { [key: string]: number });
+
+    const frequenciaPeriodos = Object.entries(frequenciaPeriodosData)
+        .map(([periodo, quantidade]) => `${periodo}: ${quantidade}`)
+        .join('\n');
+
+    console.dir({ frequenciaPeriodos }, { depth: null })
+    console.dir({ frequenciaCursos }, { depth: null })
+
     return {
         quantidadeMembrosAtuais,
         quantidadeExMembros,
@@ -161,6 +202,7 @@ export function extractData({ competianos }: ExtractDataRequest): ExtractDataRes
         tempoMedioPermanencia,
         maiorTempo,
         menorTempo,
-
+        frequenciaPeriodos,
+        frequenciaCursos
     };
 }

@@ -27,7 +27,7 @@ export default new Command({
 
         const competianos: CompetianoType[] = competentesResponse.value.responseData
 
-        const extractDataResponse = extractData({ competianos })
+        const extractDataResponse = await extractData({ competianos })
 
         return editSucessReply({
             interaction, title: "Competentes em números",
@@ -42,6 +42,8 @@ export default new Command({
                 { name: "Tempo médio de permanência", value: extractDataResponse.tempoMedioPermanencia },
                 { name: "Maior tempo de permanência", value: extractDataResponse.maiorTempo },
                 { name: "Menor tempo de permanência", value: extractDataResponse.menorTempo },
+                { name: "Graduandos por período", value: extractDataResponse.frequenciaPeriodos },
+                { name: "Graduandos por curso", value: extractDataResponse.frequenciaCursos },
             ]
         })
     },
