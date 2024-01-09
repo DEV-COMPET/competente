@@ -30,7 +30,7 @@ export class ProjectMember implements ProjectMemberType {
 export interface existentProjectMember extends ProjectMemberType {
   id: string;
 }
-const schema = new mongoose.Schema<ProjectMemberType>(
+export const projectMemberSchema = new mongoose.Schema<ProjectMemberType>(
   {
     nome: { type: String, required: true },
     email: { type: String, required: true },
@@ -54,5 +54,5 @@ const schema = new mongoose.Schema<ProjectMemberType>(
 );
 export const ProjectMemberModel = mongoose.model<ProjectMemberType>(
   "projectMembers",
-  schema
+  projectMemberSchema
 );

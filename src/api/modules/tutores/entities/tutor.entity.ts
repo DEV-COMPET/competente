@@ -24,7 +24,7 @@ export class Tutor implements TutorType {
 export interface existentTutor extends TutorType {
   id: string;
 }
-const schema = new mongoose.Schema<TutorType>(
+export const tutorSchema = new mongoose.Schema<TutorType>(
   {
     nome: { type: String, required: true },
     email: { type: String, required: true },
@@ -45,5 +45,5 @@ const schema = new mongoose.Schema<TutorType>(
 );
 export const TutorModel = mongoose.model<TutorType>(
   "tutores",
-  schema
+  tutorSchema
 );

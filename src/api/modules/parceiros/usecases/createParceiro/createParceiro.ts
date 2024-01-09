@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { makeCreateParceiroUseCase } from './makeCreateParceiroUseCase';
 import { validateImgUrl } from '../../validators';
 
-export const createUserBodySchema = z.object({
+export const createParceiroBodySchema = z.object({
 	nome: z.string(),
 	imgUrl: z.string(),
 	url: z.string(),
@@ -11,7 +11,7 @@ export const createUserBodySchema = z.object({
 
 export async function createParceiro(request: FastifyRequest, reply: FastifyReply) {
 
-	const { imgUrl, nome, url } = createUserBodySchema.parse(request.body);
+	const { imgUrl, nome, url } = createParceiroBodySchema.parse(request.body);
 
 	if (imgUrl && !validateImgUrl(imgUrl))
 		return reply.status(422).send({

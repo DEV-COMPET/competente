@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { makeCreateProjectMemberUseCase } from './makeCreateProjectMemberUseCase';
 import { validateEmail, validateImgUrl, validateLinkedin } from "../../../validators"
 
-export const createUserBodySchema = z.object({
+export const createProjectMemberBodySchema = z.object({
 	nome: z.string(),
 	email: z.string(),
 	linkedin: z.string().optional(),
@@ -15,7 +15,7 @@ export const createUserBodySchema = z.object({
 
 export async function createProjectMember(request: FastifyRequest, reply: FastifyReply) {
 
-	const { email, nome, role, github, linkedin, statement, urlImg } = createUserBodySchema.parse(request.body);
+	const { email, nome, role, github, linkedin, statement, urlImg } = createProjectMemberBodySchema.parse(request.body);
 
 	if (!validateEmail(email))
 		return reply

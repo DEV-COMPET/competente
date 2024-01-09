@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { makeCreateTutorUseCase } from './makeCreateTutorUseCase';
 import { validateEmail, validateImgUrl, validateLinkedin } from '../../validators';
 
-export const createUserBodySchema = z.object({
+export const createTutorBodySchema = z.object({
 	nome: z.string(),
 	email: z.string(),
 	linkedin: z.string().optional(),
@@ -13,7 +13,7 @@ export const createUserBodySchema = z.object({
 
 export async function createTutor(request: FastifyRequest, reply: FastifyReply) {
 
-	const { email, nome, linkedin, resumo, urlImg } = createUserBodySchema.parse(request.body);
+	const { email, nome, linkedin, resumo, urlImg } = createTutorBodySchema.parse(request.body);
 
 	if (!validateEmail(email))
 		return reply

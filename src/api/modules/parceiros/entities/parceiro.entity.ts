@@ -20,7 +20,7 @@ export interface existentParceiro extends ParceiroType {
   id: string;
 }
 
-const schema = new mongoose.Schema<ParceiroType>(
+export const parceiroSchema = new mongoose.Schema<ParceiroType>(
   {
     nome: { type: String, required: true },
     imgUrl: { type: String, required: true },
@@ -39,6 +39,6 @@ const schema = new mongoose.Schema<ParceiroType>(
   }
 );
 export const ParceiroModel = mongoose.model<ParceiroType>(
-  "membros",
-  schema
+  "parceiros",
+  parceiroSchema
 );
