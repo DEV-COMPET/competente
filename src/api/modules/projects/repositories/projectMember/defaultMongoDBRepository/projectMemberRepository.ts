@@ -1,7 +1,7 @@
 import { 
   ProjectMemberModel,
   ProjectMemberType,
-} from "../../entities/projectMember.entity";
+} from "../../../entities/projectMember.entity";
 import type { ProjectMemberRepository as InterfaceProjectMemberRepository } from "..";
 import { DefaultMongoDBRepository } from ".";
 export type ProjectMemberData = {
