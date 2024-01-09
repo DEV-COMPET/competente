@@ -1,5 +1,5 @@
 import { ResourceAlreadyExistsError } from "@/api/errors/resourceAlreadyExistsError";
-import type { ProjectMemberRepository as InterfaceCreateProjectMemberRepository } from "../../../repositories";
+import type { ProjectMemberRepository as InterfaceCreateProjectMemberRepository } from "../../../repositories/projectMember";
 import { Either, left, right } from "@/api/@types/either";
 import { ProjectMember } from "../../../entities/projectMember.entity";
 

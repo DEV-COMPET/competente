@@ -1,6 +1,6 @@
-import { ProjectMemberRepository } from "../../../repositories";
+import { ProjectMemberRepository } from "../../../repositories/projectMember";
 import { ProjectMemberType } from "../../../entities/projectMember.entity";
-import { ProjectMemberData } from "../../../repositories/defaultMongoDBRepository/projectMemberRepository";
+import { ProjectMemberData } from "../../../repositories/projectMember/defaultMongoDBRepository/projectMemberRepository";
 import { Either, left, right } from "@/api/@types/either";
 import { ResourceNotFoundError } from "@/api/errors/resourceNotFoundError"
 

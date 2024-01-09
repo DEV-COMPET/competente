@@ -1,6 +1,6 @@
 import { Either, right } from "@/api/@types/either";
 import { ProjectMemberType } from "../../../entities/projectMember.entity";
-import { ProjectMemberRepository as InterfaceProjectMemberRepository } from "../../../repositories";
+import { ProjectMemberRepository as InterfaceProjectMemberRepository } from "../../../repositories/projectMember";
 
 type ListProjectMemberUseCaseResponse = Either<
   null,

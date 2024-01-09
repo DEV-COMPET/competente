@@ -1,4 +1,4 @@
-import { ProjectMemberMongoDBRepository } from "../../../repositories/defaultMongoDBRepository/projectMemberRepository"
+import { ProjectMemberMongoDBRepository } from "../../../repositories/projectMember/defaultMongoDBRepository/projectMemberRepository"
 import { GetProjectMemberByEmailUseCase } from "./getProjectMemberByEmailUseCase"
 
 export function makeGetProjectMemberByEmailUseCase() {

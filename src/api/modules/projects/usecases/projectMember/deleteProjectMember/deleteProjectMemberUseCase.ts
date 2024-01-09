@@ -1,7 +1,7 @@
 import { Either, left, right } from "@/api/@types/either";
 import { ResourceNotFoundError } from "@/api/errors/resourceNotFoundError";
 import { ProjectMemberType } from "../../../entities/projectMember.entity";
-import type { ProjectMemberRepository as InterfaceDeleteProjectMemberRepository } from "../../../repositories";
+import type { ProjectMemberRepository as InterfaceDeleteProjectMemberRepository } from "../../../repositories/projectMember";
 
 interface DeleteProjectMemberUseCaseRequest {
   nome: string;

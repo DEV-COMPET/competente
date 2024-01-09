@@ -1,7 +1,7 @@
 import { Either, left, right } from "@/api/@types/either";
 import { ResourceNotFoundError } from "@/api/errors/resourceNotFoundError";
 import { ProjectMemberType } from "../../../entities/projectMember.entity";
-import { ProjectMemberRepository as InterfaceProjectMemberRepository } from "../../../repositories";
+import { ProjectMemberRepository as InterfaceProjectMemberRepository } from "../../../repositories/projectMember";
 
 interface GetProjectMemberByEmailUseCaseRequest {
     email: string
