@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from "uuid";
-import type { WithId } from "../repositories";
+import type { WithId } from "../repositories/projectMember";
 export class BaseModel<T> {
   model: WithId<T>;
   constructor(model: T) {
