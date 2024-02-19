@@ -1,53 +1,55 @@
-import { google } from "googleapis";
-import { partial_to_full_path, readJsonFile } from "@/bot/utils/json";
-import fs from "fs";
-import { env } from "@/env";
-import { Either, left, right} from "@/api/@types/either";
-import { GoogleError } from "@/bot/errors/googleError";
-
-// async function removeFromDrive() {
-//     const auth = new google.auth.GoogleAuth({
-//         keyFile: partial_to_full_path({
-//             dirname: __dirname,
-//             partialPath: `../../../utils/googleAPI/competente.${env.ENVIRONMENT}.json`
-//         }),
-//         scopes: 'https://www.googleapis.com/auth/drive',
-//     });
-
-//     const service = google.drive({ version: 'v3', auth});
-
-//     const folderId = "0B5QTELWgXQ5DfnY0Snl1Zl9STWF0OEVLTzZKeWlPazNKTnluZTdwLVRTUnJCcmhiOXlFZkk"
-
-
-// }
-
+import { client } from "@/bot";
 import { Command } from "@/bot/structures/Command"
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
-import { TextInputComponentData, ModalComponentData}  from "discord.js"
-import { makeModal } from "@/bot/utils/modal/makeModal"
+import { 
+    ActionRowBuilder, 
+    Events,
+    ModalActionRowComponentBuilder,
+    ModalBuilder,
+    TextInputBuilder, 
+    TextInputStyle 
+} from "discord.js";
 
-
-
-
+import { removeFromDrive } from './utils/remove'
+ /**  
+  * @author Arthur dos Santos Oliveira
+  * @description Esse comando é utilizado quando se remove o acesso de um ex-competiano do Google Drive da equipe
+  * 
+ */
 export default new Command ({
-    name: "remove-from-drive",
-    description: "Remove permissão de acesso de uma pessoa do drive",
+    name: 'remove-from-drive',
+    description: 'Remove acesso do drive de ex-competiano',
     run: async ({ interaction }) => {
-        await interaction.deferReply({ ephemeral: true });
 
         const isNotAdmin = await checkIfNotAdmin(interaction);
         if (isNotAdmin.isRight()) {
             return isNotAdmin.value.response;
         }
 
-        const { inputFields, modalBuilderRequest }: {
-            inputFields: TextInputComponentData[];
-            modalBuilderRequest: ModalComponentData;
-        } = readJsonFile({ dirname: __dirname, partialPath: 'removeFromDriveData.json'});
+        const modal = new ModalBuilder()
+            .setCustomId('infoEmail')
+            .setTitle("Email no drive");
 
-        const removeEmailModal = makeModal(inputFields, modalBuilderRequest);
-        console.log("Chego aqui")
-        await interaction.showModal(removeEmailModal);
+        const emailInput = new TextInputBuilder()
+            .setCustomId('email')
+            .setLabel("Informe o email a ser removido:")
+            .setPlaceholder("endereco@gmail.com")
+            .setRequired(true)
+            .setStyle(TextInputStyle.Short);
         
-    },
+        const firstActionRow = new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(emailInput);
+
+        modal.addComponents(firstActionRow);
+
+        let response, email;
+        await interaction.showModal(modal);
+
+        client.on(Events.InteractionCreate, interaction => {
+            if (!interaction.isModalSubmit()) 
+                return ;
+            
+            email = interaction.fields.getTextInputValue('email');
+            response = removeFromDrive(email);
+        });
+    }
 })
