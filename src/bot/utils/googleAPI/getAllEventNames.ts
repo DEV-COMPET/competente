@@ -67,8 +67,11 @@ export async function getAllEventNames({ interaction }: CreateRoleRequest): Prom
     const events = await getEventNames();
 
     const allEvents: Event[] = Array.from(events);
+    const eventsAfterSlicing = allEvents.map(event => {
+      return {name: event.name.slice(0, 100), date: event.date}
+    });
 
-    return right({ events: allEvents })
+    return right({ events: eventsAfterSlicing })
 }
 
 async function getEventNames(): Promise<NameDateSet> {

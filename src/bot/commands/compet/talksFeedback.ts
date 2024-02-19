@@ -50,6 +50,7 @@ import { ComponentType } from "discord.js";
     // Ordem decrescente de acordo com a data
     getAllEventNamesResponse.value.events.sort((a, b) => b.date.getTime() - a.date.getTime());
     
+    
     const listEventNamesMenu = makeStringSelectMenu({
       customId: customId,
       type: ComponentType.StringSelect,
@@ -60,7 +61,7 @@ import { ComponentType } from "discord.js";
       maxValues: minMax.max,
       minValues: minMax.min,
     });
-
+    
     await interaction.editReply({
       content: `Escolha um Talks`,
       components: [await makeStringSelectMenuComponent(listEventNamesMenu)],
