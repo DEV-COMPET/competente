@@ -135,15 +135,15 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     nextStartIndex = getNivelSatisfacaoTextStyleArray[1];
     content.push(getNivelSatisfacaoTextStyleArray[0]);
 
-    // if(iTalksFeedback.nivelSatisfacao) {
-    //   const nivelSatisfacaoStyle = getNivelSatisfacaoList(nextStartIndex, iTalksFeedback.nivelSatisfacao);
-    //   nextStartIndex = nivelSatisfacaoStyle[1];
-    //   content.push(nivelSatisfacaoStyle[0]);
-    // }
+    if(iTalksFeedback.nivelSatisfacao) {
+      const nivelSatisfacaoStyle = getNivelSatisfacaoList(nextStartIndex, iTalksFeedback.nivelSatisfacao);
+      nextStartIndex = nivelSatisfacaoStyle[1];
+      content.push(nivelSatisfacaoStyle[0]);
+    }
 
-    // const getNotaOrganizacaoTextStyleArray = getNotaOrganizacaoTextStyle(nextStartIndex, iTalksFeedback);
-    // nextStartIndex = getNotaOrganizacaoTextStyleArray[1];
-    // content.push(getNotaOrganizacaoTextStyleArray[0]);
+    const getNotaOrganizacaoTextStyleArray = getNotaOrganizacaoTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getNotaOrganizacaoTextStyleArray[1];
+    content.push(getNotaOrganizacaoTextStyleArray[0]);
 
     // if(iTalksFeedback.notaOrganizacao) {
     //   const notaOrganizacaoStyle = getNotaOrganizacaoList(nextStartIndex, iTalksFeedback.notaOrganizacao);
