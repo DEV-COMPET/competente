@@ -155,11 +155,11 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     // nextStartIndex = getSugestoesTextStyleArray[1];
     // content.push(getSugestoesTextStyleArray[0]);
 
-    // if(iTalksFeedback.sugestoes) {
-    //   const getSugestoesStyle = getSugestoesList(nextStartIndex, iTalksFeedback.sugestoes);
-    //   nextStartIndex = getSugestoesStyle[1];
-    //   content.push(getSugestoesStyle[0]);
-    // }
+    if(iTalksFeedback.sugestoes) {
+      const getSugestoesStyle = getSugestoesList(nextStartIndex, iTalksFeedback.sugestoes);
+      nextStartIndex = getSugestoesStyle[1];
+      content.push(getSugestoesStyle[0]);
+    }
 
 
 
@@ -187,7 +187,7 @@ function getTextObject(iTalksFeedback: ITalksFeedback) {
     const correspondenciaExpectativaText = `Correspondência de expectativa: ${iTalksFeedback.correspondenciaExpectativa? `\n${iTalksFeedback.correspondenciaExpectativa}` : "Não há dados"}`;
     const nivelSatisfacaoText = `Nível de satisfação: ${iTalksFeedback.nivelSatisfacao? `\n${iTalksFeedback.nivelSatisfacao}` : "Não há dados"}`;
     const nivelOrganizacaoText = `Nível de organização: ${iTalksFeedback.notaOrganizacao? `\n${iTalksFeedback.notaOrganizacao}` : "Não há dados"}`;
-    const sugestionsText = `Sugestões: ${iTalksFeedback.sugestoes !== undefined ? `\n${iTalksFeedback.sugestoes}` : "Não há dados"}`;
+    const sugestionsText = `Sugestões: ${iTalksFeedback.sugestoes !== undefined ? `\n${iTalksFeedback.sugestoes}` : "\nNão há dados"}`;
 
 
     return { qntRegistrationsText, qntCertificateRecipientsText, notaMediaText, relevanciaText, chanceIndicacaoText, correspondenciaExpectativaText, nivelOrganizacaoText, nivelSatisfacaoText, sugestionsText }
@@ -558,7 +558,7 @@ function getNotaOrganizacaoList(n: number, nivelOrganizacao: string): CustomList
 
 function getSugestoesTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
-  const endIndex = (n) + (textObject.sugestionsText.length - (iTalksFeedback.sugestoes?.length !== undefined? iTalksFeedback.sugestoes?.length : 0));
+  const endIndex = (n) + "Sugestões".length;
 
   console.log("TextObject:", textObject.sugestionsText, textObject.sugestionsText.length);
   console.log("Sugestoes:", iTalksFeedback.sugestoes, iTalksFeedback.sugestoes?.length);
@@ -570,8 +570,8 @@ function getSugestoesTextStyle(n: number, iTalksFeedback: ITalksFeedback): Custo
         fontSize: { magnitude: 12, unit: "PT" }
       },
       range: {
-        startIndex: n + (iTalksFeedback.sugestoes && iTalksFeedback.sugestoes.includes("Não há dados") ? 0 : 7),
-        endIndex: endIndex + (iTalksFeedback.sugestoes && iTalksFeedback.sugestoes.includes("Não há dados") ? 0 : 7)
+        startIndex: n + 6, // TODO: TESTAR
+        endIndex: endIndex + 4
       },
       fields: "bold,fontSize"
     },
@@ -590,12 +590,13 @@ function getSugestoesList(n: number, sugestions: string): CustomListStyleArray {
   const listParagraph = {
     createParagraphBullets: {
       range: {
-        startIndex: n + (!sugestions.includes("Não há dados")? 3 : 0) + 5,
-        endIndex: n + totalLengthItems,
+        startIndex: n + "Sugestões\n".length + 9,
+        endIndex: endIndex + 9,
       },
       bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
     }
   }
 
+  
   return [ listParagraph, endIndex ];
 }
