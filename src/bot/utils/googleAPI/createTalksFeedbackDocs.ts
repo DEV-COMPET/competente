@@ -145,11 +145,11 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     nextStartIndex = getNotaOrganizacaoTextStyleArray[1];
     content.push(getNotaOrganizacaoTextStyleArray[0]);
 
-    // if(iTalksFeedback.notaOrganizacao) {
-    //   const notaOrganizacaoStyle = getNotaOrganizacaoList(nextStartIndex, iTalksFeedback.notaOrganizacao);
-    //   nextStartIndex = notaOrganizacaoStyle[1];
-    //   content.push(notaOrganizacaoStyle[0]);
-    // }
+    if(iTalksFeedback.notaOrganizacao) {
+      const notaOrganizacaoStyle = getNotaOrganizacaoList(nextStartIndex, iTalksFeedback.notaOrganizacao);
+      nextStartIndex = notaOrganizacaoStyle[1];
+      content.push(notaOrganizacaoStyle[0]);
+    }
 
     // const getSugestoesTextStyleArray = getSugestoesTextStyle(nextStartIndex, iTalksFeedback);
     // nextStartIndex = getSugestoesTextStyleArray[1];
