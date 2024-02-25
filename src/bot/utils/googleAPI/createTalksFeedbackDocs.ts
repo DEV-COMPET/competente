@@ -115,21 +115,21 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
     nextStartIndex = getChanceIndicacaoTextStyleArray[1];
     content.push(getChanceIndicacaoTextStyleArray[0]);
 
-    // if(iTalksFeedback.chanceIndicacao) {
-    //   const chanceIndicacaoStyle = getChanceIndicacaoList(nextStartIndex, iTalksFeedback.chanceIndicacao);
-    //   nextStartIndex = chanceIndicacaoStyle[1];
-    //   content.push(chanceIndicacaoStyle[0]);
-    // }
+    if(iTalksFeedback.chanceIndicacao) {
+      const chanceIndicacaoStyle = getChanceIndicacaoList(nextStartIndex, iTalksFeedback.chanceIndicacao);
+      nextStartIndex = chanceIndicacaoStyle[1];
+      content.push(chanceIndicacaoStyle[0]);
+    }
 
-    // const getCorrespondenciaExpectativaTextStyleArray = getCorrespondenciaExpectativaTextStyle(nextStartIndex, iTalksFeedback);
-    // nextStartIndex = getCorrespondenciaExpectativaTextStyleArray[1];
-    // content.push(getCorrespondenciaExpectativaTextStyleArray[0]);
+    const getCorrespondenciaExpectativaTextStyleArray = getCorrespondenciaExpectativaTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getCorrespondenciaExpectativaTextStyleArray[1];
+    content.push(getCorrespondenciaExpectativaTextStyleArray[0]);
 
-    // if(iTalksFeedback.correspondenciaExpectativa) {
-    //   const correspondenciaExpectativaStyle = getCorrespondenciaExpectativaList(nextStartIndex, iTalksFeedback.correspondenciaExpectativa);
-    //   nextStartIndex = correspondenciaExpectativaStyle[1];
-    //   content.push(correspondenciaExpectativaStyle[0]);
-    // }
+    if(iTalksFeedback.correspondenciaExpectativa) {
+      const correspondenciaExpectativaStyle = getCorrespondenciaExpectativaList(nextStartIndex, iTalksFeedback.correspondenciaExpectativa);
+      nextStartIndex = correspondenciaExpectativaStyle[1];
+      content.push(correspondenciaExpectativaStyle[0]);
+    }
 
     // const getNivelSatisfacaoTextStyleArray = getNivelSatisfacaoTextStyle(nextStartIndex, iTalksFeedback);
     // nextStartIndex = getNivelSatisfacaoTextStyleArray[1];
@@ -370,7 +370,7 @@ function getRelevanciaTextStyle(n: number, iTalksFeedback: ITalksFeedback): Cust
 function getRelevanciaList(n: number, relevancia: string): CustomListStyleArray {
   const listItems = relevancia.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
   const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
-  const endIndex = n + totalLengthItems;
+  const endIndex = n + totalLengthItems - 1;
 
   console.log("Total length items: ", totalLengthItems);
     
@@ -389,7 +389,10 @@ function getRelevanciaList(n: number, relevancia: string): CustomListStyleArray 
 
 function getChanceIndicacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
-  const endIndex = (n) + (textObject.chanceIndicacaoText.length - (iTalksFeedback.chanceIndicacao?.length !== undefined? iTalksFeedback.chanceIndicacao?.length : 0));
+  // const endIndex = (n) + (textObject.chanceIndicacaoText.length - (iTalksFeedback.chanceIndicacao?.length !== undefined? iTalksFeedback.chanceIndicacao?.length : 0));
+  const endIndex = n + "Chance de indicação:".length
+
+  console.log("chance indicação text: ", textObject.chanceIndicacaoText.length, '\n=', iTalksFeedback.chanceIndicacao, '=');
 
   const textStyle = {
     updateTextStyle: {
@@ -398,8 +401,8 @@ function getChanceIndicacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback):
         fontSize: { magnitude: 12, unit: "PT" }
       },
       range: {
-        startIndex: n - 1,
-        endIndex: endIndex -1
+        startIndex: n + 1,
+        endIndex: endIndex + 2
       },
       fields: "bold,fontSize"
     },
@@ -418,7 +421,7 @@ function getChanceIndicacaoList(n: number, chanceIndicacao: string): CustomListS
   const listParagraph = {
     createParagraphBullets: {
       range: {
-        startIndex: n + 2,
+        startIndex: n + 4,
         endIndex: n + totalLengthItems,
       },
       bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
@@ -439,8 +442,8 @@ function getCorrespondenciaExpectativaTextStyle(n: number, iTalksFeedback: ITalk
         fontSize: { magnitude: 12, unit: "PT" }
       },
       range: {
-        startIndex: n + 2, // + 2 devido à quebra de linha
-        endIndex: endIndex
+        startIndex: n + 4, // + 2 devido à quebra de linha
+        endIndex: endIndex + 2
       },
       fields: "bold,fontSize"
     },
@@ -456,12 +459,12 @@ function getCorrespondenciaExpectativaList(n: number, correspondenciaExpectativa
 
   const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
 
-  const endIndex = n + totalLengthItems - (correspondenciaExpectativa.includes("Não há dados") === true? 9 : -1);
+  const endIndex = n + totalLengthItems - (correspondenciaExpectativa.includes("Não há dados") === true? 9 : -1) + 2;
     
   const listParagraph = {
     createParagraphBullets: {
       range: {
-        startIndex: n + 2,
+        startIndex: n + 4,
         endIndex: endIndex,
       },
       bulletPreset: "BULLET_DISC_CIRCLE_SQUARE"
