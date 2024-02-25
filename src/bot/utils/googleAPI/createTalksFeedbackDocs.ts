@@ -131,9 +131,9 @@ export async function createDocs(iTalksFeedback: ITalksFeedback): Promise<Create
       content.push(correspondenciaExpectativaStyle[0]);
     }
 
-    // const getNivelSatisfacaoTextStyleArray = getNivelSatisfacaoTextStyle(nextStartIndex, iTalksFeedback);
-    // nextStartIndex = getNivelSatisfacaoTextStyleArray[1];
-    // content.push(getNivelSatisfacaoTextStyleArray[0]);
+    const getNivelSatisfacaoTextStyleArray = getNivelSatisfacaoTextStyle(nextStartIndex, iTalksFeedback);
+    nextStartIndex = getNivelSatisfacaoTextStyleArray[1];
+    content.push(getNivelSatisfacaoTextStyleArray[0]);
 
     // if(iTalksFeedback.nivelSatisfacao) {
     //   const nivelSatisfacaoStyle = getNivelSatisfacaoList(nextStartIndex, iTalksFeedback.nivelSatisfacao);
@@ -476,7 +476,7 @@ function getCorrespondenciaExpectativaList(n: number, correspondenciaExpectativa
 
 function getNivelSatisfacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
-  const endIndex = (n) + (textObject.nivelSatisfacaoText.length - (iTalksFeedback.nivelSatisfacao?.length !== undefined? iTalksFeedback.nivelSatisfacao?.length : 0));
+  const endIndex = (n) + (textObject.nivelSatisfacaoText.length - (iTalksFeedback.nivelSatisfacao?.length !== undefined? iTalksFeedback.nivelSatisfacao?.length : 0)) + 1;
 
   const textStyle = {
     updateTextStyle: {
@@ -485,7 +485,7 @@ function getNivelSatisfacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback):
         fontSize: { magnitude: 12, unit: "PT" }
       },
       range: {
-        startIndex: n + 2, // + 2 devido à quebra de linha
+        startIndex: n + 3, // + 2 devido à quebra de linha
         endIndex: endIndex
       },
       fields: "bold,fontSize"
