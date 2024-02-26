@@ -22,12 +22,11 @@ export default new Modal({
 
         if (interaction.channel === null)
             throw "Channel is not cached";
-        console.log("oi2");
         await interaction.deferReply({ ephemeral: true })
 
         const { email } = extractInputData({ inputFields, interaction });
-        console.log("The email is", email);
-        const validateInputDataResponse = await validateInputData({ email })
+        const validateInputDataResponse = await validateInputData({ email });
+        
         if (validateInputDataResponse.isLeft()) {
             return await editErrorReply({
                 error: validateInputDataResponse.value.error, interaction,
