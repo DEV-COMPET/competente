@@ -54,7 +54,7 @@ export class ParceiroMongoDBRepository
   }
   public async update(
     nome: string,
-    data: MemberData
+    data: ParceiroData
   ): Promise<ParceiroType | undefined> {
     const updatedMember = await this.parceiroModel.findOneAndUpdate(
       { nome },

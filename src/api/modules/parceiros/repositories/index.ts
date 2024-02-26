@@ -1,6 +1,6 @@
 import { BaseRepository } from '../../../@types/repository';
 import type { ParceiroType } from '../entities/parceiro.entity';
-import { MemberData } from './defaultMongoDBRepository/parceiroRepository';
+import { ParceiroData } from './defaultMongoDBRepository/parceiroRepository';
 export abstract class Repository<T> implements BaseRepository<T> {
 	public abstract create(data: T): Promise<T | undefined> | T | undefined;
 	public abstract list(): Promise<T[]> | T[];
@@ -11,4 +11,4 @@ export abstract class Repository<T> implements BaseRepository<T> {
 
 export type WithId<T> = { id: string } & T;
 
-export type ParceiroRepository = Repository<ParceiroType> & { update: (nome: string, updatedData: MemberData) => Promise<ParceiroType | undefined> };
+export type ParceiroRepository = Repository<ParceiroType> & { update: (nome: string, updatedData: ParceiroData) => Promise<ParceiroType | undefined> };

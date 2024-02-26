@@ -6,13 +6,13 @@ import { createTutorBodySchema } from '@/api/modules/tutores/usecases/createTuto
 import { createProjectMemberBodySchema } from '../../projectMember/createProjectMember/createProjectMember';
 
 const updateUserDataBodySchema = z.object({
-    nome: z.string(),
-    descricao: z.string(),
-    data_inicio: z.string(),
-    thumb: z.string(),
-    members: z.array(createProjectMemberBodySchema),
-    tutors: z.array(createTutorBodySchema),
-    partners: z.array(createParceiroBodySchema)
+    nome: z.string().optional(),
+    descricao: z.string().optional(),
+    data_inicio: z.string().optional(),
+    thumb: z.string().optional(),
+    members: z.array(createProjectMemberBodySchema).optional(),
+    tutors: z.array(createTutorBodySchema).optional(),
+    partners: z.array(createParceiroBodySchema).optional(),
 })
 
 const updateUserNameBodySchema = z.object({

@@ -9,7 +9,7 @@ export const createUserBodySchema = z.object({
 	thumb: z.string(),
 });
 
-export async function createProject(request: FastifyRequest, reply: FastifyReply) {
+export async function 	createProject(request: FastifyRequest, reply: FastifyReply) {
 
 	const { data_inicio, descricao, nome, thumb } = createUserBodySchema.parse(request.body);
 
