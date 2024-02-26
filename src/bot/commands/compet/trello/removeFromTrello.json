@@ -1,4 +1,4 @@
 {
-    "name": "remove-from-trellooo",
-    "description": "Esse comando remove um membro do Trello"
+    "name": "remove-from-trello",
+    "description": "Esse comando remove um membro do board do Trello"
 }

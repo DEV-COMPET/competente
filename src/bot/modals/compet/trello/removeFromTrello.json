@@ -5,7 +5,7 @@
     },
     "inputFields": [
         {
-            "label": "Qual é o username do membro no TrelloO?",
+            "label": "Qual é o username do membro no Trello?",
             "placeholder": "Andrejogadorcarodacruz",
             "customId": "trelloUsername",
             "required": true,
