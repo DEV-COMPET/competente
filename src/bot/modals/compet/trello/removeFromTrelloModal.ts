@@ -66,13 +66,45 @@ export default new Modal({
                 });
             }
             else {
-
+                fetch(`https://api.trello.com/1/boards/EHISYWtc/members/${id}?key=9fbd93571f3419b52bb337324d0fb72f&token=ATTA565430860ae464d902f57b17c96a2737f6b79ac33077f63b147ee6ab67e828253796F1BB`, {
+                method: 'DELETE'
+                })
+                .then(response => {
+                    console.log(
+                    `Response: ${response.status} ${response.statusText}`
+                    );
+                    return response.text();
+                })
+                .then(text => {
+                    console.log(text);
+                    return editSucessReply({
+                        interaction, title: "Membro removido do Trello!",
+                        fields: [
+                            {
+                                name: "Username",
+                                value: username,
+                                inline: false
+                            },
+                            {
+                                name: "Id",
+                                value: id,
+                                inline: false
+                            }
+                        ],
+                    });
+                })
+                .catch(err => {
+                    return editErrorReply({
+                        error: err, interaction,
+                        title: "Não foi possível remover o membro do Trello"
+                    });
+                });
             }
         })
         .catch(err => {
             return editErrorReply({
                 error: err, interaction,
-                title: "Não foi possível adicionar o competiano ao Trello"
+                title: "Não foi possível remover o membro do Trello"
             });
         });
     }
