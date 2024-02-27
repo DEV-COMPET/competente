@@ -4,6 +4,7 @@ import fs from "fs"
 import { env } from "@/env";
 import { Either, left, right } from "@/api/@types/either";
 import { GoogleError } from "@/bot/errors/googleError";
+import { InvalidEmailError } from "@/bot/errors/invalidEmailError";
 
 async function createFolder() {
   // Get credentials and build service
@@ -71,4 +72,54 @@ export async function uploadToFolder(path_to_certificates: string): Promise<Uplo
   } catch (error: any) {
     return left({ error: new GoogleError(error.message) })
   }
+}
+
+
+type removeFromDriveResponse = Either<
+    { error: InvalidEmailError},
+    { emailData: string[]}
+>
+
+export async function removeFromDrive (emailsVerificado: string[]) : Promise<removeFromDriveResponse>{
+    const auth = new google.auth.GoogleAuth({ 
+        keyFile: partial_to_full_path({
+            dirname: __dirname,
+            partialPath: '../../../utils/googleAPI/competente.${env.ENVIRONMENT}.json'
+        }),
+        scopes: 'https://www.googleapis.com/auth/drive',
+    });
+
+    const drive = google.drive({version: 'v3', auth});
+    const folderId = '0B5QTELWgXQ5DfnY0Snl1Zl9STWF0OEVLTzZKeWlPazNKTnluZTdwLVRTUnJCcmhiOXlFZkk';
+
+    const emailsRemovidos: string[] = [];
+    const emailNaoRemovidos: string[] = [];
+
+    const res = await drive.permissions.list({
+        fileId: folderId,
+        fields: 'permissions(id, emailAddress)',
+    });
+
+    const permissions = res?.data.permissions;
+    if (permissions && permissions.length) {
+        for (const email of emailsVerificado) {
+            const userPermission = permissions.find((permissions: any) => permissions.emailAddress === email);
+            if (userPermission && userPermission.id) {
+                await drive.permissions.delete({
+                    fileId: folderId,
+                    permissionId: userPermission.id
+                })
+
+                emailsRemovidos.push(email);
+            } else {
+                emailNaoRemovidos.push(email);
+            }
+
+        }
+    }
+
+    if (emailNaoRemovidos.length > 0) 
+        return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos)});
+
+    return right({ emailData: emailsRemovidos });
 }
