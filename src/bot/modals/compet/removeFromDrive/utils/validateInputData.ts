@@ -19,7 +19,6 @@ export async function validateInputData({ emails }: ExtractInputDataResponse) : 
     
     for (const email of emails_arr) {
         if (!(email.includes('@'))) {
-            console.log(email)
             invalidEmailsInputs.push(email);
         } else {
             validEmailsInputs.push(email);
