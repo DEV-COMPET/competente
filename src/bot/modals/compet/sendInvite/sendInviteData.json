@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Envia convite do discord via email",
+        "customId": "send-invite"
+    },
+    "inputFields": [
+        {
+            "label": "Informe os endereços de emails",
+            "placeholder": "Email1;Email2;Email3",
+            "customId": "emailsInvite",
+            "required": true,
+            "style": 1
+        }
+    ]
+}
