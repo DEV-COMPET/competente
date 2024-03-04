@@ -1,4 +1,5 @@
-import { TextInputComponentData, ModalComponentData } from "discord.js";
+import { env } from '@/env';
+import { TextInputComponentData, ModalComponentData, ComponentType } from "discord.js";
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
@@ -7,6 +8,8 @@ import { validateInputData } from "./utils/validateInputData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import fetch from "node-fetch";
+import { makeStringSelectMenu, makeStringSelectMenuComponent } from '@/bot/utils/modal/makeSelectMenu';
+import { customId, options, minMax } from './../../../selectMenus/trello/selectTeam.json';
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -14,6 +17,7 @@ const { inputFields, modalBuilderRequest }: {
 } = readJsonFile({ dirname: __dirname, partialPath: 'addMemberToTrello.json' });
 
 const addMemberToTrelloModal = makeModal(inputFields, modalBuilderRequest);
+let export_email: string;
 
 export default new Modal({
     customId: "addmembertotrello",
@@ -32,13 +36,15 @@ export default new Modal({
                 error: validateInputDataResponse.value.error, interaction,
                 title: "Não foi possível adicionar o competiano ao Trello"
             });
-        } 
+        }
+        
+        export_email = email;
 
         const bodyData = `{
         "fullName": "<string>"
         }`;
 
-        fetch(`https://api.trello.com/1/boards/EHISYWtc/members?key=9fbd93571f3419b52bb337324d0fb72f&token=ATTA565430860ae464d902f57b17c96a2737f6b79ac33077f63b147ee6ab67e828253796F1BB&email=${email}`,{
+        fetch(`https://api.trello.com/1/boards/${env.TRELLO_BOARD_ID}/members?key=${env.TRELLO_API_KEY}&token=${env.TRELLO_ACCOUNT_TOKEN}&email=${email}`,{
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -54,10 +60,24 @@ export default new Modal({
                 return response.text();
             else throw new Error(response.statusText);
         })
-        .then(text => {
+        .then(text => async () => {
             console.log(text);
+
+            const teamMenu = makeStringSelectMenu({
+                customId,
+                type: ComponentType.StringSelect,
+                options,
+                maxValues: minMax.max,
+                minValues: minMax.min
+            });
+
+            await interaction.editReply({
+                content: 'Selecione a equipe do novo membro',
+                components: [await makeStringSelectMenuComponent(teamMenu)]
+            });
+
             return editSucessReply({
-                interaction, title: "Competiano adicionado ao Trello!",
+                interaction, title: "Competiano adicionado ao Trello Geral do COMPET!",
                 fields: [
                     {
                         name: "E-mail",
@@ -78,4 +98,4 @@ export default new Modal({
     },
 });
 
-export { addMemberToTrelloModal };
+export { addMemberToTrelloModal, export_email };

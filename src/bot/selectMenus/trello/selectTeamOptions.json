@@ -1,0 +1,20 @@
+{
+    "options": [
+        {
+            "label": "Administração",
+            "value": "Administração"
+        },
+        {
+            "label": "Desenvolvimento",
+            "value": "Desenvolvimento"
+        },
+        {
+            "label": "Eventos",
+            "value": "Eventos"
+        },
+        {
+            "label": "Marketing",
+            "value": "Marketing"
+        }
+    ]
+}
