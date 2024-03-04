@@ -1,11 +1,10 @@
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
 import { Command } from "../../../structures/Command";
-import { removeFromTrelloModal } from "@/bot/modals/compet/trello/removeFromTrelloModal";
 import { ChatInputApplicationCommandData, ComponentType } from "discord.js";
 import { readJsonFile } from "@/bot/utils/json";
-import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersNames";
+import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
-import selectMemberName from './selectMemberName.json';
+import selectMemberName from './../../../selectMenus/trello/selectMemberName.json';
 import { ExtendedInteraction } from "@/bot/typings/Commands";
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
@@ -34,8 +33,6 @@ async function handleInteraction(interaction: ExtendedInteraction) {
 
     try {
       const getAllMembersInfoResponse = await getAllMembersInfo();
-      const membersNames = getAllMembersInfoResponse.map(member => member.fullName);
-
       const { customId, minMax } = selectMemberName;
 
       const nameMenu = makeStringSelectMenu({
@@ -57,6 +54,4 @@ async function handleInteraction(interaction: ExtendedInteraction) {
     catch(error) {
       console.log(error);
     }
-
-    // await interaction.showModal(removeFromTrelloModal);
 }
