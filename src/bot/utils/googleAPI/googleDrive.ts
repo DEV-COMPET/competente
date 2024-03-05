@@ -84,7 +84,7 @@ export async function removeFromDrive (emailsVerificado: string[]) : Promise<rem
     const auth = new google.auth.GoogleAuth({ 
         keyFile: partial_to_full_path({
             dirname: __dirname,
-            partialPath: '../../../utils/googleAPI/competente.${env.ENVIRONMENT}.json'
+            partialPath: `competente.${env.ENVIRONMENT}.json`
         }),
         scopes: 'https://www.googleapis.com/auth/drive',
     });
@@ -119,7 +119,7 @@ export async function removeFromDrive (emailsVerificado: string[]) : Promise<rem
     }
 
     if (emailNaoRemovidos.length > 0) 
-        return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos)});
+        return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos, "removidos")});
 
     return right({ emailData: emailsRemovidos });
 }
