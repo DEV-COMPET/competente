@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Dar permissão de editor ao drive",
+        "customId": "acess-drive"
+    },
+    "inputFields": [
+        {
+            "label": "Informe os endereços de emails",
+            "placeholder": "email1;email2;email3",
+            "customId": "emailsAcess",
+            "required": true,
+            "style": 1
+        }
+    ]
+}
