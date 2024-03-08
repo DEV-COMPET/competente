@@ -10,6 +10,7 @@ import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import fetch from "node-fetch";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from '@/bot/utils/modal/makeSelectMenu';
 import { customId, options, minMax } from './../../../selectMenus/trello/selectTeam.json';
+import { memberEmail } from './utils/memberEmail';
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -70,6 +71,9 @@ export default new Modal({
                 maxValues: minMax.max,
                 minValues: minMax.min
             });
+
+            memberEmail.push(text);
+            console.log("memberEmail: ", text);
 
             await interaction.editReply({
                 content: 'Selecione a equipe do novo membro',

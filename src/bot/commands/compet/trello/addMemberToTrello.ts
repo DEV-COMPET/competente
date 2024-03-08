@@ -18,7 +18,7 @@ export default new Command({
     if ((isNotAdmin).isRight())
       return isNotAdmin.value.response
 
-      
+    console.log("oioioioio");
 
     await interaction.showModal(addMemberToTrelloModal);
   },
