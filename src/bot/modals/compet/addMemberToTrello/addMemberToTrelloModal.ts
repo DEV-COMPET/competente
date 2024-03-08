@@ -57,11 +57,13 @@ export default new Modal({
             `Response: ${response.status} ${response.statusText}`
             );
 
-            if(response.status == 200)
-                return response.text();
+            if(response.status == 200) {
+                console.log("status 20000");
+                return response.text(); 
+            }
             else throw new Error(response.statusText);
         })
-        .then(text => async () => {
+        .then(async text => {
             console.log(text);
 
             const teamMenu = makeStringSelectMenu({
@@ -97,8 +99,6 @@ export default new Modal({
                 title: "Não foi possível adicionar o competiano ao Trello"
             });
         });
-
-        
     },
 });
 
