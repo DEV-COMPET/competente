@@ -10,8 +10,7 @@ function validateName(name: string): boolean {
 }
 
 
-export async function getAllMembersInfo() {
-    const boardId = env.TRELLO_BOARD_ID;
+export async function getAllMembersInfo(boardId: string) {
     const APIkey = env.TRELLO_API_KEY;
     const token = env.TRELLO_ACCOUNT_TOKEN;
     

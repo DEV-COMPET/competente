@@ -18,6 +18,10 @@ const envSchema = z.object({
     MONGODB_PASSWORD: z.string().optional(),
     PORT: z.coerce.number().default(4444),
     TRELLO_BOARD_ID: z.string(),
+    TRELLO_DEV_BOARD_ID: z.string(),
+    TRELLO_ADM_BOARD_ID: z.string(),
+    TRELLO_EVENTOS_BOARD_ID: z.string(),
+    TRELLO_MARKETING_BOARD_ID: z.string(),
     TRELLO_API_KEY: z.string(),
     TRELLO_ACCOUNT_TOKEN: z.string()
 });

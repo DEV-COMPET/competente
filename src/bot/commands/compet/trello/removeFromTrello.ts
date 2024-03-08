@@ -1,3 +1,4 @@
+import { env } from '@/env'
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
 import { Command } from "../../../structures/Command";
 import { ChatInputApplicationCommandData, ComponentType } from "discord.js";
@@ -32,7 +33,8 @@ async function handleInteraction(interaction: ExtendedInteraction) {
       return isNotAdmin.value.response
 
     try {
-      const getAllMembersInfoResponse = await getAllMembersInfo();
+      const trelloGeralBoardId = env.TRELLO_BOARD_ID;
+      const getAllMembersInfoResponse = await getAllMembersInfo(trelloGeralBoardId);
       const { customId, minMax } = selectMemberName;
 
       const nameMenu = makeStringSelectMenu({
