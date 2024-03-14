@@ -1,12 +1,9 @@
 import { Materias } from "@/api/modules/materias/entities/materias.entity"
 import { saveDataToJson } from "@/bot/utils/googleAPI/getTalksInscriptions"
+import { Periodo } from "./showMateriasRestantesFull"
 
 interface FetchMateriasSeparadasPorPeriodoResponse {
-  materiasPorPeriodo: {
-    periodo: string,
-    obrigatorias: string[],
-    optativas: string[],
-  }[]
+  materiasPorPeriodo: Periodo[]
 }
 
 // Retorna lista com materias optativas e obrigatórias separadas por periodo de todos os periodos

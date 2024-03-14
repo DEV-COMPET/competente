@@ -5,10 +5,11 @@ import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { Materias } from "@/api/modules/materias/entities/materias.entity";
 import { saveDataToJson } from "@/bot/utils/googleAPI/getTalksInscriptions";
-import { showMateriasAllowedPreRequisitos } from "./util/showMateriasAllowedPreRequisitos";
 import { fetchMateriasSeparadasPorPeriodo } from "./util/fetchMateriasSeparadasPorPeriodo";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { seEuNaoFizerTalMateria } from "./util/seEuNaoFizerTalMateria";
+import { showMateriasRestantesFull } from "./util/showMateriasRestantesFull";
+import { showMateriasAllowedPreRequisitos } from "./util/showMateriasAllowedPreRequisitos";
 
 export default new Command({
   name: 'materias',
@@ -64,39 +65,61 @@ export default new Command({
       "Matemática Discreta",
       "Contexto Social e Profissional da Engenharia de Computação",
       "Metodologia Científica",
-      // "Integração e Séries",
-      // "Cálculo com Funções de Várias Variáveis I",
-      // "Fundamentos de Mecânica",
-      // "Programação Orientada a Objetos",
-      // "Laboratório de Programação Orientada a Objetos",
-      // "Sistemas Digitais para Computação",
-      // "Laboratório de Sistemas Digitais para Computação",
-      // "Filosofia da Tecnologia",
-      // "Cálculo com Funções de Várias Variáveis II",
-      // "Equações Diferenciais Ordinárias",
-      // "Fundamentos de Oscilações, Fluidos e Termodinâmica (OFT)",
-      // "Física Experimental - MOFT",
-      // "Algoritmos e Estruturas de Dados I",
-      // "Laboratório de Algoritmos e Estruturas de Dados I",
-      // "Arquitetura e Organização de Computadores I",
-      // "Laboratório de Arquitetura e Organização de Computadores I",
-      // "Inglês Instrumental I",
-      // "Fundamentos de Eletromagnetismo",
-      // "Física Experimental - EOFM",
-      // "Algoritmos e Estruturas de Dados II",
-      // "Métodos Numéricos Computacionais",
-      // "Arquitetura e Organização de Computadores II",
-      // "Linguagens de Programação",
+      "Integração e Séries",
+      "Cálculo com Funções de Várias Variáveis I",
+      "Fundamentos de Mecânica",
+      "Programação Orientada a Objetos",
+      "Laboratório de Programação Orientada a Objetos",
+      "Sistemas Digitais para Computação",
+      "Laboratório de Sistemas Digitais para Computação",
+      "Filosofia da Tecnologia",
+      "Cálculo com Funções de Várias Variáveis II",
+      "Equações Diferenciais Ordinárias",
+      "Fundamentos de Oscilações, Fluidos e Termodinâmica (OFT)",
+      "Física Experimental - MOFT",
+      "Algoritmos e Estruturas de Dados I",
+      "Laboratório de Algoritmos e Estruturas de Dados I",
+      "Arquitetura e Organização de Computadores I",
+      "Laboratório de Arquitetura e Organização de Computadores I",
+      "Inglês Instrumental I",
+      "Fundamentos de Eletromagnetismo",
+      "Física Experimental - EOFM",
+      "Algoritmos e Estruturas de Dados II",
+      "Métodos Numéricos Computacionais",
+      "Arquitetura e Organização de Computadores II",
+      "Linguagens de Programação",
     ]
 
-    const merda = seEuNaoFizerTalMateria(ehPreRequisitoDe, ehCorequisitoDe, "Fundamentos de Mecânica", materiasFeitas, materias)
-    saveDataToJson(merda, `jsons/materias/seEuNaoFizerTalMateria.json`);
+    // vetor com materias que serao atrasadas um semestre
+    const materiasTravadasUmSemestre = seEuNaoFizerTalMateria({
+      materiasFeitas, materias, ehPreRequisitoDe, ehCorequisitoDe,
+      materiasNaoFeitas: ["Arquitetura e Organização de Computadores II"],
+    })
+    saveDataToJson(materiasTravadasUmSemestre, `jsons/materias/seEuNaoFizerTalMateria.json`);
 
     await editLoadingReply({ interaction, title: "materias que posso fazer com base nas materias feitas" })
-    const materiasAns = showMateriasAllowedPreRequisitos(materias, materiasFeitas)
-    saveDataToJson(materiasAns, `jsons/materias/materiasAns.json`);
+
+    // mostra materias que ainda faltam no curso pra vc fazer
+    const materiasRestantesCurso = showMateriasRestantesFull(materias, materiasFeitas)
+    saveDataToJson(materiasRestantesCurso, `jsons/materias/materiasRestantesCurso.json`);
+
+    const materiasPretendidasFazer: string[] = [
+      "Banco de Dados I",
+      "Laboratório de Banco de Dados I",
+      "Engenharia de Software I",
+      "Laboratório de Engenharia de Software I",
+      "Estatística", 
+      "Linguagens Formais e Autômatos",
+      "Circuitos Elétricos",
+    ]
+
+    // motra materias que posso fazer imediatamente por conta dos pre reqiusitos
+    const materiasAllowedPreRequisitos = showMateriasAllowedPreRequisitos({materias, materiasFeitas, materiasPretendidasFazer})
+    saveDataToJson(materiasAllowedPreRequisitos, `jsons/materias/materiasAllowedPreRequisitos.json`);
 
     await editLoadingReply({ interaction, title: "materias separadas por curso" })
+
+    // mostra todas as materias do curso separadas por periodo
     const materiasSeparadasPorPeriodo = fetchMateriasSeparadasPorPeriodo(materias)
     saveDataToJson(materiasSeparadasPorPeriodo.materiasPorPeriodo, `jsons/materias/materias.json`);
 

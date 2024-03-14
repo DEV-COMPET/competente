@@ -1,10 +1,20 @@
 import { Materias } from "@/api/modules/materias/entities/materias.entity"
-import { Periodo } from "./showMateriasAllowedPreRequisitos";
+import { Periodo } from "./showMateriasRestantesFull";
 
-export function seEuNaoFizerTalMateria(ehPreRequisitoDe: { [key: string]: string[] }, ehCorequisitoDe: { [key: string]: string[] }, materia: string, materiasFeitas: string[], materias: Materias[]): Periodo[] {
+interface SeEuNaoFizerTalMateriaRequest {
+
+    ehPreRequisitoDe: { [key: string]: string[] },
+    ehCorequisitoDe: { [key: string]: string[] },
+    materiasNaoFeitas: string[],
+    materiasFeitas: string[],
+    materias: Materias[]
+
+}
+
+export function seEuNaoFizerTalMateria({ ehCorequisitoDe, ehPreRequisitoDe, materiasNaoFeitas, materias, materiasFeitas }: SeEuNaoFizerTalMateriaRequest): Periodo[] {
 
     const ansSet: Set<string> = new Set()
-    const stack: string[] = [materia]
+    const stack: string[] = materiasNaoFeitas
     const retorno: Periodo[] = []
 
     while (stack.length > 0) {
