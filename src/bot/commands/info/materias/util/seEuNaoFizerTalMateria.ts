@@ -5,16 +5,16 @@ interface SeEuNaoFizerTalMateriaRequest {
 
     ehPreRequisitoDe: { [key: string]: string[] },
     ehCorequisitoDe: { [key: string]: string[] },
-    materiasNaoFeitas: string[],
+    materiasPropositalmenteNaoFeitas: string[],
     materiasFeitas: string[],
     materias: Materias[]
 
 }
 
-export function seEuNaoFizerTalMateria({ ehCorequisitoDe, ehPreRequisitoDe, materiasNaoFeitas, materias, materiasFeitas }: SeEuNaoFizerTalMateriaRequest): Periodo[] {
+export function seEuNaoFizerTalMateria({ ehCorequisitoDe, ehPreRequisitoDe, materiasPropositalmenteNaoFeitas, materias, materiasFeitas }: SeEuNaoFizerTalMateriaRequest): Periodo[] {
 
     const ansSet: Set<string> = new Set()
-    const stack: string[] = materiasNaoFeitas
+    const stack: string[] = materiasPropositalmenteNaoFeitas
     const retorno: Periodo[] = []
 
     while (stack.length > 0) {

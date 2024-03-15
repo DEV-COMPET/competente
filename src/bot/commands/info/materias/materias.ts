@@ -10,6 +10,7 @@ import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { seEuNaoFizerTalMateria } from "./util/seEuNaoFizerTalMateria";
 import { showMateriasRestantesFull } from "./util/showMateriasRestantesFull";
 import { showMateriasAllowedPreRequisitos } from "./util/showMateriasAllowedPreRequisitos";
+import { gerarEhPreCorequisito } from "./util/gerarEhPreECo";
 
 export default new Command({
   name: 'materias',
@@ -33,26 +34,7 @@ export default new Command({
 
     const materias: Materias[] = materiasResponse.value.responseData
 
-    const ehPreRequisitoDe: { [key: string]: string[] } = {};
-    const ehCorequisitoDe: { [key: string]: string[] } = {};
-
-    for (const materia of materias) {
-      if (materia.prerequisitos.length > 0) {
-        for (const pre of materia.prerequisitos) {
-          if (!ehPreRequisitoDe[pre])
-            ehPreRequisitoDe[pre] = [];
-          ehPreRequisitoDe[pre].push(materia.nome);
-        }
-      }
-
-      if (materia.corequisitos.length > 0) {
-        for (const co of materia.corequisitos) {
-          if (!ehCorequisitoDe[co])
-            ehCorequisitoDe[co] = [];
-          ehCorequisitoDe[co].push(materia.nome);
-        }
-      }
-    }
+    const { ehCorequisitoDe, ehPreRequisitoDe } = gerarEhPreCorequisito({ materias })
 
     saveDataToJson(ehPreRequisitoDe, `jsons/materias/ehPreRequisitoDe.json`);
     saveDataToJson(ehCorequisitoDe, `jsons/materias/ehCorequisitoDe.json`);
@@ -90,10 +72,13 @@ export default new Command({
       "Linguagens de Programação",
     ]
 
+    const materiasPropositalmenteNaoFeitas = [
+      "Arquitetura e Organização de Computadores II"
+    ]
+
     // vetor com materias que serao atrasadas um semestre
     const materiasTravadasUmSemestre = seEuNaoFizerTalMateria({
-      materiasFeitas, materias, ehPreRequisitoDe, ehCorequisitoDe,
-      materiasNaoFeitas: ["Arquitetura e Organização de Computadores II"],
+      materiasFeitas, materias, ehPreRequisitoDe, ehCorequisitoDe, materiasPropositalmenteNaoFeitas
     })
     saveDataToJson(materiasTravadasUmSemestre, `jsons/materias/seEuNaoFizerTalMateria.json`);
 
@@ -108,13 +93,13 @@ export default new Command({
       "Laboratório de Banco de Dados I",
       "Engenharia de Software I",
       "Laboratório de Engenharia de Software I",
-      "Estatística", 
+      "Estatística",
       "Linguagens Formais e Autômatos",
       "Circuitos Elétricos",
     ]
 
     // motra materias que posso fazer imediatamente por conta dos pre reqiusitos
-    const materiasAllowedPreRequisitos = showMateriasAllowedPreRequisitos({materias, materiasFeitas, materiasPretendidasFazer})
+    const materiasAllowedPreRequisitos = showMateriasAllowedPreRequisitos({ materias, materiasFeitas, materiasPretendidasFazer })
     saveDataToJson(materiasAllowedPreRequisitos, `jsons/materias/materiasAllowedPreRequisitos.json`);
 
     await editLoadingReply({ interaction, title: "materias separadas por curso" })
