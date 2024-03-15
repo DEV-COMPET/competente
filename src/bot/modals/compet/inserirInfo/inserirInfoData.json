@@ -1,0 +1,43 @@
+{
+      "modalBuilderRequest": {
+            "title": "Inserir competiano a planilha",
+            "customId": "inserir-info"
+      },
+      "inputFields": [
+            {
+                  "label": "Nome",
+                  "customId": "nome",
+                  "placeholder": "Sandro Renato Dias",
+                  "required": true,
+                  "style": 1
+            },
+            {
+                  "label": "Telefone para contato",
+                  "customId": "telefone",
+                  "placeholder": "(DDD) 12345-6789",
+                  "required": true,
+                  "style": 1
+            },
+            {
+                  "label": "Email",
+                  "customId": "email",
+                  "placeholder": "Andrejogadorcarodacruz@gmail.com",
+                  "required": true,
+                  "style": 1
+            },
+            {
+                  "label": "Instagram (caso tenha)",
+                  "customId": "instagram",
+                  "placeholder": "https://www.instagram.com/compet.cefet",
+                  "required": false,
+                  "style": 1
+            },
+            {
+                  "label": "Linkedin (caso tenha)",
+                  "placeholder": "https://www.linkedin.com/in/NataliaBatista",
+                  "customId": "linkedin",
+                  "required": false,
+                  "style": 1
+            }
+      ]
+}
