@@ -84,7 +84,7 @@ export async function removeFromDrive (emailsVerificado: string[]) : Promise<rem
     const auth = new google.auth.GoogleAuth({ 
         keyFile: partial_to_full_path({
             dirname: __dirname,
-            partialPath: '../../../utils/googleAPI/competente.${env.ENVIRONMENT}.json'
+            partialPath: `competente.${env.ENVIRONMENT}.json`
         }),
         scopes: 'https://www.googleapis.com/auth/drive',
     });
@@ -119,7 +119,54 @@ export async function removeFromDrive (emailsVerificado: string[]) : Promise<rem
     }
 
     if (emailNaoRemovidos.length > 0) 
-        return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos)});
+        return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos, "removidos")});
 
     return right({ emailData: emailsRemovidos });
+}
+
+type acessDriveResponse = Either<
+  { error: InvalidEmailError},
+  { emailData: string[] }
+>
+
+export async function acessDrive(emailVerified: string[]): Promise<acessDriveResponse> {
+    const auth = new google.auth.GoogleAuth({ 
+      keyFile: partial_to_full_path({
+          dirname: __dirname,
+          partialPath: `competente.${env.ENVIRONMENT}.json`
+      }),
+      scopes: 'https://www.googleapis.com/auth/drive',
+    });
+
+    const drive = google.drive({version: 'v3', auth});
+    const folderId = '0B5QTELWgXQ5DfnY0Snl1Zl9STWF0OEVLTzZKeWlPazNKTnluZTdwLVRTUnJCcmhiOXlFZkk';
+    const emailAdd: string[] = [];
+    const emailNotAdd: string[] = [];
+
+    const permissionsPromises = emailVerified.map(email => {
+      const permission = {
+        type: 'user',
+        role: 'writer',
+        emailAddress: email,
+      }
+
+      return drive.permissions.create({
+        fileId: folderId,
+        sendNotificationEmail: true,
+        emailMessage: "Seja vem vindo ao Drive do Compet",
+        requestBody: permission,
+        fields: 'id'
+      }).then(result => {
+        emailAdd.push(email);
+      }).catch(error => {
+        emailNotAdd.push(email);
+      })
+    })
+
+    await Promise.all(permissionsPromises);
+
+    if (emailNotAdd.length > 0)
+      return left({ error: new InvalidEmailError(emailNotAdd, emailAdd, "adicionados")});
+
+    return right({ emailData: emailAdd });
 }
