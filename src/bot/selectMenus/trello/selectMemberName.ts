@@ -1,17 +1,92 @@
 import { env } from '@/env';
 import { SelectMenu } from "@/bot/structures/SelectMenu";
-import { customId } from './selectMemberName.json';
+import { customId, minMax } from './selectMemberName.json';
+import { ComponentType } from "discord.js";
 import { editSucessReply } from '@/bot/utils/discord/editSucessReply';
 import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
+import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { getAllMembersInfo } from '@/bot/utils/trello/getAllMembersInfo';
+import { previousPage, nextPage, getElementsPerPage, currentPage, selectMenuList } from './selectMenuList';
 
 export default new SelectMenu({
     customId,
 
     run: async ({ interaction }) => {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         const memberToBeRemovedId = interaction.values[0];
+
+        if(memberToBeRemovedId == nextPage.id.toString()) {
+            currentPage.push(currentPage[currentPage.length-1] + 1);
+            console.log("current page", currentPage[currentPage.length - 1]);
+            const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+            
+            menuOptions.push(previousPage);
+
+            let size: number;
+            const currentPageNumber = currentPage[currentPage.length - 1];
+            if(currentPageNumber == 1)
+                size = 24;
+            else {
+                size = 24 + 23 * (currentPageNumber - 1);
+            }
+
+            if(selectMenuList.length > size)
+                menuOptions.push(nextPage);
+
+            const nameMenu = makeStringSelectMenu({
+                customId,
+                type: ComponentType.StringSelect,
+                options: menuOptions.map(member => ({
+                  label: member.fullName,
+                  value: member.id.toString(),
+                })),
+                maxValues: minMax.max,
+                minValues: minMax.min,
+            });
+        
+            await interaction.editReply({
+            content: 'Selecione o membro a ser removido',
+            components: [await makeStringSelectMenuComponent(nameMenu)]
+            });
+            return;
+        }
+        else if(memberToBeRemovedId == previousPage.id.toString()) {
+            currentPage.push(currentPage[currentPage.length-1] - 1);
+            console.log("current page", currentPage[currentPage.length - 1]);
+            const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+
+            let size: number;
+            const currentPageNumber = currentPage[currentPage.length - 1];
+            if(currentPageNumber == 1)
+                size = 24;
+            else {
+                size = 24 + 23 * (currentPageNumber - 1);
+            }
+
+            if(currentPageNumber != 1)
+                menuOptions.push(previousPage);
+            if(selectMenuList.length > size)
+                menuOptions.push(nextPage);
+
+            const nameMenu = makeStringSelectMenu({
+                customId,
+                type: ComponentType.StringSelect,
+                options: menuOptions.map(member => ({
+                  label: member.fullName,
+                  value: member.id.toString(),
+                })),
+                maxValues: minMax.max,
+                minValues: minMax.min,
+            });
+        
+            await interaction.editReply({
+            content: 'Selecione o membro a ser removido',
+            components: [await makeStringSelectMenuComponent(nameMenu)]
+            });
+            return;
+        }
+
         const boardId = env.TRELLO_BOARD_ID;
         const boardIds = [ boardId ];
 
