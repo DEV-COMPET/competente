@@ -371,8 +371,6 @@ function getRelevanciaList(n: number, relevancia: string): CustomListStyleArray 
   const listItems = relevancia.split("\n").filter(item => item.trim() !== ""); // Separar itens da string
   const totalLengthItems: number = listItems.reduce((acc, item) => acc += item.length, 0);
   const endIndex = n + totalLengthItems - 1;
-
-  console.log("Total length items: ", totalLengthItems);
     
   const listParagraph = {
     createParagraphBullets: {
@@ -391,8 +389,6 @@ function getChanceIndicacaoTextStyle(n: number, iTalksFeedback: ITalksFeedback):
   const textObject = getTextObject(iTalksFeedback);
   // const endIndex = (n) + (textObject.chanceIndicacaoText.length - (iTalksFeedback.chanceIndicacao?.length !== undefined? iTalksFeedback.chanceIndicacao?.length : 0));
   const endIndex = n + "Chance de indicação:".length
-
-  console.log("chance indicação text: ", textObject.chanceIndicacaoText.length, '\n=', iTalksFeedback.chanceIndicacao, '=');
 
   const textStyle = {
     updateTextStyle: {
@@ -559,9 +555,6 @@ function getNotaOrganizacaoList(n: number, nivelOrganizacao: string): CustomList
 function getSugestoesTextStyle(n: number, iTalksFeedback: ITalksFeedback): CustomStyleArray {
   const textObject = getTextObject(iTalksFeedback);
   const endIndex = (n) + "Sugestões".length;
-
-  console.log("TextObject:", textObject.sugestionsText, textObject.sugestionsText.length);
-  console.log("Sugestoes:", iTalksFeedback.sugestoes, iTalksFeedback.sugestoes?.length);
 
   const textStyle = {
     updateTextStyle: {

@@ -112,8 +112,6 @@ export default new SelectMenu({
             evento[key] = value;
         }
 
-        console.log("Evento", evento);
-
         evento['sugestoes'] = sugestions.length > 0? sugestions.join('\n'): "Não há dados";
 
         const objectEither = await createDocs(evento);
