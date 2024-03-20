@@ -41,7 +41,7 @@ export async function createCertificate({
 }: ICreateCertificateProps): Promise<CreateCertificateResponse> {
   try {
 
-    console.dir({listaNomes})
+    console.dir({ data, horas, listaNomes, minutos, template_dir, text_dir, titulo, data_final });
 
     // Chame a função gerarPdf com os argumentos necessários
     const certificateFilePath = await gerarPdf({

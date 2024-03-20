@@ -55,8 +55,8 @@ async function handleInteraction(interaction: ExtendedInteraction) {
       customId: customId,
       type: ComponentType.StringSelect,
       options: getAllEventNamesResponse.value.events.map((event) => ({
-        label: String(event.name),
-        value: String(event.name),
+      label: String(event.name).substring(0, 80),
+      value: String(event.name).substring(0, 80),
       })),
       maxValues: minMax.max,
       minValues: minMax.min,
