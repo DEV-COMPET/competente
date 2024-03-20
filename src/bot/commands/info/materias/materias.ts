@@ -34,6 +34,8 @@ export default new Command({
 
     const materias: Materias[] = materiasResponse.value.responseData
 
+    saveDataToJson(materias, `jsons/materias/materiasObj.json`);
+
     const { ehCorequisitoDe, ehPreRequisitoDe } = gerarEhPreCorequisito({ materias })
 
     saveDataToJson(ehPreRequisitoDe, `jsons/materias/ehPreRequisitoDe.json`);
@@ -73,7 +75,7 @@ export default new Command({
     ]
 
     const materiasPropositalmenteNaoFeitas = [
-      "Arquitetura e Organização de Computadores II"
+      "Circuitos Elétricos"
     ]
 
     // vetor com materias que serao atrasadas um semestre
