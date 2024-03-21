@@ -142,7 +142,7 @@ export default new Modal({
             })
 
         const numPages = listaNomes.length;
-
+/*
         const submitToAutentiqueResponse = await submitToAutentique({
             numPages,
             titulo: titulo as string,
@@ -151,7 +151,7 @@ export default new Modal({
         });
 
         console.dir({ response: submitToAutentiqueResponse })
-
+*/
         return await interaction.editReply({
             embeds: [
                 makeSuccessEmbed({

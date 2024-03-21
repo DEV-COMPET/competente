@@ -3,6 +3,7 @@ import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import fs from 'fs/promises';
 import path from 'path';
+import { partial_to_full_path } from '../json';
 
 
 const imagesDir = path.join(__dirname, 'talks');
@@ -52,8 +53,8 @@ interface GerarPdfRequest {
 
 export async function gerarPdf({ data, dataFinal, evento, hora, imageName, minutos, reader, txtName }: GerarPdfRequest) {
   
-  console.dir({reader})
-  
+  reader.sort(); // ordenei em ordem alfabetica
+
   const pdfDoc = await PDFDocument.create();
   let page = pdfDoc.addPage([widthg, heightg]);
   const { width, height } = page.getSize();
@@ -80,7 +81,7 @@ export async function gerarPdf({ data, dataFinal, evento, hora, imageName, minut
     evento,
   };
 
-  const textLines = (await fs.readFile(txtName, 'utf-8')).split('\n');
+  const textLines = (await fs.readFile(partial_to_full_path({dirname: __dirname, partialPath: txtName}), 'utf-8')).split('\n');
 
   let auxiliar = fator_decaimento;
   page.drawImage(image, {
@@ -138,6 +139,7 @@ export async function gerarPdf({ data, dataFinal, evento, hora, imageName, minut
     if (typeof row === 'object' && 'nome' in row) {
       fields.nome = (row as { nome: string }).nome; // Assign the value of row.nome to fields.nome if it exists
     }
+    console.dir({nomez: fields.nome})
     aux = fator_decaimento;
 
     page.drawImage(image, {
