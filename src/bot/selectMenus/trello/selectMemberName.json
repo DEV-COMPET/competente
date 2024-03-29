@@ -1,0 +1,7 @@
+{
+    "customId": "get-compet-member",    
+    "minMax": {
+        "min": 1,
+        "max": 1
+    }
+}
