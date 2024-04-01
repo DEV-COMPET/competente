@@ -1,0 +1,43 @@
+{
+    "modalBuilderRequest": {
+        "title": "Adicionando um novo competiano",
+        "customId": "add-to-compet"
+    },
+    "inputFields": [
+        {
+            "label": "Nome",
+            "customId": "nome",
+            "placeholder": "Sandro Renato Dias",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Telefone",
+            "customId": "telefone",
+            "placeholder": "(11) 99999-9999",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "E-mail",
+            "customId": "email",
+            "placeholder": "Andrejogadorcarodacruz@gmail.com",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Lattes",
+            "customId": "lattes",
+            "placeholder": "http://lattes.cnpq.br/1234567890123456",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "ImageBB",
+            "customId": "imageBB",
+            "placeholder": "https://i.ibb.co/0t3J2Jd/natalia.jpg",
+            "required": true,
+            "style": 1
+        }
+    ]
+}
