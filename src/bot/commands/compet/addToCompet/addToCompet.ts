@@ -7,22 +7,22 @@ import { name, description } from "@/bot/commands/compet/addToCompet/addToCompet
 
 interface SociaMediaData {
     instagram: string | ""
-    linkedin: string | "",
+    telefone: string,
 }
 
 export const socialMedia: SociaMediaData = {
     instagram: "",
-    linkedin: ""
+    telefone: ""
 }
 
 export default new Command({
     name, description,
     options: [
         {
-            name: 'linkedin',
-            description: "Linkedin do novo competiano (caso tenha)",
+            name: 'telefone',
+            description: "Telefone do novo competiano",
             type: ApplicationCommandOptionType.String,
-            required: false
+            required: true
         },
         {
             name: 'instagram',
@@ -37,7 +37,7 @@ export default new Command({
         if (isNotAdmin.isRight())
             return isNotAdmin.value.response;
 
-        socialMedia.linkedin = interaction.options.get('linkedin')?.value as string || " ";
+        socialMedia.telefone = interaction.options.get('telefone')?.value as string;
         socialMedia.instagram = interaction.options.get('instagram')?.value as string || " ";
 
         await interaction.showModal(addToCompetModal);
