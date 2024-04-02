@@ -3,7 +3,7 @@ import { ExtractInputDataResponse } from "./extractInputData";
 import { Either, left, right } from "@/api/@types/either";
 
 export type ValidateInputDataRightResponse = {
-    emails: string[]
+    email: string,
 }
 
 type ValidateInputDataResponse = Either<
@@ -11,22 +11,14 @@ type ValidateInputDataResponse = Either<
     { inputData: ValidateInputDataRightResponse }
 >
 
-export async function validateInputData({ emails }: ExtractInputDataResponse) : Promise<ValidateInputDataResponse> {
+export async function validateInputData({ email }: ExtractInputDataResponse) : Promise<ValidateInputDataResponse> {
     const invalidEmailsInputs: string[] = [];
-    const validEmailsInputs: string[] = [];
     
-    const emails_arr = emails.split(';');
-    
-    for (const email of emails_arr) {
-        if (!(email.includes('@'))) {
-            invalidEmailsInputs.push(email);
-        } else {
-            validEmailsInputs.push(email);
-        }
+    if ((email.includes('@'))) {
+        return right({ inputData: {email: email}});
+    } else {
+        invalidEmailsInputs.push(email);
+        return left({ error: new InvalidInputLinkError(invalidEmailsInputs)});
     }
 
-    if (invalidEmailsInputs.length > 0) 
-        return left({ error: new InvalidInputLinkError(invalidEmailsInputs)});
-
-    return right({ inputData: {emails: validEmailsInputs}});
 }

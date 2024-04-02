@@ -7,7 +7,7 @@ interface ExtractInputDataRequest {
 };
 
 export interface ExtractInputDataResponse {
-    emailAcess_arr: string[]
+    email: string
 };
 
 export function extractInputData( { inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -15,13 +15,11 @@ export function extractInputData( { inputFields, interaction }: ExtractInputData
     const inputData = customIds.map(i=> ({ [i]: interaction.fields.getTextInputValue(i)}));
     
     interface InputFieldsRequest {
-        emailsAcess: string
+        email: string
     };
 
     
-    const { emailsAcess }: InputFieldsRequest = Object.assign({}, ... inputData);
+    const { email }: InputFieldsRequest = Object.assign({}, ... inputData);
     
-    const emailAcess_arr = emailsAcess.split(';').map(email => email.trim());
-    
-    return { emailAcess_arr };
+    return { email };
 }

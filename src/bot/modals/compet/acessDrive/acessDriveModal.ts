@@ -52,7 +52,7 @@ export default new Modal ({
             title: "Emails validaddos! Permitindo acessos..."
         });
 
-        const emailVerified = validateInputDataResponse.value.inputData.emailsAcess;
+        const emailVerified = validateInputDataResponse.value.inputData.email;
 
         const acessDriveResponse = await acessDrive(emailVerified);
         
