@@ -1,3 +1,4 @@
+import { CompetianoType } from "@/api/modules/competianos/entities/competiano.entity";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { TextInputComponentData } from "discord.js";
 
@@ -7,26 +8,14 @@ interface ExtractInputDataRequest {
 };
 
 export interface ExtractInputDataResponse {
-    nome: string,
-    telefone: string,
-    email: string,
-    lattes: string,
-    imageBB: string
+    data: CompetianoType
 };
 
-export function extractInputData ({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
-    const customIds = inputFields.map((fields) => fields.customId || "");
-    const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
+export function extractInputData({ inputFields, interaction }: ExtractInputDataRequest): ExtractInputDataResponse {
     
-    interface InputFieldsRequest {
-        nome: string,
-        telefone: string,
-        email: string,
-        lattes: string,
-        imageBB: string 
-    }
+    const customIds = inputFields.map((field) => field.customId || "");
+    const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i) }));
+    const data: CompetianoType = Object.assign({}, ...input_data, { data_inicio: new Date().toISOString() });
 
-    const { nome, telefone, email, lattes, imageBB }: InputFieldsRequest = Object.assign({}, ...input_data);
-
-    return { nome, telefone, email, lattes, imageBB};
+    return { data };
 }
