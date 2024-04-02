@@ -1,17 +1,19 @@
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal";
+import { validateInputData } from "./utils/validateInputData";
+import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
-import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
+import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { TextInputComponentData, ModalComponentData } from "discord.js";
 import { makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
-import { inserirInfoSheets } from "./utils/inserirInfo";
 import { extractInputData } from "./utils/extractInputData";
 import { createSelectMemberMenu } from "./utils/createSelectMemberMenu";
 import { socialMedia } from "@/bot/commands/compet/addToCompet/addToCompet";
-import { shareDrive } from "./utils/acessDrive";
 
+import { acessDrive } from "@/bot/utils/googleAPI/googleDrive";
+import { inserirInfoSheets } from "@/bot/utils/googleAPI/insertCompetianoInfo";
 
 export interface MemberData {
     id: string,
@@ -40,38 +42,92 @@ export default new Modal ({
         if (isNotAdmin.isRight())
             return isNotAdmin.value.response;
 
-        const inputData = extractInputData({ inputFields, interaction });
-        const { instagram, linkedin } = socialMedia;
+        const { data } = extractInputData({ inputFields, interaction });
 
-        await inserirInfoSheets(inputData.nome, inputData.telefone, inputData.email, instagram, linkedin);
-        await shareDrive(inputData.email);
+        
+        
+        const { nome, email, linkedin, data_inicio, url_imagem, lates } = data;
+        const { telefone, instagram } = socialMedia;
+        
+        const validateInputDataResponse = await validateInputData({ data });
+        if (validateInputDataResponse.isLeft())
+            return await editErrorReply({
+                    error: validateInputDataResponse.value.error, interaction,
+                    title: "Não foi possível adicionar o competiano no banco de dados."
+                });
 
-        await editLoadingReply({
-            interaction,
-            title: "Dados recolhido, adicionando as devidas plataformas..."
-        });
+        const inserirDadosInfoResponse = await inserirInfoSheets({ nome, telefone, email, instagram, linkedin, });
+        if (inserirDadosInfoResponse.isLeft())
+            return await editErrorReply({
+                error: inserirDadosInfoResponse.value.error, interaction,
+                title: "Não foi possível inserir competiano a planilha"
+            });
 
+        const acessDriveResponse = await acessDrive(data.email);
+        if (acessDriveResponse.isLeft())
+            return await editErrorReply({
+                error: acessDriveResponse.value.error, interaction,
+                title: "Erro ao permitir acesso ao drive do compet"
+            });
 
-        const guild = interaction.guild;
-        if(!guild)
-            throw "Guild not cached";
-
-        const members = await guild.members.fetch();
-        if (!members)
-            throw "No members in this server";
-
-        const membersData: MemberData[] = members.map(member => {
-            const { id, globalName, username } = member.user;
-
-            return { id, nickName: globalName ?? "", username };
-        });
-
-        const selectMemberMenu = createSelectMemberMenu({ membersData });
-
-        await interaction.editReply({
-            content: "Selecione o perfil do competiano que acabou de adicionar",
-            components: [await makeStringSelectMenuComponent(selectMemberMenu)]
+        
+        return await editSucessReply({
+            interaction, title: "Competiano criado com sucesso. Seja bem vindo!!",
+            fields: [
+                {
+                    name: "Nome",
+                    value: nome,
+                    inline: false
+                },
+                {
+                    name: "Data de início",
+                    value: data_inicio.toString(),
+                    inline: false
+                },
+                {
+                    name: "Linkedin",
+                    value: linkedin || " Nenhum linkedin informado",
+                    inline: false,
+                },
+                {
+                    name: "Email",
+                    value: email,
+                    inline: false
+                },
+                {
+                    name: "Lattes",
+                    value: lates || " Nenhum lattes informado",
+                    inline: false
+                },
+                {
+                    name: "Instagram",
+                    value: instagram || "Nenhum instagram informado",
+                    inline: false
+                }
+            ],
+            url_imagem: url_imagem
         })
+
+        // const guild = interaction.guild;
+        // if(!guild)
+        //     throw "Guild not cached";
+
+        // const members = await guild.members.fetch();
+        // if (!members)
+        //     throw "No members in this server";
+
+        // const membersData: MemberData[] = members.map(member => {
+        //     const { id, globalName, username } = member.user;
+
+        //     return { id, nickName: globalName ?? "", username };
+        // });
+
+        // const selectMemberMenu = createSelectMemberMenu({ membersData });
+
+        // await interaction.editReply({
+        //     content: "Selecione o perfil do competiano que acabou de adicionar",
+        //     components: [await makeStringSelectMenuComponent(selectMemberMenu)]
+        // })
     }
 })
 
