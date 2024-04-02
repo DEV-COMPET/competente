@@ -6,8 +6,8 @@
     "inputFields": [
         {
             "label": "Emails a serem removido",
-            "placeholder": "Email1;Email2;Email3",
-            "customId": "emails",
+            "placeholder": "compet@gmail.com",
+            "customId": "email",
             "required": true,
             "style": 1
         }
