@@ -28,12 +28,6 @@ export async function inserirInfoSheets({ nome, telefone, email, instagram, link
     const sheets = google.sheets({ version: 'v4', auth});
 
     const spreadsheetId = '1f1QxpkcYhWNjpkWhVu4PvruvGNhzwz8tV2aRDsrYKl4';
-
-    if (instagram === "")
-        instagram = "Competiano sem conta no Instagram";
-
-    if (linkedin === "")
-        linkedin = "Competiano sem conta no LinkedIn";
     
     const values = [nome, telefone, email, instagram, linkedin, "ATIVO"];
 
