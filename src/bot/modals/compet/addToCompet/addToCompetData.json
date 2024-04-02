@@ -5,21 +5,14 @@
     },
     "inputFields": [
         {
-            "label": "Nome",
+            "label": "Qual o nome do novo membro?",
             "customId": "nome",
             "placeholder": "Sandro Renato Dias",
             "required": true,
             "style": 1
         },
         {
-            "label": "Telefone",
-            "customId": "telefone",
-            "placeholder": "(11) 99999-9999",
-            "required": true,
-            "style": 1
-        },
-        {
-            "label": "E-mail",
+            "label": "Qual o email do novo membro?",
             "customId": "email",
             "placeholder": "Andrejogadorcarodacruz@gmail.com",
             "required": true,
@@ -27,14 +20,21 @@
         },
         {
             "label": "Lattes",
-            "customId": "lattes",
+            "customId": "lates",
             "placeholder": "http://lattes.cnpq.br/1234567890123456",
             "required": true,
             "style": 1
         },
         {
+            "label": "Linkedin",
+            "customId": "linkedin",
+            "placeholder": "https://www.linkedin.com/in/compet/",
+            "required": false,
+            "style": 1
+        },
+        {
             "label": "ImageBB",
-            "customId": "imageBB",
+            "customId": "url_imagem",
             "placeholder": "https://i.ibb.co/0t3J2Jd/natalia.jpg",
             "required": true,
             "style": 1
