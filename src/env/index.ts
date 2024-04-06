@@ -16,7 +16,14 @@ const envSchema = z.object({
     HOST: z.string().default("http://localhost:4444"),
     MONGODB_USER: z.string().optional(),
     MONGODB_PASSWORD: z.string().optional(),
-    PORT: z.coerce.number().default(4444)
+    PORT: z.coerce.number().default(4444),
+    TRELLO_BOARD_ID: z.string(),
+    TRELLO_DEV_BOARD_ID: z.string(),
+    TRELLO_ADM_BOARD_ID: z.string(),
+    TRELLO_EVENTOS_BOARD_ID: z.string(),
+    TRELLO_MARKETING_BOARD_ID: z.string(),
+    TRELLO_API_KEY: z.string(),
+    TRELLO_ACCOUNT_TOKEN: z.string()
 });
 
 const _env = envSchema.safeParse(process.env); // tenta validar process.env para ver se tem as exatas informações dentro

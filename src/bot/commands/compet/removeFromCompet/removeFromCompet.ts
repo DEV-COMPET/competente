@@ -6,7 +6,9 @@ import { fetchDataFromAPI } from "../../../utils/fetch/fetchData";
 import { editErrorReply } from "../../../utils/discord/editErrorReply";
 import { CompetianoType } from "../../../../api/modules/competianos/entities/competiano.entity";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
-import { selectMemberName } from './../../../selectMenus/trello/selectMemberName.json';
+import selectMemberName from './../../../selectMenus/compet/selectMemberName.json';
+import { nextPage } from "@/bot/selectMenus/compet/selectMenuList";
+import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
@@ -22,36 +24,7 @@ export default new Command({
         if((isNotAdmin).isRight())
             return isNotAdmin.value.response;
 
-        const competentesResponse = await fetchDataFromAPI({
-            json: false, url: '/competianos/', method: 'GET'
-        });
-
-        if(competentesResponse.isLeft())
-            return await editErrorReply({
-                interaction, error: competentesResponse.value.error, title: 'Erro ao buscar competentes'}
-            );
-        
-        const responseData: string = competentesResponse.value.responseData;
-        const competianos: CompetianoType[] = JSON.parse(responseData);
-        const activeCompetianos = await extractData({ competianos });
-
-        const { customId, minMax } = selectMemberName;
-
-        const nameMenu = makeStringSelectMenu({
-            customId,
-            type: ComponentType.StringSelect,
-            options: activeCompetianos.map(member => ({
-                label: member.nome,
-                value: member.email
-            })),
-            maxValues: minMax.max,
-            minValues: minMax.min
-        });
-
-        await interaction.editReply({
-            content: 'Selecione o membro a ser removido',
-            components: [await makeStringSelectMenuComponent(nameMenu)]
-        });
+        handleRemoveFromTrelloInteraction(interaction);
     }
 })
 
@@ -59,14 +32,14 @@ interface ExtractDataRequest {
     competianos: CompetianoType[]
 }
 
-// interface ExtractDataResponse {
-//     email: string,
-//     nome: string
-// }
+interface ExtractDataResponse {
+    email: string,
+    nome: string
+}
 
-async function extractData({ competianos }: ExtractDataRequest) {
+async function extractData({ competianos }: ExtractDataRequest): Promise<ExtractDataResponse[]> {
     // Filter active competianos
-    const activeCompetianos = competianos.filter(competiano => competiano.membro_ativo === true)
+    const activeCompetianos: ExtractDataResponse[] = competianos.filter(competiano => competiano.membro_ativo === true)
                                          .filter(competiano => !competiano.tutor)
                                          .map(competiano => ({ nome: competiano.nome, email: competiano.email }));
     return activeCompetianos;
