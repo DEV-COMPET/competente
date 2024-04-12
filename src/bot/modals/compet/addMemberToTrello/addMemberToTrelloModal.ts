@@ -53,19 +53,12 @@ export default new Modal({
             body: bodyData
         })
         .then(response => {
-            console.log(
-            `Response: ${response.status} ${response.statusText}`
-            );
-
             if(response.status == 200) {
-                console.log("status 20000");
                 return response.text(); 
             }
             else throw new Error(response.statusText);
         })
         .then(async text => {
-            console.log(text);
-
             const teamMenu = makeStringSelectMenu({
                 customId,
                 type: ComponentType.StringSelect,
@@ -75,7 +68,6 @@ export default new Modal({
             });
 
             memberEmail.push(text);
-            console.log("memberEmail: ", text);
 
             await interaction.editReply({
                 content: 'Selecione a equipe do novo membro',

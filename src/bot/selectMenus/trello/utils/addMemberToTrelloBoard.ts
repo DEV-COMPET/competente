@@ -13,11 +13,8 @@ export default async function addMemberToTrelloBoard(trelloBoardID: string, emai
         body: bodyData
     });
 
-    console.log(`Response: ${response.status} ${response.statusText}`);
-
     if (response.ok) {
-        const text = await response.text();
-        console.log(text);
+        // const text = await response.text();
         return { status: "OK" };
     } else {
         throw new Error(response.statusText);

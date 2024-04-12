@@ -13,7 +13,6 @@ export default new SelectMenu( {
         await interaction.deferReply();
 
         const memberTeam = interaction.values[0];
-        console.log('the member team is', memberTeam);
 
         if(memberTeam == 'Administração') {
             try {
