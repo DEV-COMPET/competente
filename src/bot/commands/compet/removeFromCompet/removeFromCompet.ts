@@ -9,6 +9,7 @@ import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils
 import selectMemberName from './../../../selectMenus/compet/selectMemberName.json';
 import { nextPage } from "@/bot/selectMenus/compet/selectMenuList";
 import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
+import { handleRemoveFromDiscordInteraction } from "../kickMember/kickMember";
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
@@ -24,7 +25,8 @@ export default new Command({
         if((isNotAdmin).isRight())
             return isNotAdmin.value.response;
 
-        handleRemoveFromTrelloInteraction(interaction);
+        //await handleRemoveFromTrelloInteraction(interaction);
+        await handleRemoveFromDiscordInteraction(interaction);
     }
 })
 
