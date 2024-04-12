@@ -18,7 +18,6 @@ export default new SelectMenu({
 
         if(memberToBeRemovedId == nextPage.id.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
             
             menuOptions.push(previousPage);
@@ -53,7 +52,6 @@ export default new SelectMenu({
         }
         else if(memberToBeRemovedId == previousPage.id.toString()) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
             let size: number;

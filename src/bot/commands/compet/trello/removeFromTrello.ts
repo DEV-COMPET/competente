@@ -38,14 +38,10 @@ async function handleInteraction(interaction: ExtendedInteraction) {
       const getAllMembersInfoResponse = await getAllMembersInfo(trelloGeralBoardId);
       const { customId, minMax } = selectMemberName;
 
-      const number_people = 75;
-      const people = getNRandomPeople(number_people);
-      let menuOptions: Person[] = people;
-      selectMenuList.splice(0, selectMenuList.length, ...people);
+      let menuOptions: Person[] = getAllMembersInfoResponse;
+      //selectMenuList.splice(0, selectMenuList.length, ...people);
 
-      console.log(people);
-
-      if(people.length > 25) { // split
+      if(menuOptions.length > 25) { // split
         menuOptions = menuOptions.slice(0, 24);
         menuOptions.push(nextPage);
       }
@@ -73,32 +69,6 @@ async function handleInteraction(interaction: ExtendedInteraction) {
 
 // Definição da interface para os objetos
 interface Person {
-  id: number;
+  id: string;
   fullName: string;
-}
-
-// Função para gerar nomes aleatórios
-function generateRandomName(): string {
-  const firstNames = ['John', 'Emma', 'Michael', 'Sophia', 'William', 'Olivia', 'James', 'Ava', 'Alexander', 'Isabella'];
-  const lastNames = ['Smith', 'Johnson', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez'];
-  
-  const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-  const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-  
-  return `${randomFirstName} ${randomLastName}`;
-}
-
-function getNRandomPeople(n : number) : Person[] {
-  const people: Person[] = [];
-
-// Adicionando 30 elementos aleatórios ao vetor
-for (let i = 1; i < n; i++) {
-  const person: Person = {
-    id: i + 1,
-    fullName: generateRandomName()
-  
-  };
-  people.push(person);
-}
-return people;
 }

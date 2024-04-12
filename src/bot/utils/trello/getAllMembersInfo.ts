@@ -23,7 +23,6 @@ export async function getAllMembersInfo(boardId: string) {
             throw new Error('Trello Get All Members Names Error');
 
         const membersInfo: TrelloMember[] = await response.json();
-        console.log('members info: ', membersInfo);
         const membersNames = membersInfo.map(member => ({ fullName: member.fullName, id: member.id }))
                                 .filter(member => validateName(member.fullName));
         return membersNames;

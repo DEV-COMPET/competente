@@ -21,11 +21,9 @@ export default new Modal({
     run: async ({ interaction }) => {
         if(interaction.channel === null)
             throw "Channel is not cached";
-        console.log("oioi2");
         await interaction.deferReply({ ephemeral: true });
 
         const { username } = extractInputData({ inputFields, interaction });
-        console.log("the username is:", username);
 
         const validateInputDataResponse = await validateInputData({ username });
         if(validateInputDataResponse.isLeft()) {
@@ -49,7 +47,6 @@ export default new Modal({
             let id = undefined;
 
             for(const user of users) {
-                console.log(user.username, username);
                 if(user.username === username) {
                     id = user.id;
                     break;
@@ -76,7 +73,6 @@ export default new Modal({
                     return response.text();
                 })
                 .then(text => {
-                    console.log(text);
                     return editSucessReply({
                         interaction, title: "Membro removido do Trello!",
                         fields: [
