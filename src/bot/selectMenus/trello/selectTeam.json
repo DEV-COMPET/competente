@@ -1,0 +1,25 @@
+{
+    "customId": "get-member-team",    
+    "minMax": {
+        "min": 1,
+        "max": 1
+    },
+    "options": [
+        {
+            "label": "Administração",
+            "value": "Administração"
+        },
+        {
+            "label": "Desenvolvimento",
+            "value": "Desenvolvimento"
+        },
+        {
+            "label": "Eventos",
+            "value": "Eventos"
+        },
+        {
+            "label": "Marketing",
+            "value": "Marketing"
+        }
+    ]
+}
