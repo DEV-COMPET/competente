@@ -16,6 +16,7 @@ export default new SelectMenu({
         await interaction.deferReply({ ephemeral: true });
 
         let memberToBeRemovedId = interaction.values[0]; // TODO: colocar const
+        console.log("Member to be removed: ", memberToBeRemovedId);
 
         if(memberToBeRemovedId == nextPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);

@@ -61,13 +61,14 @@ export async function handleRemoveFromDiscordInteraction(interaction: ExtendedIn
         const member = memberId[1].user;
         extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
     }
+    const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
     console.log(extractedMembers);
 
     if(extractedMembers.length > 0) {
         const nameMenu = makeStringSelectMenu({
             customId,
             type: ComponentType.StringSelect,
-            options: extractedMembers.map(member => ({
+            options: filteredExtractedMembers.map(member => ({
             label: member.globalName!,
             value: member.id.toString(),
             })),
@@ -82,43 +83,7 @@ export async function handleRemoveFromDiscordInteraction(interaction: ExtendedIn
     }
 
 //console.log(extractedMembers);
-    // const targetUserId = interaction.options.get('target-user')?.value;
-    // const reason = interaction.options.get('reason')?.value || 'Nenhuma justificativa foi fornecida';
-    // const targetUser = await interaction.guild?.members.fetch(`${targetUserId}`);
-    // console.log("oi2");
-
-    // try {
-    //     if (!targetUser) {
-    //         await interaction.editReply("Não foi possível encontrar o usuario no servidor ");
-    //             return;
-    //         }
     
-    //         if (targetUser.id === interaction.guild?.ownerId) {
-    //         await interaction.editReply("Você não pode *expulsar* o dono do servidor!");
-    //             return;
-    //         }
-    // } catch (error) {
-    //     await interaction.editReply("Erro ao executar o comando");
-    //     return ;
-    // }
-
-    // try {
-    //     await targetUser.kick();
-    //     const embed = new EmbedBuilder().setTitle(`Remoção de ${targetUser.displayName}`);
-    //     embed.addFields(
-    //         {name: "Usuário: ", value: `${targetUser}`},
-    //         {name: "Motivo: ", value: `${reason}`}
-    //     );
-    //     await interaction.editReply({embeds: [embed]});
-
-    // } catch (error) {
-    //     const embed = new EmbedBuilder().setTitle(`Remoção de ${targetUser.displayName}`);
-    //     embed.addFields(
-    //         {name: "Erro: ", value: `Erro ao kickar ${targetUser}`},
-    //     );
-    //     await interaction.editReply({ embeds: [embed] });
-    //     console.log(`Erro ao tentar kickar usuario ${error}`);
-    // }
 }
 
 async function banUser(userId: string) {
