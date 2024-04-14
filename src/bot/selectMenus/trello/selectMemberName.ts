@@ -7,6 +7,7 @@ import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { getAllMembersInfo } from '@/bot/utils/trello/getAllMembersInfo';
 import { previousPage, nextPage, getElementsPerPage, currentPage, selectMenuList } from './selectMenuList';
+import { removeFromDriveModal } from '@/bot/modals/compet/removeFromDrive/removeFromDriveModal';
 
 export default new SelectMenu({
     customId,
@@ -122,7 +123,7 @@ export default new SelectMenu({
         // Await all fetch operations
         await Promise.all(fetchPromises);
 
-        return editSucessReply({
+        await editSucessReply({
             interaction,
             title: 'Membro removido do Trello',
             fields: [
@@ -145,5 +146,8 @@ export default new SelectMenu({
                 title: 'Não foi possível excluir o membro do Trello'
             });
         });
+
+        console.log("#####################################")
+        // await interaction.showModal(removeFromDriveModal);
     }
 })

@@ -8,8 +8,10 @@ import { CompetianoType } from "../../../../api/modules/competianos/entities/com
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import selectMemberName from './../../../selectMenus/compet/selectMemberName.json';
 import { nextPage } from "@/bot/selectMenus/compet/selectMenuList";
-import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
+import { removeFromDriveModal } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
+import { handlingRemove } from "./utils/handleRemove";
 import { handleRemoveFromDiscordInteraction } from "../kickMember/kickMember";
+import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
@@ -19,14 +21,25 @@ const { name, description }: ChatInputApplicationCommandData = readJsonFile({
 export default new Command({
     name, description,
     run: async({ interaction }) => {
-        await interaction.deferReply({ ephemeral: true });
+        // await interaction.deferReply({ ephemeral: true });
 
         const isNotAdmin = await checkIfNotAdmin(interaction);
         if((isNotAdmin).isRight())
             return isNotAdmin.value.response;
 
-        //await handleRemoveFromTrelloInteraction(interaction);
-        await handleRemoveFromDiscordInteraction(interaction);
+        handlingRemove.push(interaction);
+        await interaction.showModal(removeFromDriveModal);
+
+        //const [discordInteractionResult, driveInteractionResult] = await Promise.all([
+        //    handleRemoveFromDiscordInteraction(interaction),
+        //    handleRemoveFromTrelloInteraction(interaction)
+        //]) ;
+            
+        // await handleRemoveFromDiscordInteraction(interaction);
+
+        // await handleRemoveFromDiscordInteraction(interaction);
+        //await interaction.showModal(removeFromDriveModal)
+        //await handleRemoveFromDriveInteraction(interaction);
     }
 })
 

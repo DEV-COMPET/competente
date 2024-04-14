@@ -4,12 +4,20 @@ import { customId, minMax } from './removeMemberFromDiscord.json';
 import { ComponentType, EmbedBuilder } from "discord.js";
 import { editSucessReply } from '@/bot/utils/discord/editSucessReply';
 import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
+
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
-import { previousPage, nextPage, getElementsPerPage, currentPage, selectMenuList } from './selectMenuList'
+import { previousPage as previousPageDiscord, nextPage as nextPageDiscord, 
+    getElementsPerPage, currentPage as currentPageDiscord, 
+    selectMenuList as selectMenuListDiscord } from './selectMenuList'
+import { nextPage as nextPageTrello, selectMenuList as selectMenuListTrello } from "../trello/selectMenuList";
+
 import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
 import { handleRemoveFromTrelloInteraction } from "@/bot/commands/compet/trello/removeFromTrello";
 import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
+import { handlingRemove } from "@/bot/commands/compet/removeFromCompet/utils/handleRemove";
+import { removeFromDriveModal } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
+import selectMemberName from "../trello/selectMemberName.json";
 
 export default new SelectMenu({
     customId,
@@ -20,23 +28,23 @@ export default new SelectMenu({
         let memberToBeRemovedId = interaction.values[0]; // TODO: colocar const
         console.log("Member to be removed: ", memberToBeRemovedId);
 
-        if(memberToBeRemovedId == nextPage.globalName.toString()) {
-            currentPage.push(currentPage[currentPage.length-1] + 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
-            const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+        if(memberToBeRemovedId == nextPageDiscord.globalName.toString()) {
+            currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] + 1);
+            console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
+            const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
             
-            menuOptions.push(previousPage);
+            menuOptions.push(previousPageDiscord);
 
             let size: number;
-            const currentPageNumber = currentPage[currentPage.length - 1];
+            const currentPageNumber = currentPageDiscord[currentPageDiscord.length - 1];
             if(currentPageNumber == 1)
                 size = 24;
             else {
                 size = 24 + 23 * (currentPageNumber - 1);
             }
 
-            if(selectMenuList.length > size)
-                menuOptions.push(nextPage);
+            if(selectMenuListDiscord.length > size)
+                menuOptions.push(nextPageDiscord);
 
             const nameMenu = makeStringSelectMenu({
                 customId,
@@ -55,13 +63,13 @@ export default new SelectMenu({
             });
             return;
         }
-        else if(memberToBeRemovedId == previousPage.id.toString()) {
-            currentPage.push(currentPage[currentPage.length-1] - 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
-            const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+        else if(memberToBeRemovedId == previousPageDiscord.id.toString()) {
+            currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] - 1);
+            console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
+            const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
 
             let size: number;
-            const currentPageNumber = currentPage[currentPage.length - 1];
+            const currentPageNumber = currentPageDiscord[currentPageDiscord.length - 1];
             if(currentPageNumber == 1)
                 size = 24;
             else {
@@ -69,9 +77,9 @@ export default new SelectMenu({
             }
 
             if(currentPageNumber != 1)
-                menuOptions.push(previousPage);
-            if(selectMenuList.length > size)
-                menuOptions.push(nextPage);
+                menuOptions.push(previousPageDiscord);
+            if(selectMenuListDiscord.length > size)
+                menuOptions.push(nextPageDiscord);
 
             const nameMenu = makeStringSelectMenu({
                 customId,
@@ -92,11 +100,55 @@ export default new SelectMenu({
         }
         console.log("AQUI");
         await kickUser(memberToBeRemovedId, interaction);
+        await removeFromTrello(interaction);
+        
 
+        // Remove from Trello
+        //const prev_interaction = handlingRemove[handlingRemove.length-1];
+        //await handleRemoveFromTrelloInteraction(prev_interaction);
     }
 
     
 })
+
+async function removeFromTrello(interaction: ExtendedStringSelectMenuInteraction) {
+    try {
+        const trelloGeralBoardId = env.TRELLO_BOARD_ID;
+        const getAllMembersInfoResponse = await getAllMembersInfo(trelloGeralBoardId);
+        const { customId, minMax } = selectMemberName;
+  
+        let menuOptions = getAllMembersInfoResponse;
+        selectMenuListTrello.splice(0, selectMenuListTrello.length, ...menuOptions);
+  
+        console.log(menuOptions);
+  
+        if(menuOptions.length > 25) { // split
+          menuOptions = menuOptions.slice(0, 24);
+          menuOptions.push(nextPageTrello);
+        }
+  
+        const nameMenu = makeStringSelectMenu({
+          customId,
+          type: ComponentType.StringSelect,
+          options: menuOptions.map(member => ({
+            label: member.fullName,
+            value: member.id.toString(),
+          })),
+          maxValues: minMax.max,
+          minValues: minMax.min,
+        });
+  
+        await interaction.editReply({
+          content: 'Selecione o membro a ser removido do Trello',
+          components: [await makeStringSelectMenuComponent(nameMenu)]
+        });
+        console.log("Opa, chegou aqui após Trello******************************");
+        // await interaction.showModal(removeFromDriveModal);
+      }
+      catch(error) {
+        console.log(error);
+      }
+}
 
 // TODO: fazer um modal para adicionar a justificativa de remoção do Discord
 export async function kickUser(userId: string, interaction: ExtendedStringSelectMenuInteraction) {

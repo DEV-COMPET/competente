@@ -5,11 +5,17 @@ import { extractInputData } from "./utils/extractInputData";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
-import { TextInputComponentData, ModalComponentData } from "discord.js";
+import { TextInputComponentData, ModalComponentData, Client, GatewayIntentBits, ComponentType } from "discord.js";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 
 import { removeFromDrive } from "@/bot/utils/googleAPI/googleDrive";
 import { validateInputData } from "./utils/validateInputData";
+import { handleRemoveFromDiscordInteraction } from "@/bot/commands/compet/kickMember/kickMember";
+import { handlingRemove } from "@/bot/commands/compet/removeFromCompet/utils/handleRemove";
+import { env } from "@/env";
+import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
+
+import { customId, minMax } from '../../../selectMenus/discord/removeMemberFromDiscord.json';
 
 const { inputFields, modalBuilderRequest}: {
     inputFields: TextInputComponentData[];
@@ -27,16 +33,12 @@ export default new Modal({
 
         await interaction.deferReply({ ephemeral: true});
 
-        const isNotAdmin = await checkIfNotAdmin(interaction)
-        if ((isNotAdmin).isRight())
-            return isNotAdmin.value.response
-
         const input_data = extractInputData({ interaction , inputFields });
 
-        await editLoadingReply({
-            interaction,
-            title: "Fazendo validação dos emails passados"
-        });
+        // await editLoadingReply({
+        //     interaction,
+        //     title: "Fazendo validação dos emails passados"
+        // });
 
         const validateInputDataResponse = await validateInputData(input_data);
 
@@ -48,10 +50,10 @@ export default new Modal({
             })
         }
 
-        await editLoadingReply({
-            interaction,
-            title: "Verificação concluida, realizando remoção do drive"
-        })
+        // await editLoadingReply({
+        //     interaction,
+        //     title: "Verificação concluida, realizando remoção do drive"
+        // })
 
         const emailsVerificado = validateInputDataResponse.value.inputData.emails;
 
@@ -64,14 +66,59 @@ export default new Modal({
             })
         }
 
-        return await interaction.editReply({
-            embeds: [
-                makeSuccessEmbed({
-                    title: `Os seguintes emails foram removidos com sucesso:\n ${(removeFromDriveResponse.value.emailData.join(', '))}`,
-                    interaction
-                })
-            ]
-        })
+        // await interaction.editReply({
+        //     embeds: [
+        //         makeSuccessEmbed({
+        //             title: `Os seguintes emails foram removidos com sucesso:\n ${(removeFromDriveResponse.value.emailData.join(', '))}`,
+        //             interaction
+        //         })
+        //     ]
+        // });
+        const prev_interaction = handlingRemove[handlingRemove.length-1];
+
+        console.log("The length is: ", handlingRemove.length);
+        const client = new Client({
+            intents: [
+                GatewayIntentBits.GuildMembers,  // MAKE SURE TO ADD THIS
+            ],
+        });
+    
+        await client.login(env.DISCORD_TOKEN);
+        
+        const guild = await client.guilds.fetch('1173025347466436712');
+        const guildMembers = await guild.members.fetch();
+        const extractedMembers = [];
+    
+        //console.log(guildMembers);
+        console.log(typeof(guildMembers));
+    
+        for (const memberId of guildMembers) {
+            const member = memberId[1].user;
+            extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
+        }
+        const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
+        console.log(extractedMembers);
+    
+    
+        if(extractedMembers.length > 0) {
+            const nameMenu = makeStringSelectMenu({
+                customId,
+                type: ComponentType.StringSelect,
+                options: filteredExtractedMembers.map(member => ({
+                label: member.globalName!,
+                value: member.id.toString(),
+                })),
+                maxValues: minMax.max,
+                minValues: minMax.min,
+            });
+    
+            // handlingRemove.push(interaction);
+    
+            await interaction.editReply({
+            content: 'Selecione o membro a ser removido do Discord',
+            components: [await makeStringSelectMenuComponent(nameMenu)]
+            });
+        }
     }
 });
 

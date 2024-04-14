@@ -9,15 +9,10 @@ import selectMemberName from './../../../selectMenus/trello/selectMemberName.jso
 import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { selectMenuList, currentPage, nextPage } from '@/bot/selectMenus/trello/selectMenuList';
 import { ExtendedStringSelectMenuInteraction } from '@/bot/typings/SelectMenu';
+import { removeFromDriveModal } from '@/bot/modals/compet/removeFromDrive/removeFromDriveModal';
 
 export async function handleRemoveFromTrelloInteraction(interaction: ExtendedInteraction) {
   // await interaction.deferReply({ ephemeral: true });
-
-    if(interaction.replied) {
-        console.error('A interação já foi respondida');
-        return;
-    }
-
     try {
       const trelloGeralBoardId = env.TRELLO_BOARD_ID;
       const getAllMembersInfoResponse = await getAllMembersInfo(trelloGeralBoardId);
@@ -45,9 +40,11 @@ export async function handleRemoveFromTrelloInteraction(interaction: ExtendedInt
       });
 
       await interaction.editReply({
-        content: 'Selecione o membro a ser removido',
+        content: 'Selecione o membro a ser removido do Trello',
         components: [await makeStringSelectMenuComponent(nameMenu)]
       });
+      console.log("Opa, chegou aqui após Trello******************************");
+      // await interaction.showModal(removeFromDriveModal);
     }
     catch(error) {
       console.log(error);

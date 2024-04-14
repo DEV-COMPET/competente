@@ -8,6 +8,8 @@ import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
 import { customId, minMax } from "@/bot/selectMenus/discord/removeMemberFromDiscord.json";
+import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
+import { handlingRemove } from "../removeFromCompet/utils/handleRemove";
 
 export default new Command ({
 
@@ -64,6 +66,7 @@ export async function handleRemoveFromDiscordInteraction(interaction: ExtendedIn
     const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
     console.log(extractedMembers);
 
+
     if(extractedMembers.length > 0) {
         const nameMenu = makeStringSelectMenu({
             customId,
@@ -76,8 +79,10 @@ export async function handleRemoveFromDiscordInteraction(interaction: ExtendedIn
             minValues: minMax.min,
         });
 
+        handlingRemove.push(interaction);
+
         await interaction.editReply({
-        content: 'Selecione o membro a ser removido',
+        content: 'Selecione o membro a ser removido do Discord',
         components: [await makeStringSelectMenuComponent(nameMenu)]
         });
     }
