@@ -12,7 +12,7 @@ export function createSelectRoleMenu({ rolesData }: CreateTeamMenuRequest): Stri
     
     const options: SelectMenuComponentOptionData[] = rolesData.map( role => {
         return { 
-            label: `${role.name} (${role.id})`,
+            label: `${role.name}`,
             value: `${role.name}`
         }
     });
