@@ -14,6 +14,7 @@ import { socialMedia } from "@/bot/commands/compet/addToCompet/addToCompet";
 
 import { acessDrive } from "@/bot/utils/googleAPI/googleDrive";
 import { inserirInfoSheets } from "@/bot/utils/googleAPI/insertCompetianoInfo";
+import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 
 export interface MemberData {
     id: string,
@@ -71,7 +72,7 @@ export default new Modal ({
             });
 
         
-        return await editSucessReply({
+        await editSucessReply({
             interaction, title: "Competiano criado com sucesso. Seja bem vindo!!",
             fields: [
                 {
@@ -108,26 +109,31 @@ export default new Modal ({
             url_imagem: url_imagem
         })
 
-        // const guild = interaction.guild;
-        // if(!guild)
-        //     throw "Guild not cached";
+        const guild = interaction.guild;
 
-        // const members = await guild.members.fetch();
-        // if (!members)
-        //     throw "No members in this server";
+        if (!guild) {
+            return await  editLoadingReply({
+                interaction,
+                title: "Fazendo validação dos emails passados"
+            });
+        }    
+        
+        const members = await guild.members.fetch();
+        
+        const membersData: MemberData[] = members.map(member => {
+            const { id, globalName, username } = member.user;
 
-        // const membersData: MemberData[] = members.map(member => {
-        //     const { id, globalName, username } = member.user;
+            return { id, nickName: globalName ?? "", username };
 
-        //     return { id, nickName: globalName ?? "", username };
-        // });
+        });
 
-        // const selectMemberMenu = createSelectMemberMenu({ membersData });
+        const selectMemberMenu = createSelectMemberMenu({ membersData });
 
-        // await interaction.editReply({
-        //     content: "Selecione o perfil do competiano que acabou de adicionar",
-        //     components: [await makeStringSelectMenuComponent(selectMemberMenu)]
-        // })
+        await interaction.editReply({
+            content: "Selecione o perfil do competiano que acabou de adicionar",
+            components: [await makeStringSelectMenuComponent(selectMemberMenu)]
+        
+        });
     }
 })
 
