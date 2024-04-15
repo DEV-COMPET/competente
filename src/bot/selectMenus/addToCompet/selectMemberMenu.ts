@@ -2,6 +2,7 @@ import { SelectMenu } from "@/bot/structures/SelectMenu";
 import { customId } from "./selectMemberMenuData.json";
 import { makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { createSelectRoleMenu } from "./utils/createSelectRoleMenu";
+import { competianoChosen } from "./variable/competianoChosen";
 // import { memberSelect } from "./variables/memeberSelected";
 
 export interface RoleData {
@@ -12,9 +13,11 @@ export interface RoleData {
 export default new SelectMenu ({
     customId,
     run: async ({ interaction }) => {
+
         const member = interaction.values[0];
 
-        console.log(member);
+        competianoChosen.push(member);
+
 
         const guild = interaction.guild;
         if(!guild) 
@@ -28,12 +31,10 @@ export default new SelectMenu ({
             return { id, name };
         });
 
-        console.log(rolesData);
-
         const selectRoleMenu = createSelectRoleMenu( { rolesData });
 
         await interaction.reply({
-            content: `Informe a equipe de ${member}`,
+            content: 'Agora informe o cargo do novo competiano',
             components: [await makeStringSelectMenuComponent(selectRoleMenu)],
             ephemeral: true
         });
