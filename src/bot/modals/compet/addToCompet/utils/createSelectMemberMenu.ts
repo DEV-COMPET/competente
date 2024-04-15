@@ -13,7 +13,7 @@ export function createSelectMemberMenu( { membersData }: createSelectMemberMenuR
     const options: SelectMenuComponentOptionData[] = membersData.map( member => {
         return {
             label: `${member.username} (${member.nickName})`,
-            value: member.username
+            value: member.id
         }
     });
 
