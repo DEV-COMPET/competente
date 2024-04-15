@@ -80,7 +80,7 @@ type removeFromDriveResponse = Either<
     { emailData: string[]}
 >
 
-export async function removeFromDrive (emailsVerificado: string[]) : Promise<removeFromDriveResponse>{
+export async function removeFromDrive (emailVerificado: string) : Promise<removeFromDriveResponse>{
     const auth = new google.auth.GoogleAuth({ 
         keyFile: partial_to_full_path({
             dirname: __dirname,
@@ -102,34 +102,26 @@ export async function removeFromDrive (emailsVerificado: string[]) : Promise<rem
 
     const permissions = res?.data.permissions;
     if (permissions && permissions.length) {
-        for (const email of emailsVerificado) {
-            const userPermission = permissions.find((permissions: any) => permissions.emailAddress === email);
-            if (userPermission && userPermission.id) {
-                await drive.permissions.delete({
-                    fileId: folderId,
-                    permissionId: userPermission.id
-                })
-
-                emailsRemovidos.push(email);
-            } else {
-                emailNaoRemovidos.push(email);
-            }
-
+      const userPermission = permissions.find((permissions: any) => permissions.emailAddress === emailVerificado);
+        if (userPermission && userPermission.id) {
+          await drive.permissions.delete({
+            fileId: folderId,
+            permissionId: userPermission.id
+          });
+          emailsRemovidos.push(emailVerificado);
+        } else {
+          return left({ error: new InvalidEmailError(emailVerificado, "remover")});
         }
     }
-
-    if (emailNaoRemovidos.length > 0) 
-        return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos, "removidos")});
-
     return right({ emailData: emailsRemovidos });
 }
-
+          
 type acessDriveResponse = Either<
   { error: InvalidEmailError},
   { emailData: string[] }
 >
 
-export async function acessDrive(emailVerified: string[]): Promise<acessDriveResponse> {
+export async function acessDrive(email: string): Promise<acessDriveResponse> {
     const auth = new google.auth.GoogleAuth({ 
       keyFile: partial_to_full_path({
           dirname: __dirname,
@@ -141,32 +133,28 @@ export async function acessDrive(emailVerified: string[]): Promise<acessDriveRes
     const drive = google.drive({version: 'v3', auth});
     const folderId = '0B5QTELWgXQ5DfnY0Snl1Zl9STWF0OEVLTzZKeWlPazNKTnluZTdwLVRTUnJCcmhiOXlFZkk';
     const emailAdd: string[] = [];
-    const emailNotAdd: string[] = [];
 
-    const permissionsPromises = emailVerified.map(email => {
-      const permission = {
-        type: 'user',
-        role: 'writer',
-        emailAddress: email,
+    const permissions = [
+      {
+        type: "user",
+        role: "writer",
+        emailAddress: email
       }
-
-      return drive.permissions.create({
-        fileId: folderId,
-        sendNotificationEmail: true,
-        emailMessage: "Seja vem vindo ao Drive do Compet",
-        requestBody: permission,
-        fields: 'id'
-      }).then(result => {
+    ]
+    for (const permission of permissions) {
+      try {
+        await drive.permissions.create({
+          fileId: folderId,
+          sendNotificationEmail: true,
+          emailMessage: "Seja bem vindo ao drive do compet",
+          requestBody: permission,
+          fields: 'id'
+        });
         emailAdd.push(email);
-      }).catch(error => {
-        emailNotAdd.push(email);
-      })
-    })
-
-    await Promise.all(permissionsPromises);
-
-    if (emailNotAdd.length > 0)
-      return left({ error: new InvalidEmailError(emailNotAdd, emailAdd, "adicionados")});
-
-    return right({ emailData: emailAdd });
+      } catch (error) {
+        console.log(error)
+        return left({ error: new InvalidEmailError(email, "compartilhar")})
+      }
+    }
+    return right({ emailData: emailAdd })
 }

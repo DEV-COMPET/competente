@@ -6,8 +6,8 @@
     "inputFields": [
         {
             "label": "Informe os endereços de emails",
-            "placeholder": "email1;email2;email3",
-            "customId": "emailsAcess",
+            "placeholder": "compet@gmail.com",
+            "customId": "email",
             "required": true,
             "style": 1
         }

@@ -7,7 +7,7 @@ interface ExtractInputDataRequest {
 };
 
 export interface ExtractInputDataResponse {
-    emails: string
+    email: string
 }
 
 export function extractInputData({ inputFields, interaction}: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -15,10 +15,10 @@ export function extractInputData({ inputFields, interaction}: ExtractInputDataRe
     const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i)}));
 
     interface InputFieldsRequest {
-        emails: string
+        email: string
     };
     
-    const { emails }: InputFieldsRequest = Object.assign({}, ...input_data);
+    const { email }: InputFieldsRequest = Object.assign({}, ...input_data);
 
-    return { emails };
+    return { email };
 }

@@ -53,9 +53,9 @@ export default new Modal({
             title: "Verificação concluida, realizando remoção do drive"
         })
 
-        const emailsVerificado = validateInputDataResponse.value.inputData.emails;
+        const emailVerificado = validateInputDataResponse.value.inputData.email;
 
-        const removeFromDriveResponse = await removeFromDrive(emailsVerificado);
+        const removeFromDriveResponse = await removeFromDrive(emailVerificado);
         if (removeFromDriveResponse.isLeft()) {
             return await editErrorReply({
                 interaction,

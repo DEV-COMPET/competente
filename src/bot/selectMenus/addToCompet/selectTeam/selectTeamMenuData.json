@@ -1,0 +1,7 @@
+{
+    "customId": "select-team",
+    "minMax": {
+        "max": 1,
+        "min": 1
+    }
+}
