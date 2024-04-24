@@ -13,6 +13,7 @@ import { handlingRemove } from "./utils/handleRemove";
 import { handleRemoveFromDiscordInteraction } from "../kickMember/kickMember";
 import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
 
+
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
     partialPath: "removeFromCompetInput.json"
