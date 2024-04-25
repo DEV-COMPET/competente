@@ -2,16 +2,12 @@ import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal";
 import { extractInputData, ExtractInputDataResponse } from "./utils/extractInputData";
-import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
 import { TextInputComponentData, ModalComponentData, Client, GatewayIntentBits, ComponentType } from "discord.js";
-import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 
 import { removeFromDrive } from "@/bot/utils/googleAPI/googleDrive";
 import { validateInputData } from "./utils/validateInputData";
-import { handleRemoveFromDiscordInteraction } from "@/bot/commands/compet/kickMember/kickMember";
-import { handlingRemove } from "@/bot/commands/compet/removeFromCompet/utils/handleRemove";
 import { env } from "@/env";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
@@ -99,8 +95,6 @@ export async function handleRemoveFromDriveInteraction(interaction: ExtendedModa
             ]
         });
         
-        const prev_interaction = handlingRemove[handlingRemove.length-1];
-        console.log("The length is: ", handlingRemove.length);
         const filteredExtractedMembers = await getDiscordMembers();
     
         if(filteredExtractedMembers.length > 0) {
@@ -114,8 +108,6 @@ export async function handleRemoveFromDriveInteraction(interaction: ExtendedModa
                 maxValues: minMax.max,
                 minValues: minMax.min,
             });
-    
-            // handlingRemove.push(interaction);
     
             await interaction.editReply({
             content: 'Selecione o membro a ser removido do Discord',
@@ -140,9 +132,6 @@ async function getDiscordMembers() {
     const guildMembers = await guild.members.fetch();
     const extractedMembers = [];
 
-    //console.log(guildMembers);
-    console.log(typeof(guildMembers));
-
     for (const memberId of guildMembers) {
         const member = memberId[1].user;
         extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
@@ -150,7 +139,7 @@ async function getDiscordMembers() {
     const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
 
     filteredExtractedMembers.push(cancelOption);
-    
+
     return filteredExtractedMembers;
 }
 

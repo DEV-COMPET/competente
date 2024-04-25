@@ -21,8 +21,6 @@ export async function handleRemoveFromTrelloInteraction(interaction: ExtendedInt
       let menuOptions = getAllMembersInfoResponse;
       selectMenuList.splice(0, selectMenuList.length, ...menuOptions);
 
-      console.log(menuOptions);
-
       if(menuOptions.length > 25) { // split
         menuOptions = menuOptions.slice(0, 24);
         menuOptions.push(nextPage);
@@ -43,8 +41,6 @@ export async function handleRemoveFromTrelloInteraction(interaction: ExtendedInt
         content: 'Selecione o membro a ser removido do Trello',
         components: [await makeStringSelectMenuComponent(nameMenu)]
       });
-      console.log("Opa, chegou aqui após Trello******************************");
-      // await interaction.showModal(removeFromDriveModal);
     }
     catch(error) {
       console.log(error);

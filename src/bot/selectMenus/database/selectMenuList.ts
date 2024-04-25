@@ -12,8 +12,6 @@ function getElementsPerPage(currentPage: number): any[] {
     const itemsPerPage: number = 22;
 
     if (currentPage == 1) {
-        console.log(currentPage);
-        console.log(0, 23);
         const slicedArray = selectMenuList.slice(0, itemsPerPage - 1);
         return slicedArray;
     }

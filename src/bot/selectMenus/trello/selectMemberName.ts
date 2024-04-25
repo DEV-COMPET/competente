@@ -7,12 +7,6 @@ import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { getAllMembersInfo } from '@/bot/utils/trello/getAllMembersInfo';
 import { previousPage, nextPage, getElementsPerPage, currentPage, selectMenuList } from './selectMenuList';
-import { removeFromDriveModal } from '@/bot/modals/compet/removeFromDrive/removeFromDriveModal';
-import { listCompetiano } from '@/api/modules/competianos/usecases/listCompetiano/listCompetiano';
-import { CompetianoType } from '@/api/modules/competianos/entities/competiano.entity';
-import { extractData } from '@/bot/commands/compet/competEmNumeros/utils/extractData';
-import { fetchDataFromAPI } from '@/bot/utils/fetch/fetchData';
-import { customId as customIdDB, minMax as minMaxDB } from './../database/updateMemberStatus.json'
 
 export default new SelectMenu({
     customId,
@@ -24,7 +18,6 @@ export default new SelectMenu({
 
         if(memberToBeRemovedId == nextPage.id.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
             
             menuOptions.push(previousPage);

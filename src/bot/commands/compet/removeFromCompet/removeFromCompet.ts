@@ -6,12 +6,8 @@ import { fetchDataFromAPI } from "../../../utils/fetch/fetchData";
 import { editErrorReply } from "../../../utils/discord/editErrorReply";
 import { CompetianoType } from "../../../../api/modules/competianos/entities/competiano.entity";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
-import selectMemberName from './../../../selectMenus/compet/selectMemberName.json';
 import { nextPage } from "@/bot/selectMenus/compet/selectMenuList";
-import { removeFromDriveModal } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
 import { handlingRemove } from "./utils/handleRemove";
-import { handleRemoveFromDiscordInteraction } from "../kickMember/kickMember";
-import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
 import { customId as customIdDB, minMax as minMaxDB } from '@/bot/selectMenus/database/updateMemberStatus.json';
 import { cancelOption, currentPage, getElementsPerPage, selectMenuList } from "@/bot/selectMenus/database/selectMenuList";
 
@@ -46,10 +42,12 @@ export default new Command({
         const competianosAtivosNaoTutoresNome = competianosAtivosNaoTutores.map(competiano => ({ 
             nome: competiano.nome, email: competiano.email
          }));
-        console.log(competianosAtivosNaoTutoresNome);
 
         selectMenuList.push(...competianosAtivosNaoTutoresNome);
-        let menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+        const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+
+        if(competianosAtivosNaoTutoresNome.length > 24)
+            menuOptions.push(nextPage);
 
         const competianosDBMenu = makeStringSelectMenu({
             customId: customIdDB,
@@ -68,19 +66,6 @@ export default new Command({
             content: 'Selecione o membro a ser removido',
             components: [await makeStringSelectMenuComponent(competianosDBMenu)]
         });
-
-        // await interaction.showModal(removeFromDriveModal);
-
-        //const [discordInteractionResult, driveInteractionResult] = await Promise.all([
-        //    handleRemoveFromDiscordInteraction(interaction),
-        //    handleRemoveFromTrelloInteraction(interaction)
-        //]) ;
-            
-        // await handleRemoveFromDiscordInteraction(interaction);
-
-        // await handleRemoveFromDiscordInteraction(interaction);
-        //await interaction.showModal(removeFromDriveModal)
-        //await handleRemoveFromDriveInteraction(interaction);
     }
 })
 

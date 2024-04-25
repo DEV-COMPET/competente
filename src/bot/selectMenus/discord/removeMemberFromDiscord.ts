@@ -1,9 +1,7 @@
 import { env } from "@/env";
 import { SelectMenu } from "@/bot/structures/SelectMenu";
 import { customId, minMax } from './removeMemberFromDiscord.json';
-import { ComponentType, EmbedBuilder } from "discord.js";
-import { editSucessReply } from '@/bot/utils/discord/editSucessReply';
-import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
+import { ComponentType } from "discord.js";
 
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { previousPage as previousPageDiscord, nextPage as nextPageDiscord, 
@@ -13,11 +11,7 @@ import { previousPage as previousPageDiscord, nextPage as nextPageDiscord,
 import { nextPage as nextPageTrello, selectMenuList as selectMenuListTrello } from "../trello/selectMenuList";
 
 import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
-import { handleRemoveFromTrelloInteraction } from "@/bot/commands/compet/trello/removeFromTrello";
-import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
-import { handlingRemove } from "@/bot/commands/compet/removeFromCompet/utils/handleRemove";
-import { removeFromDriveModal } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
 import selectMemberName from "../trello/selectMemberName.json";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
 import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
@@ -30,12 +24,10 @@ export default new SelectMenu({
         await interaction.deferReply({ ephemeral: true });
 
         const memberToBeRemovedId = interaction.values[0];
-        console.log("Member to be removed: ", memberToBeRemovedId);
 
         // próxima página
         if(memberToBeRemovedId == nextPageDiscord.globalName.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] + 1);
-            console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
             const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
             
             menuOptions.push(previousPageDiscord);
@@ -111,12 +103,9 @@ export default new SelectMenu({
             return;
         }
 
-        console.log("removeMemberFromDiscord");
         await kickUser(memberToBeRemovedId, interaction);
         await removeFromTrello(interaction);
     }
-
-    
 })
 
 export async function removeFromTrello(interaction: ExtendedStringSelectMenuInteraction | ExtendedModalInteraction) {
@@ -127,8 +116,6 @@ export async function removeFromTrello(interaction: ExtendedStringSelectMenuInte
   
         let menuOptions = getAllMembersInfoResponse;
         selectMenuListTrello.splice(0, selectMenuListTrello.length, ...menuOptions);
-  
-        console.log(menuOptions);
   
         if(menuOptions.length > 25) { // split
           menuOptions = menuOptions.slice(0, 24);
@@ -150,8 +137,6 @@ export async function removeFromTrello(interaction: ExtendedStringSelectMenuInte
           content: 'Selecione o membro a ser removido do Trello',
           components: [await makeStringSelectMenuComponent(nameMenu)]
         });
-        console.log("Opa, chegou aqui após Trello******************************");
-        // await interaction.showModal(removeFromDriveModal);
       }
       catch(error) {
         console.log(error);

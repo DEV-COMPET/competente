@@ -5,7 +5,6 @@ import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils
 import { ComponentType } from "discord.js";
 import { fetchDataFromAPI } from "@/bot/utils/fetch/fetchData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
-import { CompetianoType } from "@/api/modules/competianos/entities/competiano.entity";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { handleRemoveFromDriveInteraction } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
 
@@ -15,7 +14,6 @@ export default new SelectMenu({
     run: async({ interaction }) => {
         const memberToBeRemovedNomeEmail = interaction.values[0];
         await interaction.deferReply({ ephemeral: true });
-        console.log("Member to be removed: ", memberToBeRemovedNomeEmail);
 
         // próxima página
         if(memberToBeRemovedNomeEmail == nextPage.nome.toString()) {
@@ -90,7 +88,6 @@ export default new SelectMenu({
             return;
         }
         else if(memberToBeRemovedNomeEmail === cancelOption.nome) {
-            console.log("cancelado###################################");
             return await editSucessReply({
                 interaction, title: 'Operação cancelada'
             });
@@ -98,13 +95,8 @@ export default new SelectMenu({
         const nome_email = memberToBeRemovedNomeEmail.split('$$$');
         const memberToBeRemovedNome = nome_email[0];
         const memberToBeRemovedEmail = nome_email[1];
-        console.log("nome_email", nome_email);
-        console.log(memberToBeRemovedNome);
-        console.log(memberToBeRemovedEmail);
         const url = "/competianos/" + memberToBeRemovedNome;
 
-        console.log("URL de atualização********************");
-        console.log(url);
         const quitMemberResponse = await fetchDataFromAPI({
             json: true, method: "PUT", url: url,
             bodyData: { membro_ativo: false, data_fim: new Date() }
