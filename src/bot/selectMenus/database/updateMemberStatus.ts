@@ -13,6 +13,7 @@ export default new SelectMenu({
 
     run: async({ interaction }) => {
         const memberToBeRemovedNome = interaction.values[0];
+        await interaction.deferReply({ ephemeral: true });
         console.log("Member to be removed: ", memberToBeRemovedNome);
 
         if(memberToBeRemovedNome == nextPage.nome.toString()) {
