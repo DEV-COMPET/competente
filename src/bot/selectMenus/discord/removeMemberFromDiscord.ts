@@ -18,6 +18,9 @@ import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
 import { handlingRemove } from "@/bot/commands/compet/removeFromCompet/utils/handleRemove";
 import { removeFromDriveModal } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
 import selectMemberName from "../trello/selectMemberName.json";
+import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
+import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
+import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 
 export default new SelectMenu({
     customId,
@@ -25,7 +28,7 @@ export default new SelectMenu({
     run: async ({ interaction }) => {
         await interaction.deferReply({ ephemeral: true });
 
-        let memberToBeRemovedId = interaction.values[0]; // TODO: colocar const
+        const memberToBeRemovedId = interaction.values[0]; // TODO: colocar const
         console.log("Member to be removed: ", memberToBeRemovedId);
 
         if(memberToBeRemovedId == nextPageDiscord.globalName.toString()) {
@@ -98,20 +101,16 @@ export default new SelectMenu({
             });
             return;
         }
-        console.log("AQUI");
+        console.log("removeMemberFromDiscord");
+
         await kickUser(memberToBeRemovedId, interaction);
         await removeFromTrello(interaction);
-        
-
-        // Remove from Trello
-        //const prev_interaction = handlingRemove[handlingRemove.length-1];
-        //await handleRemoveFromTrelloInteraction(prev_interaction);
     }
 
     
 })
 
-async function removeFromTrello(interaction: ExtendedStringSelectMenuInteraction) {
+export async function removeFromTrello(interaction: ExtendedStringSelectMenuInteraction | ExtendedModalInteraction) {
     try {
         const trelloGeralBoardId = env.TRELLO_BOARD_ID;
         const getAllMembersInfoResponse = await getAllMembersInfo(trelloGeralBoardId);
@@ -171,19 +170,29 @@ export async function kickUser(userId: string, interaction: ExtendedStringSelect
 
     try {
         await targetUser.kick();
-        const embed = new EmbedBuilder().setTitle(`Remoção de ${targetUser.displayName}`);
-        embed.addFields(
-            {name: "Usuário: ", value: `${targetUser}`},
-            {name: "Motivo: ", value: `Nenhuma Justificativa`}
-        );
-        await interaction.editReply({embeds: [embed]});
+        await interaction.editReply({
+            embeds: [
+                makeSuccessEmbed({
+                    title: `Remoção de ${targetUser.displayName} do Discord`,
+                    fields: [
+                        {name: "Usuário: ", value: `${targetUser}`},
+                        {name: "Motivo: ", value: `Nenhuma Justificativa`},
+                    ],
+                    interaction,
+                })
+            ]
+        });
 
     } catch (error) {
-        const embed = new EmbedBuilder().setTitle(`Remoção de ${targetUser.displayName}`);
-        embed.addFields(
-            {name: "Erro: ", value: `Erro ao kickar ${targetUser}`},
-        );
-        await interaction.editReply({ embeds: [embed] });
+        await interaction.editReply({
+            embeds: [
+                makeErrorEmbed({
+                    title: `Remoção de ${targetUser.displayName}`,
+                    error: { code: 404, message: `Erro ao kickar ${targetUser}` },
+                    interaction
+                })
+            ]
+        });
         console.log(`Erro ao tentar kickar usuario ${error}`);
     }
 }

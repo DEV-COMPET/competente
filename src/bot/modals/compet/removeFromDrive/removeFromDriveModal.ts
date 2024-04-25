@@ -16,6 +16,7 @@ import { env } from "@/env";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
 import { customId, minMax } from '../../../selectMenus/discord/removeMemberFromDiscord.json';
+import { removeFromTrello } from "@/bot/selectMenus/discord/removeMemberFromDiscord";
 
 const { inputFields, modalBuilderRequest}: {
     inputFields: TextInputComponentData[];
@@ -50,57 +51,62 @@ export default new Modal({
             })
         }
 
-        // await editLoadingReply({
-        //     interaction,
-        //     title: "Verificação concluida, realizando remoção do drive"
-        // })
+        await editLoadingReply({
+            interaction,
+            title: "Verificação concluida, realizando remoção do drive"
+        });
 
         const emailsVerificado = validateInputDataResponse.value.inputData.emails;
 
         const removeFromDriveResponse = await removeFromDrive(emailsVerificado);
         if (removeFromDriveResponse.isLeft()) {
-            return await editErrorReply({
+            await editErrorReply({
                 interaction,
                 title: "Alguns emails não foram removidos",
                 error: removeFromDriveResponse.value.error
-            })
-        }
+            });
 
-        // await interaction.editReply({
-        //     embeds: [
-        //         makeSuccessEmbed({
-        //             title: `Os seguintes emails foram removidos com sucesso:\n ${(removeFromDriveResponse.value.emailData.join(', '))}`,
-        //             interaction
-        //         })
-        //     ]
-        // });
-        const prev_interaction = handlingRemove[handlingRemove.length-1];
+            const filteredExtractedMembers = await getDiscordMembers();
 
-        console.log("The length is: ", handlingRemove.length);
-        const client = new Client({
-            intents: [
-                GatewayIntentBits.GuildMembers,  // MAKE SURE TO ADD THIS
-            ],
-        });
-    
-        await client.login(env.DISCORD_TOKEN);
+            if(filteredExtractedMembers.length > 0) {
+                const nameMenu = makeStringSelectMenu({
+                    customId,
+                    type: ComponentType.StringSelect,
+                    options: filteredExtractedMembers.map(member => ({
+                    label: member.globalName!,
+                    value: member.id.toString(),
+                    })),
+                    maxValues: minMax.max,
+                    minValues: minMax.min,
+                });
         
-        const guild = await client.guilds.fetch('1173025347466436712');
-        const guildMembers = await guild.members.fetch();
-        const extractedMembers = [];
-    
-        //console.log(guildMembers);
-        console.log(typeof(guildMembers));
-    
-        for (const memberId of guildMembers) {
-            const member = memberId[1].user;
-            extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
+                // handlingRemove.push(interaction);
+        
+                await interaction.editReply({
+                content: 'Selecione o membro a ser removido do Discord',
+                components: [await makeStringSelectMenuComponent(nameMenu)]
+                });
+            }
+            // sem membro no Discord
+            else {
+                await removeFromTrello(interaction);
+            }
         }
-        const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
-        console.log(extractedMembers);
+
+        await interaction.editReply({
+            embeds: [
+                makeSuccessEmbed({
+                    title: `Os seguintes emails foram removidos do Drive com sucesso:\n ${emailsVerificado}`,
+                    interaction
+                })
+            ]
+        });
+        
+        const prev_interaction = handlingRemove[handlingRemove.length-1];
+        console.log("The length is: ", handlingRemove.length);
+        const filteredExtractedMembers = await getDiscordMembers();
     
-    
-        if(extractedMembers.length > 0) {
+        if(filteredExtractedMembers.length > 0) {
             const nameMenu = makeStringSelectMenu({
                 customId,
                 type: ComponentType.StringSelect,
@@ -121,5 +127,29 @@ export default new Modal({
         }
     }
 });
+
+async function getDiscordMembers() {
+    const client = new Client({
+        intents: [
+            GatewayIntentBits.GuildMembers,  // MAKE SURE TO ADD THIS
+        ],
+    });
+
+    await client.login(env.DISCORD_TOKEN);
+    
+    const guild = await client.guilds.fetch('1173025347466436712');
+    const guildMembers = await guild.members.fetch();
+    const extractedMembers = [];
+
+    //console.log(guildMembers);
+    console.log(typeof(guildMembers));
+
+    for (const memberId of guildMembers) {
+        const member = memberId[1].user;
+        extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
+    }
+    const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
+    return filteredExtractedMembers;
+}
 
 export { removeFromDriveModal }
