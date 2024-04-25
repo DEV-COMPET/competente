@@ -1,6 +1,6 @@
 import { SelectMenu } from "@/bot/structures/SelectMenu";
 import { customId, minMax } from './updateMemberStatus.json';
-import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList } from "./selectMenuList";
+import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList, cancelOption } from "./selectMenuList";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { ComponentType } from "discord.js";
 import { fetchDataFromAPI } from "@/bot/utils/fetch/fetchData";
@@ -17,6 +17,7 @@ export default new SelectMenu({
         await interaction.deferReply({ ephemeral: true });
         console.log("Member to be removed: ", memberToBeRemovedNomeEmail);
 
+        // próxima página
         if(memberToBeRemovedNomeEmail == nextPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);
             console.log("current page", currentPage[currentPage.length - 1]);
@@ -52,6 +53,7 @@ export default new SelectMenu({
             });
             return;
         }
+        // página anterior
         else if(memberToBeRemovedNomeEmail == previousPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
             console.log("current page", currentPage[currentPage.length - 1]);
@@ -86,6 +88,12 @@ export default new SelectMenu({
             components: [await makeStringSelectMenuComponent(nameMenu)]
             });
             return;
+        }
+        else if(memberToBeRemovedNomeEmail === cancelOption.nome) {
+            console.log("cancelado###################################");
+            return await editSucessReply({
+                interaction, title: 'Operação cancelada'
+            });
         }
         const nome_email = memberToBeRemovedNomeEmail.split('$$$');
         const memberToBeRemovedNome = nome_email[0];

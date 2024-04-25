@@ -6,14 +6,16 @@ const selectMenuList: CompetianoUpdateMemberStatus[] = [];
 const currentPage: number[] = [1];
 const previousPage: CompetianoUpdateMemberStatus = { nome: "Anterior" };
 const nextPage: CompetianoUpdateMemberStatus = { nome: "Próximo" };
+const cancelOption: CompetianoUpdateMemberStatus = { nome: "Cancelar" };
 
 function getElementsPerPage(currentPage: number): any[] {
-    const itemsPerPage: number = 23;
+    const itemsPerPage: number = 22;
 
-    if(currentPage == 1) {
+    if (currentPage == 1) {
         console.log(currentPage);
-        console.log(0, 24);
-        return selectMenuList.slice(0, 24);
+        console.log(0, 23);
+        const slicedArray = selectMenuList.slice(0, itemsPerPage - 1);
+        return slicedArray;
     }
 
     const startIndex: number = 24 + ((currentPage - 2) * (itemsPerPage - 1));
@@ -22,7 +24,10 @@ function getElementsPerPage(currentPage: number): any[] {
     console.log(currentPage);
     console.log(startIndex, endIndex);
 
-    return selectMenuList.slice(startIndex, endIndex);
+    const slicedArray = selectMenuList.slice(startIndex, endIndex);
+    slicedArray.push(cancelOption);
+
+    return slicedArray;
 }
 
-export { selectMenuList, currentPage, previousPage, nextPage, getElementsPerPage };
+export { cancelOption, selectMenuList, currentPage, previousPage, nextPage, getElementsPerPage };

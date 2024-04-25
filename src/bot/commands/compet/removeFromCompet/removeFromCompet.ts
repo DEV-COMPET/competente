@@ -13,6 +13,7 @@ import { handlingRemove } from "./utils/handleRemove";
 import { handleRemoveFromDiscordInteraction } from "../kickMember/kickMember";
 import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
 import { customId as customIdDB, minMax as minMaxDB } from '@/bot/selectMenus/database/updateMemberStatus.json';
+import { cancelOption, currentPage, getElementsPerPage, selectMenuList } from "@/bot/selectMenus/database/selectMenuList";
 
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
@@ -47,20 +48,25 @@ export default new Command({
          }));
         console.log(competianosAtivosNaoTutoresNome);
 
+        selectMenuList.push(...competianosAtivosNaoTutoresNome);
+        let menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+
         const competianosDBMenu = makeStringSelectMenu({
             customId: customIdDB,
             type: ComponentType.StringSelect,
-            options: competianosAtivosNaoTutoresNome.map(competiano => ({
+            options: menuOptions.map(competiano => ({
               label: competiano.nome,
               value: competiano.nome + "$$$" + competiano.email,
             })),
             maxValues: minMaxDB.max,
             minValues: minMaxDB.min,
         });
-    
+
+        competianosDBMenu.addOptions({ label: cancelOption.nome, value: cancelOption.nome });
+            
         await interaction.editReply({
-        content: 'Selecione o membro a ser removido',
-        components: [await makeStringSelectMenuComponent(competianosDBMenu)]
+            content: 'Selecione o membro a ser removido',
+            components: [await makeStringSelectMenuComponent(competianosDBMenu)]
         });
 
         // await interaction.showModal(removeFromDriveModal);
