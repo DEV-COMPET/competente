@@ -8,7 +8,8 @@ import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { previousPage as previousPageDiscord, nextPage as nextPageDiscord, 
     getElementsPerPage, currentPage as currentPageDiscord, 
-    selectMenuList as selectMenuListDiscord } from './selectMenuList'
+    selectMenuList as selectMenuListDiscord, 
+    cancelOption} from './selectMenuList'
 import { nextPage as nextPageTrello, selectMenuList as selectMenuListTrello } from "../trello/selectMenuList";
 
 import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
@@ -28,15 +29,17 @@ export default new SelectMenu({
     run: async ({ interaction }) => {
         await interaction.deferReply({ ephemeral: true });
 
-        const memberToBeRemovedId = interaction.values[0]; // TODO: colocar const
+        const memberToBeRemovedId = interaction.values[0];
         console.log("Member to be removed: ", memberToBeRemovedId);
 
+        // próxima página
         if(memberToBeRemovedId == nextPageDiscord.globalName.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] + 1);
             console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
             const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
             
             menuOptions.push(previousPageDiscord);
+            menuOptions.push(cancelOption);
 
             let size: number;
             const currentPageNumber = currentPageDiscord[currentPageDiscord.length - 1];
@@ -66,10 +69,12 @@ export default new SelectMenu({
             });
             return;
         }
+        // página anterior
         else if(memberToBeRemovedId == previousPageDiscord.id.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] - 1);
             console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
             const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
+            menuOptions.push(cancelOption);
 
             let size: number;
             const currentPageNumber = currentPageDiscord[currentPageDiscord.length - 1];
@@ -99,6 +104,10 @@ export default new SelectMenu({
             content: 'Selecione o membro a ser removido',
             components: [await makeStringSelectMenuComponent(nameMenu)]
             });
+            return;
+        }
+        else if(memberToBeRemovedId === cancelOption.id) {
+            await removeFromTrello(interaction);
             return;
         }
 

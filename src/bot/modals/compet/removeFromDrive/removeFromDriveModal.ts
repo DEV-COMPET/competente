@@ -19,6 +19,7 @@ import { customId, minMax } from '../../../selectMenus/discord/removeMemberFromD
 import { removeFromTrello } from "@/bot/selectMenus/discord/removeMemberFromDiscord";
 import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
+import { cancelOption } from "@/bot/selectMenus/discord/selectMenuList";
 
 const { inputFields, modalBuilderRequest}: {
     inputFields: TextInputComponentData[];
@@ -147,6 +148,9 @@ async function getDiscordMembers() {
         extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
     }
     const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
+
+    filteredExtractedMembers.push(cancelOption);
+    
     return filteredExtractedMembers;
 }
 

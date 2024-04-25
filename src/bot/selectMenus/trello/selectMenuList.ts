@@ -7,6 +7,7 @@ const selectMenuList: Competiano[] = [];
 const currentPage: number[] = [1];
 const previousPage: Competiano = { fullName: 'Anterior', id: "0" };
 const nextPage: Competiano = { fullName: 'Próximo', id: "1" };
+const cancelOption: Competiano = { fullName: 'Cancelar', id: "-1" };
 
 function getElementsPerPage(currentPage: number): any[] {
     const itemsPerPage: number = 23;
@@ -26,4 +27,4 @@ function getElementsPerPage(currentPage: number): any[] {
     return selectMenuList.slice(startIndex, endIndex);
 }
 
-export { selectMenuList, currentPage, previousPage, nextPage, getElementsPerPage };
+export { cancelOption, selectMenuList, currentPage, previousPage, nextPage, getElementsPerPage };
