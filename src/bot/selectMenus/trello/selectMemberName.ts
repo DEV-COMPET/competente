@@ -151,37 +151,5 @@ export default new SelectMenu({
                 title: 'Não foi possível excluir o membro do Trello'
             });
         });
-
-        console.log("#####################################")
-        // await interaction.showModal(removeFromDriveModal);
-        const competentesResponse = await fetchDataFromAPI({
-            json: true, url: "/competianos/", method: "GET"
-        })
-        if (competentesResponse.isLeft())
-            return await editErrorReply({
-                interaction, error: competentesResponse.value.error, title: "Erro ao buscar competianos"
-            })
-
-        const competianos: CompetianoType[] = competentesResponse.value.responseData
-        const competianosAtivos = competianos.filter(competiano => competiano.membro_ativo === true)
-        const competianosAtivosNaoTutores = competianosAtivos.filter(competiano => competiano.tutor === false);
-        const competianosAtivosNaoTutoresNome = competianosAtivosNaoTutores.map(competiano => ({ nome: competiano.nome }));
-        console.log(competianosAtivosNaoTutoresNome);
-
-        const competianosDBMenu = makeStringSelectMenu({
-            customId: customIdDB,
-            type: ComponentType.StringSelect,
-            options: competianosAtivosNaoTutoresNome.map(competiano => ({
-              label: competiano.nome,
-              value: competiano.nome,
-            })),
-            maxValues: minMaxDB.max,
-            minValues: minMaxDB.min,
-        });
-    
-        await interaction.editReply({
-        content: 'Selecione o membro a ser removido',
-        components: [await makeStringSelectMenuComponent(competianosDBMenu)]
-        });
     }
 })

@@ -7,16 +7,17 @@ import { fetchDataFromAPI } from "@/bot/utils/fetch/fetchData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { CompetianoType } from "@/api/modules/competianos/entities/competiano.entity";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
+import { handleRemoveFromDriveInteraction } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
 
 export default new SelectMenu({
     customId,
 
     run: async({ interaction }) => {
-        const memberToBeRemovedNome = interaction.values[0];
+        const memberToBeRemovedNomeEmail = interaction.values[0];
         await interaction.deferReply({ ephemeral: true });
-        console.log("Member to be removed: ", memberToBeRemovedNome);
+        console.log("Member to be removed: ", memberToBeRemovedNomeEmail);
 
-        if(memberToBeRemovedNome == nextPage.nome.toString()) {
+        if(memberToBeRemovedNomeEmail == nextPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);
             console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
@@ -51,7 +52,7 @@ export default new SelectMenu({
             });
             return;
         }
-        else if(memberToBeRemovedNome == previousPage.nome.toString()) {
+        else if(memberToBeRemovedNomeEmail == previousPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
             console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
@@ -86,7 +87,12 @@ export default new SelectMenu({
             });
             return;
         }
-
+        const nome_email = memberToBeRemovedNomeEmail.split('$$$');
+        const memberToBeRemovedNome = nome_email[0];
+        const memberToBeRemovedEmail = nome_email[1];
+        console.log("nome_email", nome_email);
+        console.log(memberToBeRemovedNome);
+        console.log(memberToBeRemovedEmail);
         const url = "/competianos/" + memberToBeRemovedNome;
 
         console.log("URL de atualização********************");
@@ -96,14 +102,22 @@ export default new SelectMenu({
             bodyData: { membro_ativo: false, data_fim: new Date() }
         });
 
-        if (quitMemberResponse.isLeft())
-            return await editErrorReply({
+        if (quitMemberResponse.isLeft()) {
+            await editErrorReply({
                 error: quitMemberResponse.value.error, interaction,
-                title: "Não foi possivel remover o competiano"
-            })
+                title: "Não foi possivel atualizar o status do competiano no banco de dados"
+            });
 
-        return await editSucessReply({
-            interaction, title: `Competiano '${memberToBeRemovedNome}' removido com sucesso`
-        })
+            // remover do drive
+            await handleRemoveFromDriveInteraction(interaction, { emails: memberToBeRemovedEmail });
+        }
+        else {
+            await editSucessReply({
+                interaction, title: `Status do membro '${memberToBeRemovedNome}' atualizado com sucesso`
+            });
+
+            // remover do drive
+            await handleRemoveFromDriveInteraction(interaction, { emails: memberToBeRemovedEmail });
+        }
     }
 })

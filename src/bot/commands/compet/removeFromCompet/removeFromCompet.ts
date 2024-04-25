@@ -12,6 +12,7 @@ import { removeFromDriveModal } from "@/bot/modals/compet/removeFromDrive/remove
 import { handlingRemove } from "./utils/handleRemove";
 import { handleRemoveFromDiscordInteraction } from "../kickMember/kickMember";
 import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
+import { customId as customIdDB, minMax as minMaxDB } from '@/bot/selectMenus/database/updateMemberStatus.json';
 
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
@@ -22,14 +23,47 @@ const { name, description }: ChatInputApplicationCommandData = readJsonFile({
 export default new Command({
     name, description,
     run: async({ interaction }) => {
-        // await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ ephemeral: true });
 
         const isNotAdmin = await checkIfNotAdmin(interaction);
         if((isNotAdmin).isRight())
             return isNotAdmin.value.response;
 
         handlingRemove.push(interaction);
-        await interaction.showModal(removeFromDriveModal);
+
+        const competentesResponse = await fetchDataFromAPI({
+            json: true, url: "/competianos/", method: "GET"
+        })
+        if (competentesResponse.isLeft())
+            return await editErrorReply({
+                interaction, error: competentesResponse.value.error, title: "Erro ao buscar competianos"
+            })
+
+        const competianos: CompetianoType[] = competentesResponse.value.responseData
+        const competianosAtivos = competianos.filter(competiano => competiano.membro_ativo === true)
+        const competianosAtivosNaoTutores = competianosAtivos.filter(competiano => competiano.tutor === false);
+        const competianosAtivosNaoTutoresNome = competianosAtivosNaoTutores.map(competiano => ({ 
+            nome: competiano.nome, email: competiano.email
+         }));
+        console.log(competianosAtivosNaoTutoresNome);
+
+        const competianosDBMenu = makeStringSelectMenu({
+            customId: customIdDB,
+            type: ComponentType.StringSelect,
+            options: competianosAtivosNaoTutoresNome.map(competiano => ({
+              label: competiano.nome,
+              value: competiano.nome + "$$$" + competiano.email,
+            })),
+            maxValues: minMaxDB.max,
+            minValues: minMaxDB.min,
+        });
+    
+        await interaction.editReply({
+        content: 'Selecione o membro a ser removido',
+        components: [await makeStringSelectMenuComponent(competianosDBMenu)]
+        });
+
+        // await interaction.showModal(removeFromDriveModal);
 
         //const [discordInteractionResult, driveInteractionResult] = await Promise.all([
         //    handleRemoveFromDiscordInteraction(interaction),

@@ -1,7 +1,7 @@
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal";
-import { extractInputData } from "./utils/extractInputData";
+import { extractInputData, ExtractInputDataResponse } from "./utils/extractInputData";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
@@ -17,6 +17,8 @@ import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils
 
 import { customId, minMax } from '../../../selectMenus/discord/removeMemberFromDiscord.json';
 import { removeFromTrello } from "@/bot/selectMenus/discord/removeMemberFromDiscord";
+import { ExtendedModalInteraction } from "@/bot/typings/Modals";
+import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
 
 const { inputFields, modalBuilderRequest}: {
     inputFields: TextInputComponentData[];
@@ -36,63 +38,57 @@ export default new Modal({
 
         const input_data = extractInputData({ interaction , inputFields });
 
-        // await editLoadingReply({
-        //     interaction,
-        //     title: "Fazendo validação dos emails passados"
-        // });
+        await handleRemoveFromDriveInteraction(interaction, input_data);
+    }
+});
 
-        const validateInputDataResponse = await validateInputData(input_data);
+export async function handleRemoveFromDriveInteraction(interaction: ExtendedModalInteraction | ExtendedStringSelectMenuInteraction, { emails }: ExtractInputDataResponse) {
+    const validateInputDataResponse = await validateInputData({ emails });
 
-        if (validateInputDataResponse.isLeft()) {
-            return await editErrorReply({
-                interaction,
-                title: "Não é possível remover dados, emails passados invalido",
-                error: validateInputDataResponse.value.error
-            })
-        }
-
-        await editLoadingReply({
+    if (validateInputDataResponse.isLeft()) {
+        return await editErrorReply({
             interaction,
-            title: "Verificação concluida, realizando remoção do drive"
+            title: "Não é possível remover dados, emails passados invalido",
+            error: validateInputDataResponse.value.error
+        })
+    }
+
+    const emailsVerificado = validateInputDataResponse.value.inputData.emails;
+
+    const removeFromDriveResponse = await removeFromDrive(emailsVerificado);
+    if (removeFromDriveResponse.isLeft()) {
+        await editErrorReply({
+            interaction,
+            title: "Alguns emails não foram removidos",
+            error: removeFromDriveResponse.value.error
         });
 
-        const emailsVerificado = validateInputDataResponse.value.inputData.emails;
+        const filteredExtractedMembers = await getDiscordMembers();
 
-        const removeFromDriveResponse = await removeFromDrive(emailsVerificado);
-        if (removeFromDriveResponse.isLeft()) {
-            await editErrorReply({
-                interaction,
-                title: "Alguns emails não foram removidos",
-                error: removeFromDriveResponse.value.error
+        if(filteredExtractedMembers.length > 0) {
+            const nameMenu = makeStringSelectMenu({
+                customId,
+                type: ComponentType.StringSelect,
+                options: filteredExtractedMembers.map(member => ({
+                label: member.globalName!,
+                value: member.id.toString(),
+                })),
+                maxValues: minMax.max,
+                minValues: minMax.min,
             });
-
-            const filteredExtractedMembers = await getDiscordMembers();
-
-            if(filteredExtractedMembers.length > 0) {
-                const nameMenu = makeStringSelectMenu({
-                    customId,
-                    type: ComponentType.StringSelect,
-                    options: filteredExtractedMembers.map(member => ({
-                    label: member.globalName!,
-                    value: member.id.toString(),
-                    })),
-                    maxValues: minMax.max,
-                    minValues: minMax.min,
-                });
-        
-                // handlingRemove.push(interaction);
-        
-                await interaction.editReply({
-                content: 'Selecione o membro a ser removido do Discord',
-                components: [await makeStringSelectMenuComponent(nameMenu)]
-                });
-            }
-            // sem membro no Discord
-            else {
-                await removeFromTrello(interaction);
-            }
+    
+            // handlingRemove.push(interaction);
+    
+            await interaction.editReply({
+            content: 'Selecione o membro a ser removido do Discord',
+            components: [await makeStringSelectMenuComponent(nameMenu)]
+            });
         }
-
+        // sem membro no Discord, logo, vamos remover do Trello
+        else
+            await removeFromTrello(interaction);
+    }
+    else {
         await interaction.editReply({
             embeds: [
                 makeSuccessEmbed({
@@ -125,8 +121,10 @@ export default new Modal({
             components: [await makeStringSelectMenuComponent(nameMenu)]
             });
         }
+        else // sem membro no Discord, logo vamos remover do Trello diretamente
+            await removeFromTrello(interaction);
     }
-});
+}
 
 async function getDiscordMembers() {
     const client = new Client({

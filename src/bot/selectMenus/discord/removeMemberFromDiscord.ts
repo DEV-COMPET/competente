@@ -101,8 +101,8 @@ export default new SelectMenu({
             });
             return;
         }
-        console.log("removeMemberFromDiscord");
 
+        console.log("removeMemberFromDiscord");
         await kickUser(memberToBeRemovedId, interaction);
         await removeFromTrello(interaction);
     }
