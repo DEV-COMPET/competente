@@ -143,4 +143,4 @@ async function getDiscordMembers() {
     return filteredExtractedMembers;
 }
 
-export { removeFromDriveModal }
+export { removeFromDriveModal, getDiscordMembers }

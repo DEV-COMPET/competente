@@ -6,7 +6,7 @@ const selectMenuList: CompetianoUpdateMemberStatus[] = [];
 const currentPage: number[] = [1];
 const previousPage: CompetianoUpdateMemberStatus = { nome: "Anterior" };
 const nextPage: CompetianoUpdateMemberStatus = { nome: "Próximo" };
-const cancelOption: CompetianoUpdateMemberStatus = { nome: "Cancelar" };
+const cancelOption: CompetianoUpdateMemberStatus = { nome: "Nenhum" };
 
 function getElementsPerPage(currentPage: number): any[] {
     const itemsPerPage: number = 22;

@@ -99,8 +99,7 @@ export default new SelectMenu({
             return;
         }
         else if(memberToBeRemovedId === cancelOption.id) {
-            await removeFromTrello(interaction);
-            return;
+            return await removeFromTrello(interaction);
         }
 
         await kickUser(memberToBeRemovedId, interaction);

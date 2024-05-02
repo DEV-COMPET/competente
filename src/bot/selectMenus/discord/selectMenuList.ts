@@ -8,7 +8,7 @@ const selectMenuList: CompetianoDiscord[] = [];
 const currentPage: number[] = [1];
 const previousPage: CompetianoDiscord = { globalName: 'Anterior', id: "0", username: "Anterior" };
 const nextPage: CompetianoDiscord = { globalName: 'Próximo', id: "1", username: "Próximo" };
-const cancelOption: CompetianoDiscord = { globalName: 'Cancelar', id: "-1", username: "Cancelar" };
+const cancelOption: CompetianoDiscord = { globalName: 'Nenhum', id: "-1", username: "Nenhum" };
 
 function getElementsPerPage(currentPage: number): any[] {
     const itemsPerPage: number = 23;
