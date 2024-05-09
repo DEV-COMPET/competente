@@ -64,7 +64,7 @@ export default new SelectMenu({
         // página anterior
         else if(memberToBeRemovedId == previousPageDiscord.id.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] - 1);
-            console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
+            //console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
             const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
             menuOptions.push(cancelOption);
 

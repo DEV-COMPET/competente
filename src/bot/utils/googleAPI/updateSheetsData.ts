@@ -17,16 +17,12 @@ export async function updateSheetsDataGivenTheMemberName(nome: string) {
 
         const size = sheetData.length
         for(let i = 0; i < size; i++) {
-            console.log(sheetData[i].Nome, nome)
             if(sheetData[i].Nome === nome) {
                 const key = 'STATUS';
                 sheetData[i][key] = 'INATIVO';
-                console.log(sheetData[i]);
             }
         }
-        console.log(sheetData);
         const updatedSheets = arrayObjectsToMatrix(sheetData);
-        console.log(updatedSheets);
         await updateSheetsData({ spreadsheetId, sheetName, values: updatedSheets });
 }
 

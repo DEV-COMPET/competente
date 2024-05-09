@@ -1,13 +1,8 @@
-import { env } from "@/env";
 import { SelectMenu } from "@/bot/structures/SelectMenu";
 import { customId, minMax } from './selectMemberName.json';
 import { ComponentType } from "discord.js";
-import { editSucessReply } from '@/bot/utils/discord/editSucessReply';
-import { editErrorReply } from '@/bot/utils/discord/editErrorReply';
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { previousPage, nextPage, getElementsPerPage, currentPage, selectMenuList } from './selectMenuList'
-import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
-import { handleRemoveFromTrelloInteraction } from "@/bot/commands/compet/trello/removeFromTrello";
 
 export default new SelectMenu({
     customId,
@@ -15,12 +10,12 @@ export default new SelectMenu({
     run: async ({ interaction }) => {
         await interaction.deferReply({ ephemeral: true });
 
-        let memberToBeRemovedId = interaction.values[0]; // TODO: colocar const
-        console.log("Member to be removed: ", memberToBeRemovedId);
+        const memberToBeRemovedId = interaction.values[0];
+        //console.log("Member to be removed: ", memberToBeRemovedId);
 
         if(memberToBeRemovedId == nextPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
+            //console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
             
             menuOptions.push(previousPage);
@@ -55,7 +50,7 @@ export default new SelectMenu({
         }
         else if(memberToBeRemovedId == previousPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
+            //console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
             let size: number;
@@ -88,7 +83,6 @@ export default new SelectMenu({
             });
             return;
         }
-        console.log("AQUI");
 
         //await handleRemoveFromTrelloInteraction(interaction);
 

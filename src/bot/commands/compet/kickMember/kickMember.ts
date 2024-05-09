@@ -8,7 +8,6 @@ import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
 import { customId, minMax } from "@/bot/selectMenus/discord/removeMemberFromDiscord.json";
-import { handleRemoveFromTrelloInteraction } from "../trello/removeFromTrello";
 import { handlingRemove } from "../removeFromCompet/utils/handleRemove";
 
 export default new Command ({
@@ -57,14 +56,14 @@ export async function handleRemoveFromDiscordInteraction(interaction: ExtendedIn
     const extractedMembers = [];
 
     //console.log(guildMembers);
-    console.log(typeof(guildMembers));
+    //console.log(typeof(guildMembers));
 
     for (const memberId of guildMembers) {
         const member = memberId[1].user;
         extractedMembers.push({ id: member.id, username: member.username, globalName: member.globalName });
     }
     const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
-    console.log(extractedMembers);
+    //console.log(extractedMembers);
 
 
     if(extractedMembers.length > 0) {

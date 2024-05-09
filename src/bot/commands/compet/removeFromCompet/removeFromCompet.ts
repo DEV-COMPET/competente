@@ -44,11 +44,12 @@ export default new Command({
          }));
 
         selectMenuList.push(...competianosAtivosNaoTutoresNome);
-        const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
+        let menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
         if(competianosAtivosNaoTutoresNome.length > 24)
             menuOptions.push(nextPage);
 
+        menuOptions = removeDuplicates(menuOptions);
         const competianosDBMenu = makeStringSelectMenu({
             customId: customIdDB,
             type: ComponentType.StringSelect,
@@ -76,6 +77,20 @@ interface ExtractDataRequest {
 interface ExtractDataResponse {
     email: string,
     nome: string
+}
+
+function removeDuplicates(arr: ExtractDataResponse[]): ExtractDataResponse[] {
+    const uniqueMap: { [key: string]: boolean } = {};
+    const uniqueArray: ExtractDataResponse[] = [];
+
+    arr.forEach(obj => {
+        if (!uniqueMap[obj.nome]) {
+            uniqueMap[obj.nome] = true;
+            uniqueArray.push(obj);
+        }
+    });
+
+    return uniqueArray;
 }
 
 async function extractData({ competianos }: ExtractDataRequest): Promise<ExtractDataResponse[]> {

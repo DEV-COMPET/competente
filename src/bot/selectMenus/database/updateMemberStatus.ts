@@ -21,7 +21,7 @@ export default new SelectMenu({
         // próxima página
         if(memberToBeRemovedNomeEmail == nextPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] + 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
+            //console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
             
             menuOptions.push(previousPage);
@@ -57,7 +57,7 @@ export default new SelectMenu({
         // página anterior
         else if(memberToBeRemovedNomeEmail == previousPage.nome.toString()) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
+            //console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
             let size: number;
