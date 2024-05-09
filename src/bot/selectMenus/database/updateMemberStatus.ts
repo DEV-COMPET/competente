@@ -9,6 +9,7 @@ import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { getDiscordMembers, handleRemoveFromDriveInteraction } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
 import { removeFromTrello } from "../discord/removeMemberFromDiscord";
+import { updateSheetsDataGivenTheMemberName } from "@/bot/utils/googleAPI/updateSheetsData";
 
 export default new SelectMenu({
     customId,
@@ -116,6 +117,7 @@ export default new SelectMenu({
             const nome_email = memberToBeRemovedNomeEmail.split('$$$');
             const memberToBeRemovedNome = nome_email[0];
             const memberToBeRemovedEmail = nome_email[1];
+            await updateSheetsDataGivenTheMemberName(memberToBeRemovedNome);
 
             const url = "/competianos/" + memberToBeRemovedNome;
     
