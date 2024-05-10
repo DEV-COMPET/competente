@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Um bot para auxiliar nas demandas do dia a dia do compet",
   "scripts": {
-    "postinstall": "tsx src/bot/utils/python/venv.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && tsc-alias",
     "postbuild": "tsx src/build.ts",
