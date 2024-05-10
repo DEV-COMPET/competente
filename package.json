@@ -3,17 +3,21 @@
   "version": "1.0.0",
   "description": "Um bot para auxiliar nas demandas do dia a dia do compet",
   "scripts": {
-    "postinstall": "tsx src/bot/utils/python/venv.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc && tsc-alias",
     "postbuild": "tsx src/build.ts",
+    "start": "node dist/start.js",
     "api:start": "node dist/api/server.js",
     "bot:start": "node dist/bot/index.js",
+    "sleep": "cross-env SLEEP=10 node -e \"setTimeout(() => {}, parseInt(process.env.SLEEP) * 1000)\"",
     "api:dev": "npx nodemon --require tsconfig-paths/register src/api/server.ts",
     "bot:dev": "npx nodemon --require tsconfig-paths/register src/bot/index.ts",
     "generate": "graphql-codegen",
     "pm2:start": "pm2 start dist/api/server.js && pm2 start dist/bot/index.js",
-    "pm2:stop": "pm2 stop all"
+    "pm2:stop": "pm2 stop all",
+    "prerailway": "echo \"$COMPETENTE_DEVELOPMENT_JSON\" > src/bot/utils/googleAPI/competente.development.json",
+    "railway": "tsx src/json.ts",
+    "postrailway": "npm run build"
   },
   "contributors": [
     {
@@ -73,6 +77,8 @@
     "@types/uuid": "^9.0.3",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
     "eslint": "^8.48.0",
     "graphql-tag": "^2.12.6",
     "nodemon": "^3.0.1",

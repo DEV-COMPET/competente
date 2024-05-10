@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import path from "path";
 import { env } from "@/env";
+import { readJsonFile } from "../json";
 
 interface FetchDataFromSheetRequest {
     spreadsheetId: string
@@ -14,6 +15,9 @@ export async function fetchDataFromSheet({ spreadsheetId, sheetName }: FetchData
     })
 
     try {
+
+        const js = readJsonFile({dirname: __dirname, partialPath: `competente.${env.ENVIRONMENT}.json`})
+
         const sheets = google.sheets({ version: 'v4', auth });
 
         const response = await sheets.spreadsheets.values.get({
@@ -29,6 +33,7 @@ export async function fetchDataFromSheet({ spreadsheetId, sheetName }: FetchData
         }
 
         const headers = values[0];
+
         const rows = values.slice(1);
 
         // Mapeia os dados para objetos

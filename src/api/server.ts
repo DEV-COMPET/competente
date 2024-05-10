@@ -21,7 +21,6 @@ app.register(projectmembersRoutes, { prefix: 'projectMembers' })
 app.register(parceirosRoutes, { prefix: 'parceiros' })
 
 app.listen({
-	host: '0.0.0.0', // auxilia front-end a conectar com aplicação mais pra frente
 	port: port,
 }).then(() => {
 	console.log(`server listening on port ${port}`);

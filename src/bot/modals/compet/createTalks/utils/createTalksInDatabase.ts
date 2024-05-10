@@ -17,7 +17,7 @@ export async function createTalksInDatabase(inputData: ValidateInputDataRightRes
         headers: { "Content-Type": "application/json" },
     };
 
-    const APIurl = env.ENVIRONMENT === "development" ? "http://localhost:4444/talks/" : `${env.HOST}/talks/` || "http://localhost:4444/talks/";
+    const APIurl = env.ENVIRONMENT === "development" ? "http://localhost:3000/talks/" : `${env.HOST}/talks/` || "http://localhost:3000/talks/";
 
     const response = await fetch(APIurl, requestOptions);
 

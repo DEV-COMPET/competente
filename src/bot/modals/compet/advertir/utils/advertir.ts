@@ -26,7 +26,7 @@ export async function advertir({ advertidos }: AdvertirRequest): Promise<Adverti
             headers: { "Content-Type": "application/json" },
         };
 
-        const createMemberUrl = `http://localhost:4444/competianos/${advertido.nome}`
+        const createMemberUrl = `http://localhost:3000/competianos/${advertido.nome}`
 
         const response1 = await fetch(createMemberUrl, requestOptions);
         if (!(response1.status >= 200 && response1.status < 300)) {

@@ -158,8 +158,6 @@ export async function extractData({ competianos }: ExtractDataRequest): Promise<
         sheetName: "Respostas ao formulário 1"
     })
 
-    console.dir({ inscricaoProcessoSeletivoData }, { depth: null })
-
     const frequenciaCursosData = inscricaoProcessoSeletivoData
         .map(row => row["Qual curso você faz? 12"])
         .reduce((total, curso) => {

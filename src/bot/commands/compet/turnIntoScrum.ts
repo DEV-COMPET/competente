@@ -17,7 +17,7 @@ export default new Command({
   run: async ({ interaction }) => {
     const member = await interaction.guild?.members.fetch(interaction.user.id);
     const isADM = member?.permissions.has("Administrator");
-    const url = "http://localhost:4444/competianos";
+    const url = "http://localhost:3000/competianos";
 
     // Esse comando verifica se o usúario é um administrador e caso seja, torna possível tornar um membro do compet Scrum do compet
     if (isADM) {

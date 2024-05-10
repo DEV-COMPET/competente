@@ -22,7 +22,7 @@ export async function sendWarningEmailsToTutors({ advertidos }: SendWarningEmail
         headers: { "Content-Type": "application/json" },
     };
 
-    const createMemberUrl = env.ENVIRONMENT === "development" ? "http://localhost:4444/competianos" : `${env.HOST}/competianos` || "http://localhost:4444/competianos/";
+    const createMemberUrl = env.ENVIRONMENT === "development" ? "http://localhost:3000/competianos" : `${env.HOST}/competianos` || "http://localhost:3000/competianos/";
 
     const response = await fetch(createMemberUrl, requestOptions);
     if (!(response.status >= 200 && response.status < 300)) {
