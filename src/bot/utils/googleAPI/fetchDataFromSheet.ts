@@ -21,6 +21,8 @@ export async function fetchDataFromSheet({ spreadsheetId, sheetName }: FetchData
 
         console.log("b")
 
+        console.dir({ spreadsheetId, sheetName }, { depth: null })
+
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId,
             range: `${sheetName}!A1:P`, // Substitua pela faixa que deseja ler
