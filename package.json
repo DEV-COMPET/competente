@@ -16,7 +16,7 @@
     "pm2:start": "pm2 start dist/api/server.js && pm2 start dist/bot/index.js",
     "pm2:stop": "pm2 stop all",
     "prerailway": "echo \"$COMPETENTE_DEVELOPMENT_JSON\" > src/bot/utils/googleAPI/competente.development.json",
-    "railway": "echo \"$GMAIL_SENDER_JSON\" > src/bot/utils/googleAPI/gmailSender.development.json",
+    "railway": "tsx src/json.ts",
     "postrailway": "npm run build"
   },
   "contributors": [
