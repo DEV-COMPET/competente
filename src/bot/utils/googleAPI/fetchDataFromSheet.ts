@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import path from "path";
 import { env } from "@/env";
+import { readJsonFile } from "../json";
 
 interface FetchDataFromSheetRequest {
     spreadsheetId: string
@@ -14,6 +15,9 @@ export async function fetchDataFromSheet({ spreadsheetId, sheetName }: FetchData
     })
 
     try {
+
+        const js = readJsonFile({dirname: __dirname, partialPath: `competente.${env.ENVIRONMENT}.json`})
+        console.dir({js}, {depth: null})
 
         console.log("a")
 
