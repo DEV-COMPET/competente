@@ -150,7 +150,7 @@ $ npm run bot:dev
 ### **HOST**
 
 - Host local no qual será executado o script.
-- Geralmente na forma de <b>*http://localhost:4444/*</b>
+- Geralmente na forma de <b>*http://localhost:3000/*</b>
 
 ### **MONGODB_USER**
 

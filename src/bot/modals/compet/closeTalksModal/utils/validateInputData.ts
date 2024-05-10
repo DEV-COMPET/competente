@@ -31,8 +31,8 @@ export async function validateInputData({ titulo, minutos_totais }: ExtractInput
     };
 
     const APIurl = env.ENVIRONMENT === "development" ?
-        `http://localhost:4444/talks/${titulo}` :
-        `${env.HOST}/talks/${titulo}` || `http://localhost:4444/talks/${titulo}`;
+        `http://localhost:3000/talks/${titulo}` :
+        `${env.HOST}/talks/${titulo}` || `http://localhost:3000/talks/${titulo}`;
 
     const response = await fetch(APIurl, requestOptions);
     if (!(response.status >= 200 && response.status < 300)) {

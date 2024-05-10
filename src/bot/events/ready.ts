@@ -14,7 +14,7 @@ export default new Event("ready", "once", async function () {
   // }
   // if (!webhook) return;
   // try {
-  //   const url = env.ENVIRONMENT === "development" ? "http://localhost:4444" : env.HOST;
+  //   const url = env.ENVIRONMENT === "development" ? "http://localhost:3000" : env.HOST;
   //   const response = await fetch(`${url}/webhooks/discord/`, {
   //     method: "POST",
   //     headers: { "Content-Type": "application/json" },
