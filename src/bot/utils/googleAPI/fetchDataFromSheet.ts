@@ -14,22 +14,37 @@ export async function fetchDataFromSheet({ spreadsheetId, sheetName }: FetchData
     })
 
     try {
+
+        console.log("a")
+
         const sheets = google.sheets({ version: 'v4', auth });
+
+        console.log("b")
 
         const response = await sheets.spreadsheets.values.get({
             spreadsheetId,
             range: `${sheetName}!A1:P`, // Substitua pela faixa que deseja ler
         });
 
+        console.log("c")
         const values = response.data.values;
+
+        console.log("d")
 
         if (!values || values.length === 0) {
             console.log('Nenhum dado encontrado na planilha.');
             return [];
         }
 
+        console.log("e")
+
         const headers = values[0];
+
+        console.log("f")
+
         const rows = values.slice(1);
+
+        console.log("g")
 
         // Mapeia os dados para objetos
         const objects = rows.map((row) => {
@@ -41,6 +56,8 @@ export async function fetchDataFromSheet({ spreadsheetId, sheetName }: FetchData
             });
             return obj;
         });
+
+        console.log("h")
 
         return objects;
     } catch (error) {
