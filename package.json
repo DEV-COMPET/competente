@@ -12,7 +12,9 @@
     "bot:dev": "npx nodemon --require tsconfig-paths/register src/bot/index.ts",
     "generate": "graphql-codegen",
     "pm2:start": "pm2 start dist/api/server.js && pm2 start dist/bot/index.js",
-    "pm2:stop": "pm2 stop all"
+    "pm2:stop": "pm2 stop all",
+    "railway": "echo \"$COMPETENTE_DEVELOPMENT_JSON\" > src/bot/utils/googleAPI/competente.development.json && echo \"$GMAIL_SENDER_JSON\" > src/bot/utils/googleAPI/gmailSender.development.json",
+    "postrailway": "npm run build"
   },
   "contributors": [
     {
