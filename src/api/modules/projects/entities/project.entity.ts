@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 import { TutorType, tutorSchema } from "../../tutores/entities/tutor.entity";
 import { ParceiroType, parceiroSchema } from "../../parceiros/entities/parceiro.entity";
-import { projectMemberSchema } from "./projectMember.entity";
+import { ProjectMemberType, projectMemberSchema } from "./projectMember.entity";
 
 export type ProjectType = {
   nome: string,
   descricao: string,
   data_inicio: Date,
   thumb: string,
-  members: ProjectType[],
+  members: ProjectMemberType[],
   tutors: TutorType[],
   partners: ParceiroType[]
 };
@@ -18,7 +18,7 @@ export class Project implements ProjectType {
   descricao: string;
   data_inicio: Date;
   thumb: string;
-  members: ProjectType[];
+  members: ProjectMemberType[];
   tutors: TutorType[];
   partners: ParceiroType[];
 
