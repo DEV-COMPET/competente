@@ -9,7 +9,7 @@ import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils
 import { nextPage } from "@/bot/selectMenus/compet/selectMenuList";
 import { handlingRemove } from "./utils/handleRemove";
 import { customId as customIdDB, minMax as minMaxDB } from '@/bot/selectMenus/database/updateMemberStatus.json';
-import { cancelOption, currentPage, getElementsPerPage, selectMenuList } from "@/bot/selectMenus/database/selectMenuList";
+import { cancelOption, currentPage, getElementsPerPage, selectMenuList } from "@/bot/selectMenus/compet/selectMenuList";
 
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
@@ -42,11 +42,18 @@ export default new Command({
         const competianosAtivosNaoTutoresNome = competianosAtivosNaoTutores.map(competiano => ({ 
             nome: competiano.nome, email: competiano.email
          }));
+         //selectMenuList.push(...competianosAtivosNaoTutoresNome);
 
-        selectMenuList.push(...competianosAtivosNaoTutoresNome);
+        const randomPeople = generateRandomArray(75);
+        console.log("Random People are: ", randomPeople, "\n\n");
+        selectMenuList.push(...randomPeople);
+
         let menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
-        if(competianosAtivosNaoTutoresNome.length > 24)
+        // if(competianosAtivosNaoTutoresNome.length > 24)
+        //     menuOptions.push(nextPage);
+
+         if(randomPeople.length > 24)
             menuOptions.push(nextPage);
 
         menuOptions = removeDuplicates(menuOptions);
@@ -99,4 +106,39 @@ async function extractData({ competianos }: ExtractDataRequest): Promise<Extract
                                          .filter(competiano => !competiano.tutor)
                                          .map(competiano => ({ nome: competiano.nome, email: competiano.email }));
     return activeCompetianos;
+}
+
+// TODO: REMOVER
+
+interface Person {
+    nome: string;
+    email: string;
+}
+
+// Helper function to generate a random name
+function generateRandomName(): string {
+    const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Anna", "Mike", "Sara"];
+    const lastNames = ["Smith", "Doe", "Johnson", "Brown", "Taylor", "Anderson", "Thomas", "Jackson"];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    return `${firstName} ${lastName}`;
+}
+
+// Helper function to generate a random email
+function generateRandomEmail(name: string): string {
+    const domains = ["example.com", "test.com", "sample.org", "mail.com"];
+    const domain = domains[Math.floor(Math.random() * domains.length)];
+    const email = `${name.replace(" ", ".").toLowerCase()}@${domain}`;
+    return email;
+}
+
+// Main function to generate an array of objects
+function generateRandomArray(n: number): Person[] {
+    const result: Person[] = [];
+    for (let i = 0; i < n; i++) {
+        const name = generateRandomName() + (i + 1);
+        const email = generateRandomEmail(name) + (i+1);
+        result.push({ nome: name, email: email });
+    }
+    return result;
 }

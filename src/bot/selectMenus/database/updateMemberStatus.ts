@@ -1,7 +1,7 @@
 import { SelectMenu } from "@/bot/structures/SelectMenu";
 import { customId, minMax } from './updateMemberStatus.json';
 import { customId as customIdDiscord, minMax as minMaxDiscord } from '../discord/removeMemberFromDiscord.json'
-import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList, cancelOption } from "./selectMenuList";
+import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList, cancelOption } from "./../compet/selectMenuList";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { ComponentType } from "discord.js";
 import { fetchDataFromAPI } from "@/bot/utils/fetch/fetchData";
@@ -18,10 +18,13 @@ export default new SelectMenu({
         const memberToBeRemovedNomeEmail = interaction.values[0];
         await interaction.deferReply({ ephemeral: true });
 
+        console.log("member to be removed email: ", memberToBeRemovedNomeEmail);
+
         // próxima página
-        if(memberToBeRemovedNomeEmail == nextPage.nome.toString()) {
+        if(memberToBeRemovedNomeEmail == nextPage.nome.toString() + "$$$" + nextPage.email) {
+            console.log("Esta na proxima pagina")
             currentPage.push(currentPage[currentPage.length-1] + 1);
-            //console.log("current page", currentPage[currentPage.length - 1]);
+            console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
             
             menuOptions.push(previousPage);
@@ -36,13 +39,14 @@ export default new SelectMenu({
 
             if(selectMenuList.length > size)
                 menuOptions.push(nextPage);
+            menuOptions.push(cancelOption);
 
             const nameMenu = makeStringSelectMenu({
                 customId,
                 type: ComponentType.StringSelect,
                 options: menuOptions.map(member => ({
-                  label: member.globalName,
-                  value: member.id.toString(),
+                  label: member.nome,
+                  value: member.nome + "$$$" + member.email,
                 })),
                 maxValues: minMax.max,
                 minValues: minMax.min,
@@ -55,7 +59,7 @@ export default new SelectMenu({
             return;
         }
         // página anterior
-        else if(memberToBeRemovedNomeEmail == previousPage.nome.toString()) {
+        else if(memberToBeRemovedNomeEmail == previousPage.nome.toString() + "$$$" + previousPage.email) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
             //console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
@@ -72,13 +76,14 @@ export default new SelectMenu({
                 menuOptions.push(previousPage);
             if(selectMenuList.length > size)
                 menuOptions.push(nextPage);
+            menuOptions.push(cancelOption);
 
             const nameMenu = makeStringSelectMenu({
                 customId,
                 type: ComponentType.StringSelect,
                 options: menuOptions.map(member => ({
-                  label: member.globalName,
-                  value: member.id.toString(),
+                  label: member.nome,
+                  value: member.nome + "$$$" + member.email,
                 })),
                 maxValues: minMax.max,
                 minValues: minMax.min,
@@ -90,7 +95,7 @@ export default new SelectMenu({
             });
             return;
         }
-        else if(memberToBeRemovedNomeEmail === cancelOption.nome) { // nenhuma opção
+        else if(memberToBeRemovedNomeEmail === cancelOption.nome + "$$$" + cancelOption.email) { // nenhuma opção
             const filteredExtractedMembers = await getDiscordMembers();
     
             if(filteredExtractedMembers.length > 0) {
