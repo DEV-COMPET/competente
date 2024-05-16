@@ -98,19 +98,22 @@ export default new SelectMenu({
             return;
         }
         else if(memberToBeRemovedNomeEmail === cancelOption.nome + "$$$" + cancelOption.email) { // nenhuma opção
-            //const filteredExtractedMembers = await getDiscordMembers();
-            const filteredExtractedMembers = generateRandomUserArray(75);
-            const options = filteredExtractedMembers.map(member => ({
-                label: member.globalName,
-                value: member.id.toString()
-            }));
+            const filteredExtractedMembers = await getDiscordMembers();
+            //const filteredExtractedMembers = generateRandomUserArray(75);
 
-            selectMenuListDiscord.push(...filteredExtractedMembers);
+            const filteredExtractedMembersNotNull = filteredExtractedMembers.filter(member => member.globalName !== null)
+                                                    .map(member => ({
+                                                        id: member.id,
+                                                        username: member.username,
+                                                        globalName: member.globalName!
+                                                    }));
+            selectMenuListDiscord.push(...filteredExtractedMembersNotNull);
+            console.log("filteredExtractedMembers ", filteredExtractedMembers);
             const menuOptions = getElementsPerPageDiscord(currentPageDiscord[currentPageDiscord.length-1]);
 
-            if(filteredExtractedMembers.length > 24)
+            if(filteredExtractedMembersNotNull.length > 24)
                 menuOptions.push(nextPageDiscord);
-            menuOptions.push(cancelOptionDiscord);
+            //menuOptions.push(cancelOptionDiscord);
 
             console.log("Discord Options: ", menuOptions);
     

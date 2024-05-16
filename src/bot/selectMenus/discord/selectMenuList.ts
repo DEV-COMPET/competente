@@ -23,4 +23,4 @@ function getElementsPerPage(currentPage: number): any[] {
     return selectMenuList.slice(startIndex, endIndex);
 }
 
-export { cancelOption, selectMenuList, currentPage, previousPage, nextPage, getElementsPerPage };
+export { cancelOption, selectMenuList, currentPage, previousPage, nextPage, getElementsPerPage, CompetianoDiscord };

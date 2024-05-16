@@ -42,18 +42,14 @@ export default new Command({
         const competianosAtivosNaoTutoresNome = competianosAtivosNaoTutores.map(competiano => ({ 
             nome: competiano.nome, email: competiano.email
          }));
-         //selectMenuList.push(...competianosAtivosNaoTutoresNome);
-
-        const randomPeople = generateRandomArray(75);
-        //console.log("Random People are: ", randomPeople, "\n\n");
-        selectMenuList.push(...randomPeople);
-
+         
+         //const randomPeople = generateRandomArray(75);
+         //selectMenuList.push(...randomPeople);
+         
+        selectMenuList.push(...competianosAtivosNaoTutoresNome);
         let menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
-        // if(competianosAtivosNaoTutoresNome.length > 24)
-        //     menuOptions.push(nextPage);
-
-         if(randomPeople.length > 24)
+         if(competianosAtivosNaoTutoresNome.length > 24)
             menuOptions.push(nextPage);
 
         menuOptions = removeDuplicates(menuOptions);

@@ -138,7 +138,7 @@ async function getDiscordMembers() {
     }
     const filteredExtractedMembers = extractedMembers.filter(member => member.globalName !== null);
 
-    filteredExtractedMembers.push(cancelOption);
+    filteredExtractedMembers.push(cancelOption); // opção "Nenhum"
 
     return filteredExtractedMembers;
 }
