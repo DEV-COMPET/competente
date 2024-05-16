@@ -3,7 +3,7 @@ import { Command } from "@/bot/structures/Command";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { description, name } from "./kickMemberData.json"
 
-import { ApplicationCommandOptionType, Client, ComponentType, EmbedBuilder, Events, GatewayIntentBits } from "discord.js"
+import { ApplicationCommandOptionType, Client, ComponentType, GatewayIntentBits } from "discord.js"
 import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
@@ -51,7 +51,7 @@ export async function handleRemoveFromDiscordInteraction(interaction: ExtendedIn
 
     await client.login(env.DISCORD_TOKEN);
     
-    const guild = await client.guilds.fetch('1173025347466436712');
+    const guild = await client.guilds.fetch(env.DISCORD_GUILD_ID);
     const guildMembers = await guild.members.fetch();
     const extractedMembers = [];
 

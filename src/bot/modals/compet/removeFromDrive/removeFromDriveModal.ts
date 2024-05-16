@@ -128,7 +128,7 @@ async function getDiscordMembers() {
 
     await client.login(env.DISCORD_TOKEN);
     
-    const guild = await client.guilds.fetch('1173025347466436712');
+    const guild = await client.guilds.fetch(env.DISCORD_CLIENT_ID);
     const guildMembers = await guild.members.fetch();
     const extractedMembers = [];
 
