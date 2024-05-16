@@ -12,7 +12,7 @@ interface UpdateDataFromSheetRequest {
 export async function updateSheetsDataGivenTheMemberName(nome: string) {
     const spreadsheetId = env.MEMBERS_SPREADSHEET_ID;
         
-        const sheetName = "PET Ativos" // TODO: Change the sheetName to Petianos Ativos
+        const sheetName = "Petianos Ativos" // TODO: Change the sheetName to Petianos Ativos
         const sheetData = removeBlackSpaceAndNumberFromKeys(await fetchDataFromSheet({ spreadsheetId, sheetName }));
 
         const size = sheetData.length
