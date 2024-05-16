@@ -24,9 +24,10 @@ export default new SelectMenu({
         await interaction.deferReply({ ephemeral: true });
 
         const memberToBeRemovedId = interaction.values[0];
+        console.log("SelectMenu do Discord*********************", memberToBeRemovedId);
 
         // próxima página
-        if(memberToBeRemovedId == nextPageDiscord.globalName.toString()) {
+        if(memberToBeRemovedId == nextPageDiscord.id.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] + 1);
             const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
             
@@ -36,13 +37,14 @@ export default new SelectMenu({
             let size: number;
             const currentPageNumber = currentPageDiscord[currentPageDiscord.length - 1];
             if(currentPageNumber == 1)
-                size = 24;
+                size = 23;
             else {
-                size = 24 + 23 * (currentPageNumber - 1);
+                size = 23 + 23 * (currentPageNumber - 1);
             }
 
             if(selectMenuListDiscord.length > size)
                 menuOptions.push(nextPageDiscord);
+            console.log("MenuOptions: ", menuOptions);
 
             const nameMenu = makeStringSelectMenu({
                 customId,
@@ -56,7 +58,7 @@ export default new SelectMenu({
             });
         
             await interaction.editReply({
-            content: 'Selecione o membro a ser removido',
+            content: 'Selecione o membro a ser removido do Discord',
             components: [await makeStringSelectMenuComponent(nameMenu)]
             });
             return;

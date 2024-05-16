@@ -2,6 +2,8 @@ import { SelectMenu } from "@/bot/structures/SelectMenu";
 import { customId, minMax } from './updateMemberStatus.json';
 import { customId as customIdDiscord, minMax as minMaxDiscord } from '../discord/removeMemberFromDiscord.json'
 import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList, cancelOption } from "./../compet/selectMenuList";
+import { previousPage as previousPageDiscord, currentPage as currentPageDiscord, nextPage as nextPageDiscord,
+            getElementsPerPage as getElementsPerPageDiscord, selectMenuList as selectMenuListDiscord, cancelOption as cancelOptionDiscord } from "./../discord/selectMenuList";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { ComponentType } from "discord.js";
 import { fetchDataFromAPI } from "@/bot/utils/fetch/fetchData";
@@ -96,15 +98,29 @@ export default new SelectMenu({
             return;
         }
         else if(memberToBeRemovedNomeEmail === cancelOption.nome + "$$$" + cancelOption.email) { // nenhuma opção
-            const filteredExtractedMembers = await getDiscordMembers();
+            //const filteredExtractedMembers = await getDiscordMembers();
+            const filteredExtractedMembers = generateRandomUserArray(75);
+            const options = filteredExtractedMembers.map(member => ({
+                label: member.globalName,
+                value: member.id.toString()
+            }));
+
+            selectMenuListDiscord.push(...filteredExtractedMembers);
+            const menuOptions = getElementsPerPageDiscord(currentPageDiscord[currentPageDiscord.length-1]);
+
+            if(filteredExtractedMembers.length > 24)
+                menuOptions.push(nextPageDiscord);
+            menuOptions.push(cancelOptionDiscord);
+
+            console.log("Discord Options: ", menuOptions);
     
             if(filteredExtractedMembers.length > 0) {
                 const nameMenu = makeStringSelectMenu({
                     customId: customIdDiscord,
                     type: ComponentType.StringSelect,
-                    options: filteredExtractedMembers.map(member => ({
-                    label: member.globalName!,
-                    value: member.id.toString(),
+                    options: menuOptions.map(member => ({
+                        label: member.globalName!,
+                        value: member.id
                     })),
                     maxValues: minMaxDiscord.max,
                     minValues: minMaxDiscord.min,
@@ -151,3 +167,56 @@ export default new SelectMenu({
         }
     }
 })
+
+// TODO: remover
+
+interface User {
+    id: string;
+    username: string;
+    globalName: string;
+}
+
+// Helper function to generate a random username with length constraints
+function generateRandomUsername(): string {
+    const adjectives = ["Quick", "Lazy", "Happy", "Sad", "Brave", "Clever"];
+    const nouns = ["Fox", "Dog", "Lion", "Cat", "Bear", "Tiger"];
+    const adjective = adjectives[Math.floor(Math.random() * adjectives.length)];
+    const noun = nouns[Math.floor(Math.random() * nouns.length)];
+    const number = Math.floor(Math.random() * 10000);
+    let username = `${adjective}${noun}${number}`;
+    
+    // Ensure the username is not longer than 25 characters
+    if (username.length > 25) {
+        username = username.substring(0, 25);
+    }
+    
+    return username;
+}
+
+// Helper function to generate a random global name with length constraints
+function generateRandomGlobalName(): string {
+    const firstNames = ["John", "Jane", "Alex", "Chris", "Anna", "Mike", "Sara"];
+    const lastNames = ["Smith", "Doe", "Brown", "Taylor", "Thomas", "Jackson"];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    let globalName = `${firstName}${lastName}`;
+    
+    // Ensure the globalName is not longer than 25 characters
+    if (globalName.length > 25) {
+        globalName = globalName.substring(0, 25);
+    }
+    
+    return globalName;
+}
+
+// Main function to generate an array of objects
+function generateRandomUserArray(n: number): User[] {
+    const result: User[] = [];
+    for (let i = 0; i < n; i++) {
+        const id = (i + 5).toString(); // Generate sequential IDs starting from 1
+        const username = generateRandomUsername() + id;
+        const globalName = generateRandomGlobalName() + (i + 1).toString();
+        result.push({ id, username, globalName });
+    }
+    return result;
+}

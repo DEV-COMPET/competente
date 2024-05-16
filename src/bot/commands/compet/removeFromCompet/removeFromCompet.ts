@@ -45,7 +45,7 @@ export default new Command({
          //selectMenuList.push(...competianosAtivosNaoTutoresNome);
 
         const randomPeople = generateRandomArray(75);
-        console.log("Random People are: ", randomPeople, "\n\n");
+        //console.log("Random People are: ", randomPeople, "\n\n");
         selectMenuList.push(...randomPeople);
 
         let menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
@@ -68,7 +68,9 @@ export default new Command({
             minValues: minMaxDB.min,
         });
 
-        competianosDBMenu.addOptions({ label: cancelOption.nome, value: cancelOption.nome });
+        competianosDBMenu.addOptions({ label: cancelOption.nome, value: cancelOption.nome + "$$$" + 
+            cancelOption.email
+         });
             
         await interaction.editReply({
             content: 'Selecione o membro a ser removido',
