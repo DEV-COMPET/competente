@@ -20,13 +20,9 @@ export default new SelectMenu({
         const memberToBeRemovedNomeEmail = interaction.values[0];
         await interaction.deferReply({ ephemeral: true });
 
-        console.log("member to be removed email: ", memberToBeRemovedNomeEmail);
-
         // próxima página
         if(memberToBeRemovedNomeEmail == nextPage.nome.toString() + "$$$" + nextPage.email) {
-            console.log("Esta na proxima pagina")
             currentPage.push(currentPage[currentPage.length-1] + 1);
-            console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
             
             menuOptions.push(previousPage);
@@ -99,7 +95,6 @@ export default new SelectMenu({
         }
         else if(memberToBeRemovedNomeEmail === cancelOption.nome + "$$$" + cancelOption.email) { // nenhuma opção
             const filteredExtractedMembers = await getDiscordMembers();
-            //const filteredExtractedMembers = generateRandomUserArray(75);
 
             const filteredExtractedMembersNotNull = filteredExtractedMembers.filter(member => member.globalName !== null)
                                                     .map(member => ({
@@ -108,14 +103,10 @@ export default new SelectMenu({
                                                         globalName: member.globalName!
                                                     }));
             selectMenuListDiscord.push(...filteredExtractedMembersNotNull);
-            console.log("filteredExtractedMembers ", filteredExtractedMembers);
             const menuOptions = getElementsPerPageDiscord(currentPageDiscord[currentPageDiscord.length-1]);
 
             if(filteredExtractedMembersNotNull.length > 24)
                 menuOptions.push(nextPageDiscord);
-            //menuOptions.push(cancelOptionDiscord);
-
-            console.log("Discord Options: ", menuOptions);
     
             if(filteredExtractedMembers.length > 0) {
                 const nameMenu = makeStringSelectMenu({

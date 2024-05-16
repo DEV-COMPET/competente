@@ -26,8 +26,6 @@ export default new SelectMenu({
         await interaction.deferReply({ ephemeral: true });
 
         const memberToBeRemovedId = interaction.values[0];
-        console.log("SelectMenu do Discord*********************", memberToBeRemovedId);
-
         // próxima página
         if(memberToBeRemovedId == nextPageDiscord.id.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] + 1);
@@ -46,7 +44,6 @@ export default new SelectMenu({
 
             if(selectMenuListDiscord.length > size)
                 menuOptions.push(nextPageDiscord);
-            console.log("MenuOptions: ", menuOptions);
 
             const nameMenu = makeStringSelectMenu({
                 customId,
@@ -68,7 +65,6 @@ export default new SelectMenu({
         // página anterior
         else if(memberToBeRemovedId == previousPageDiscord.id.toString()) {
             currentPageDiscord.push(currentPageDiscord[currentPageDiscord.length-1] - 1);
-            //console.log("current page", currentPageDiscord[currentPageDiscord.length - 1]);
             const menuOptions = getElementsPerPage(currentPageDiscord[currentPageDiscord.length-1]);
             menuOptions.push(cancelOption);
 
@@ -121,7 +117,6 @@ export async function removeFromTrello(interaction: ExtendedStringSelectMenuInte
         const options = getAllMembersInfoResponse;
         selectMenuListTrello.push(...options);
         const menuOptions = getElementsPerPageTrello(currentPageTrello[currentPageTrello.length-1]);
-        console.log("O menuOptions do Trello: ", menuOptions);
   
         if(options.length > 25) { // split
           menuOptions.push(nextPageTrello);
