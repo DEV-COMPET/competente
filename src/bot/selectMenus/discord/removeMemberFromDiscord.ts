@@ -8,7 +8,9 @@ import { previousPage as previousPageDiscord, nextPage as nextPageDiscord,
     getElementsPerPage, currentPage as currentPageDiscord, 
     selectMenuList as selectMenuListDiscord, 
     cancelOption} from './selectMenuList'
-import { nextPage as nextPageTrello, selectMenuList as selectMenuListTrello } from "../trello/selectMenuList";
+import { nextPage as nextPageTrello, selectMenuList as selectMenuListTrello, 
+            getElementsPerPage as getElementsPerPageTrello,
+            currentPage as currentPageTrello } from "../trello/selectMenuList";
 
 import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
@@ -115,11 +117,13 @@ export async function removeFromTrello(interaction: ExtendedStringSelectMenuInte
         const getAllMembersInfoResponse = await getAllMembersInfo(trelloGeralBoardId);
         const { customId, minMax } = selectMemberName;
   
-        let menuOptions = getAllMembersInfoResponse;
-        selectMenuListTrello.splice(0, selectMenuListTrello.length, ...menuOptions);
+        //let menuOptions = getAllMembersInfoResponse;
+        const options = generateRandomArray(75);
+        selectMenuListTrello.push(...options);
+        const menuOptions = getElementsPerPageTrello(currentPageTrello[currentPageTrello.length-1]);
+        console.log("O menuOptions do Trello: ", menuOptions);
   
-        if(menuOptions.length > 25) { // split
-          menuOptions = menuOptions.slice(0, 24);
+        if(options.length > 25) { // split
           menuOptions.push(nextPageTrello);
         }
   
@@ -190,4 +194,29 @@ export async function kickUser(userId: string, interaction: ExtendedStringSelect
         });
         console.log(`Erro ao tentar kickar usuario ${error}`);
     }
+}
+
+interface Person {
+    fullName: string;
+    id: string;
+}
+
+// Helper function to generate a random full name
+function generateRandomFullName(): string {
+    const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Anna", "Mike", "Sara"];
+    const lastNames = ["Smith", "Doe", "Johnson", "Brown", "Taylor", "Anderson", "Thomas", "Jackson"];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    return `${firstName} ${lastName}`;
+}
+
+// Main function to generate an array of objects
+function generateRandomArray(n: number): Person[] {
+    const result: Person[] = [];
+    for (let i = 0; i < n; i++) {
+        const id = (i + 5).toString(); // Generate sequential IDs starting from 1
+        const fullName = generateRandomFullName() + (i+1);
+        result.push({ fullName, id });
+    }
+    return result;
 }
