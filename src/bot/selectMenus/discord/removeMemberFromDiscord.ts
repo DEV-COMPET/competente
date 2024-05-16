@@ -190,28 +190,3 @@ export async function kickUser(userId: string, interaction: ExtendedStringSelect
         console.log(`Erro ao tentar kickar usuario ${error}`);
     }
 }
-
-
-// TODO: REMOVER
-interface Person {
-    fullName: string;
-    id: string;
-}
-
-function generateRandomFullName(): string {
-    const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Anna", "Mike", "Sara"];
-    const lastNames = ["Smith", "Doe", "Johnson", "Brown", "Taylor", "Anderson", "Thomas", "Jackson"];
-    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-    return `${firstName} ${lastName}`;
-}
-
-function generateRandomArray(n: number): Person[] {
-    const result: Person[] = [];
-    for (let i = 0; i < n; i++) {
-        const id = (i + 5).toString();
-        const fullName = generateRandomFullName() + (i+1);
-        result.push({ fullName, id });
-    }
-    return result;
-}

@@ -105,34 +105,3 @@ async function extractData({ competianos }: ExtractDataRequest): Promise<Extract
                                          .map(competiano => ({ nome: competiano.nome, email: competiano.email }));
     return activeCompetianos;
 }
-
-// TODO: REMOVER
-interface Person {
-    nome: string;
-    email: string;
-}
-
-function generateRandomName(): string {
-    const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Anna", "Mike", "Sara"];
-    const lastNames = ["Smith", "Doe", "Johnson", "Brown", "Taylor", "Anderson", "Thomas", "Jackson"];
-    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-    return `${firstName} ${lastName}`;
-}
-
-function generateRandomEmail(name: string): string {
-    const domains = ["example.com", "test.com", "sample.org", "mail.com"];
-    const domain = domains[Math.floor(Math.random() * domains.length)];
-    const email = `${name.replace(" ", ".").toLowerCase()}@${domain}`;
-    return email;
-}
-
-function generateRandomArray(n: number): Person[] {
-    const result: Person[] = [];
-    for (let i = 0; i < n; i++) {
-        const name = generateRandomName() + (i + 1);
-        const email = generateRandomEmail(name) + (i+1);
-        result.push({ nome: name, email: email });
-    }
-    return result;
-}
