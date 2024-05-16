@@ -107,13 +107,11 @@ async function extractData({ competianos }: ExtractDataRequest): Promise<Extract
 }
 
 // TODO: REMOVER
-
 interface Person {
     nome: string;
     email: string;
 }
 
-// Helper function to generate a random name
 function generateRandomName(): string {
     const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Anna", "Mike", "Sara"];
     const lastNames = ["Smith", "Doe", "Johnson", "Brown", "Taylor", "Anderson", "Thomas", "Jackson"];
@@ -122,7 +120,6 @@ function generateRandomName(): string {
     return `${firstName} ${lastName}`;
 }
 
-// Helper function to generate a random email
 function generateRandomEmail(name: string): string {
     const domains = ["example.com", "test.com", "sample.org", "mail.com"];
     const domain = domains[Math.floor(Math.random() * domains.length)];
@@ -130,7 +127,6 @@ function generateRandomEmail(name: string): string {
     return email;
 }
 
-// Main function to generate an array of objects
 function generateRandomArray(n: number): Person[] {
     const result: Person[] = [];
     for (let i = 0; i < n; i++) {

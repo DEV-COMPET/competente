@@ -191,12 +191,13 @@ export async function kickUser(userId: string, interaction: ExtendedStringSelect
     }
 }
 
+
+// TODO: REMOVER
 interface Person {
     fullName: string;
     id: string;
 }
 
-// Helper function to generate a random full name
 function generateRandomFullName(): string {
     const firstNames = ["John", "Jane", "Alex", "Emily", "Chris", "Anna", "Mike", "Sara"];
     const lastNames = ["Smith", "Doe", "Johnson", "Brown", "Taylor", "Anderson", "Thomas", "Jackson"];
@@ -205,11 +206,10 @@ function generateRandomFullName(): string {
     return `${firstName} ${lastName}`;
 }
 
-// Main function to generate an array of objects
 function generateRandomArray(n: number): Person[] {
     const result: Person[] = [];
     for (let i = 0; i < n; i++) {
-        const id = (i + 5).toString(); // Generate sequential IDs starting from 1
+        const id = (i + 5).toString();
         const fullName = generateRandomFullName() + (i+1);
         result.push({ fullName, id });
     }
