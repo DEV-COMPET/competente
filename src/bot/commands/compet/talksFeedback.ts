@@ -49,12 +49,13 @@ import { ComponentType } from "discord.js";
 
     // Ordem decrescente de acordo com a data
     getAllEventNamesResponse.value.events.sort((a, b) => b.date.getTime() - a.date.getTime());
+    const last25EventNames = getAllEventNamesResponse.value.events.slice(-25);
     
     
     const listEventNamesMenu = makeStringSelectMenu({
       customId: customId,
       type: ComponentType.StringSelect,
-      options: getAllEventNamesResponse.value.events.map((event) => ({
+      options: last25EventNames.map((event) => ({
         label: String(event.name),
         value: String(event.name),
       })),
