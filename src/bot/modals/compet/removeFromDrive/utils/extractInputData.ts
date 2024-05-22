@@ -4,10 +4,10 @@ import { TextInputComponentData } from "discord.js";
 interface ExtractInputDataRequest {
     interaction: ExtendedModalInteraction,
     inputFields: TextInputComponentData[]
-};
+}
 
 export interface ExtractInputDataResponse {
-    email: string
+    emails: string
 }
 
 export function extractInputData({ inputFields, interaction}: ExtractInputDataRequest): ExtractInputDataResponse {
@@ -15,10 +15,10 @@ export function extractInputData({ inputFields, interaction}: ExtractInputDataRe
     const input_data = customIds.map(i => ({ [i]: interaction.fields.getTextInputValue(i)}));
 
     interface InputFieldsRequest {
-        email: string
-    };
+        emails: string
+    }
     
-    const { email }: InputFieldsRequest = Object.assign({}, ...input_data);
+    const { emails }: InputFieldsRequest = Object.assign({}, ...input_data);
 
-    return { email };
+    return { emails };
 }

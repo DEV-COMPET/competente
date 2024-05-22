@@ -139,40 +139,48 @@ type removeFromDriveResponse = Either<
     { emailData: string[]}
 >
 
-export async function removeFromDrive (emailVerificado: string) : Promise<removeFromDriveResponse>{
-    const auth = new google.auth.GoogleAuth({ 
-        keyFile: partial_to_full_path({
-            dirname: __dirname,
-            partialPath: `competente.${env.ENVIRONMENT}.json`
-        }),
-        scopes: 'https://www.googleapis.com/auth/drive',
-    });
+export async function removeFromDrive (emailsVerificado: string[]) : Promise<removeFromDriveResponse>{
+  const auth = new google.auth.GoogleAuth({ 
+      keyFile: partial_to_full_path({
+          dirname: __dirname,
+          partialPath: `competente.${env.ENVIRONMENT}.json`
+      }),
+      scopes: 'https://www.googleapis.com/auth/drive',
+  });
 
-    const drive = google.drive({version: 'v3', auth});
-    const folderId = '0B5QTELWgXQ5DfnY0Snl1Zl9STWF0OEVLTzZKeWlPazNKTnluZTdwLVRTUnJCcmhiOXlFZkk';
+  const drive = google.drive({version: 'v3', auth});
+  const folderId = '0B5QTELWgXQ5DfnY0Snl1Zl9STWF0OEVLTzZKeWlPazNKTnluZTdwLVRTUnJCcmhiOXlFZkk';
 
-    const emailsRemovidos: string[] = [];
-    const emailNaoRemovidos: string[] = [];
+  const emailsRemovidos: string[] = [];
+  const emailNaoRemovidos: string[] = [];
 
-    const res = await drive.permissions.list({
-        fileId: folderId,
-        fields: 'permissions(id, emailAddress)',
-    });
+  const res = await drive.permissions.list({
+      fileId: folderId,
+      fields: 'permissions(id, emailAddress)',
+  });
 
-    const permissions = res?.data.permissions;
-    if (permissions && permissions.length) {
-      const userPermission = permissions.find((permissions: any) => permissions.emailAddress === emailVerificado);
-        if (userPermission && userPermission.id) {
-          await drive.permissions.delete({
-            fileId: folderId,
-            permissionId: userPermission.id
-          });
-          emailsRemovidos.push(emailVerificado);
-        } else {
-          return left({ error: new InvalidEmailError(emailVerificado, "remover")});
-        }
-    }
-    return right({ emailData: emailsRemovidos });
+  const permissions = res?.data.permissions;
+  if (permissions && permissions.length) {
+      for (const email of emailsVerificado) {
+          const userPermission = permissions.find((permissions: any) => permissions.emailAddress === email);
+          if (userPermission && userPermission.id) {
+              await drive.permissions.delete({
+                  fileId: folderId,
+                  permissionId: userPermission.id
+              })
+
+              emailsRemovidos.push(email);
+          } else {
+              emailNaoRemovidos.push(email);
+          }
+
+      }
+  }
+
+  if (emailNaoRemovidos.length > 0) 
+      return left({ error: new InvalidEmailError(emailNaoRemovidos, emailsRemovidos, "removidos")});
+
+  return right({ emailData: emailsRemovidos });
 }
           
 type acessDriveResponse = Either<
@@ -212,7 +220,7 @@ export async function acessDrive(email: string): Promise<acessDriveResponse> {
         emailAdd.push(email);
       } catch (error) {
         console.log(error)
-        return left({ error: new InvalidEmailError(email, "compartilhar")})
+        return left({ error: new InvalidEmailError([email], [" "], "compartilhar")})
       }
     }
     return right({ emailData: emailAdd })
