@@ -1,15 +1,10 @@
 import { env } from '@/env'
-import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin"
-import { Command } from "../../../structures/Command";
-import { ChatInputApplicationCommandData, ComponentType } from "discord.js";
-import { readJsonFile } from "@/bot/utils/json";
+import { ComponentType } from "discord.js";
 import { getAllMembersInfo } from "@/bot/utils/trello/getAllMembersInfo";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import selectMemberName from './../../../selectMenus/trello/selectMemberName.json';
 import { ExtendedInteraction } from "@/bot/typings/Commands";
-import { selectMenuList, currentPage, nextPage } from '@/bot/selectMenus/trello/selectMenuList';
-import { ExtendedStringSelectMenuInteraction } from '@/bot/typings/SelectMenu';
-import { removeFromDriveModal } from '@/bot/modals/compet/removeFromDrive/removeFromDriveModal';
+import { selectMenuList, nextPage } from '@/bot/selectMenus/trello/selectMenuList';
 
 export async function handleRemoveFromTrelloInteraction(interaction: ExtendedInteraction) {
   // await interaction.deferReply({ ephemeral: true });
