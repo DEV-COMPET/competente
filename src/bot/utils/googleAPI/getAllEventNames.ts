@@ -100,7 +100,7 @@ async function getEventNames(): Promise<NameDateSet> {
         if(event !== undefined)
           eventNames.add({ name: event, date: new Date(date) });
       });
-  
+      
       return eventNames;
     }
     else return new NameDateSet();
