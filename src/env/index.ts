@@ -16,7 +16,7 @@ const envSchema = z.object({
     HOST: z.string().default("http://localhost:3000"),
     MONGODB_USER: z.string().optional(),
     MONGODB_PASSWORD: z.string().optional(),
-    PORT: z.coerce.number().default(4444),
+    PORT: z.coerce.number().default(3000),
     TRELLO_BOARD_ID: z.string(),
     TRELLO_DEV_BOARD_ID: z.string(),
     TRELLO_ADM_BOARD_ID: z.string(),

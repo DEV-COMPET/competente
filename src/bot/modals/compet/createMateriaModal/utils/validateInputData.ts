@@ -20,7 +20,7 @@ export async function validateInputData({ inputData }: ExtractInputDataResponse)
         headers: { "Content-Type": "application/json" },
     };
 
-    const APIUrl = env.ENVIRONMENT === "development" ? "http://localhost:4444/materias" : `${env.HOST}/materias` || "http://localhost:4444/materias/";
+    const APIUrl = env.ENVIRONMENT === "development" ? "http://localhost:3000/materias" : `${env.HOST}/materias` || "http://localhost:3000/materias/";
 
     const response = await fetch(APIUrl, requestOptions);
     if (!(response.status >= 200 && response.status < 300)) {
