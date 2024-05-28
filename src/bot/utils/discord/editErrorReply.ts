@@ -1,6 +1,6 @@
-import { ExtendedModalInteraction } from "@/bot/typings/Modals"
+import { ExtendedModalInteraction } from "@/bot/typings/Modals";
+import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { makeErrorEmbed } from "../embed/makeErrorEmbed"
-import { ExtendedInteraction } from "@/bot/typings/Commands"
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu"
 
 interface EditErrorReplyRequest {

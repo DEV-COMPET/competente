@@ -52,6 +52,7 @@ export default new SelectMenu({
         }
         else if(memberToBeRemovedId == previousPage.id.toString()) {
             currentPage.push(currentPage[currentPage.length-1] - 1);
+            //console.log("current page", currentPage[currentPage.length - 1]);
             const menuOptions = getElementsPerPage(currentPage[currentPage.length-1]);
 
             let size: number;
@@ -120,7 +121,7 @@ export default new SelectMenu({
         // Await all fetch operations
         await Promise.all(fetchPromises);
 
-        return editSucessReply({
+        await editSucessReply({
             interaction,
             title: 'Membro removido do Trello',
             fields: [

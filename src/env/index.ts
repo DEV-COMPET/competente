@@ -23,7 +23,8 @@ const envSchema = z.object({
     TRELLO_EVENTOS_BOARD_ID: z.string(),
     TRELLO_MARKETING_BOARD_ID: z.string(),
     TRELLO_API_KEY: z.string(),
-    TRELLO_ACCOUNT_TOKEN: z.string()
+    TRELLO_ACCOUNT_TOKEN: z.string(),
+    MEMBERS_SPREADSHEET_ID: z.string()
 });
 
 const _env = envSchema.safeParse(process.env); // tenta validar process.env para ver se tem as exatas informações dentro
