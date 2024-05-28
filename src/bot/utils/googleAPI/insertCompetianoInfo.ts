@@ -1,5 +1,4 @@
 import { google } from "googleapis";
-import { ExtractInputDataResponse } from "@/bot/modals/compet/inserirInfo/utils/extractInputData";
 import { Either, left, right } from "@/api/@types/either";
 import { InvalidInserirError } from "@/bot/errors/invalidInserirError";
 import { env } from "@/env";
@@ -15,6 +14,13 @@ type inserirDadosInfoResponse = Either<
         linkedin: string | undefined,
     } } 
 >
+export interface ExtractInputDataResponse {
+    nome: string,
+    telefone: string,
+    email: string,
+    instagram?: string | undefined,
+    linkedin?: string | undefined,
+};
 
 export async function inserirInfoSheets({ nome, telefone, email, instagram, linkedin }: ExtractInputDataResponse): Promise<inserirDadosInfoResponse> {
     const auth = new google.auth.GoogleAuth({
