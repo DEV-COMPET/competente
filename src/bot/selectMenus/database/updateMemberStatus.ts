@@ -102,6 +102,7 @@ export default new SelectMenu({
                                                         username: member.username,
                                                         globalName: member.globalName!
                                                     }));
+            selectMenuListDiscord.length = 0;
             selectMenuListDiscord.push(...filteredExtractedMembersNotNull);
             const menuOptions = getElementsPerPageDiscord(currentPageDiscord[currentPageDiscord.length-1]);
 

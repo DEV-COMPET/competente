@@ -115,6 +115,7 @@ export async function removeFromTrello(interaction: ExtendedStringSelectMenuInte
   
         //let menuOptions = getAllMembersInfoResponse;
         const options = getAllMembersInfoResponse;
+        selectMenuListTrello.length = 0;
         selectMenuListTrello.push(...options);
         const menuOptions = getElementsPerPageTrello(currentPageTrello[currentPageTrello.length-1]);
   
