@@ -1,51 +1,16 @@
 import { env } from "@/env";
-import { Command } from "@/bot/structures/Command";
-import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
-import { description, name } from "./kickMemberData.json"
 
-import { ApplicationCommandOptionType, Client, ComponentType, GatewayIntentBits } from "discord.js"
+import { Client, ComponentType, GatewayIntentBits } from "discord.js"
 import { ExtendedInteraction } from "@/bot/typings/Commands";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 
 import { customId, minMax } from "@/bot/selectMenus/discord/removeMemberFromDiscord.json";
-import { handlingRemove } from "../removeFromCompet/utils/handleRemove";
-
-export default new Command ({
-
-    name, description,
-    options: [
-        {
-            name: 'target-user',
-            description: 'Usuário a ser expluso',
-            type: ApplicationCommandOptionType.Mentionable,
-            required: true,
-        },
-        {
-            name: 'reason',
-            description: 'Motivo para a expulsão do usuaŕio',
-            type: ApplicationCommandOptionType.String,
-        }
-
-    ],
-
-    run: async ({ interaction }) => {
-        await interaction.deferReply({ ephemeral: true })
-    
-        const isNotAdmin = await checkIfNotAdmin( interaction )
-        if (isNotAdmin.isRight()) {
-            return isNotAdmin.value.response;
-        }
-
-        await handleRemoveFromDiscordInteraction(interaction);
-
-    },
-
-});
+import { handlingRemove } from "../../../commands/compet/removeFromCompet/utils/handleRemove";
 
 export async function handleRemoveFromDiscordInteraction(interaction: ExtendedInteraction) {
     const client = new Client({
         intents: [
-            GatewayIntentBits.GuildMembers,  // MAKE SURE TO ADD THIS
+            GatewayIntentBits.GuildMembers, 
         ],
     });
 
