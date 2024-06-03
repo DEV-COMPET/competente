@@ -1,0 +1,7 @@
+{
+    "customId": "select-event-name",
+    "minMax": {
+        "min": 1,
+        "max": 1
+    }
+}
