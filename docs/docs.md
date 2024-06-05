@@ -9,6 +9,7 @@
     - [/lista](#lista)
     - [/talks-feedback](#talks-feedback)
     - [/remove-from-compet](#remove-from-compet)
+    - [/advertir](#advertir)
 2. [Instruções para Adicionar Imagens no ImageBB](#instruções-para-adicionar-imagens-no-imagebb)
 
 ## Comandos do Bot
@@ -108,7 +109,7 @@ Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo 
         - Email incorreto: o email do membro no banco de dados não estava na pasta do drive.
         - Erro ao tentar remover do drive ou atualizar o status no banco de dados.
 
-    ![Seleção de Membro no Drive](/caminho/para/imagem-drive.png)
+    ![Seleção de Membro no Drive](./assets/remove-from-compet_drive-1.png)
 
 2. **Seleção de Membro para Remover do Discord:**
     - **Descrição:** Após o primeiro passo, o bot apresenta um segundo menu de seleção para remover o membro do Discord do projeto. Similarmente, é possível navegar pelas páginas de membros.
@@ -120,7 +121,7 @@ Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo 
         - Sucesso ao remover do Discord.
         - Erro ao tentar remover do Discord.
 
-    ![Seleção de Membro no Discord](/caminho/para/imagem-discord.png)
+    ![Seleção de Membro no Discord](./assets/remove-from-compet_discord-1.png)
 
 3. **Seleção de Membro para Remover do Trello Geral e da Equipe:**
     - **Descrição:** Finalmente, o bot apresenta um terceiro menu de seleção para remover o membro do Trello geral do projeto e do Trello da equipe específica. Aqui, também é possível navegar entre as páginas de membros.
@@ -132,7 +133,7 @@ Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo 
         - Sucesso ao remover do Trello geral e da equipe.
         - Erro ao tentar remover do Trello.
 
-    ![Seleção de Membro no Trello](/caminho/para/imagem-trello.png)
+    ![Seleção de Membro no Trello](./assets/remove-from-compet_trello-1.png)
 
 ### Fluxo de Navegação
 1. **Primeiro Menu:**
@@ -149,6 +150,17 @@ Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo 
 Após cada etapa de seleção, o bot fornece mensagens de feedback:
 - **Mensagens de Sucesso:** Confirmação de que a ação foi concluída com sucesso, como "Membro removido do drive e status atualizado com sucesso."
 - **Mensagens de Erro:** Indicação de problemas, como "Erro ao tentar remover o membro do Discord. Tente novamente."
+
+
+### /advertir
+
+Este comando adverte, isto é, dá uma advertência a um membro. Deve-se preencher duas informações:
+
+* Nome de quem será advertido
+
+* O(s) motivo(s) da advertência. Caso haja mais de um motivo, separe-os entre ponto e vírgula (;)
+
+![Modal do comando /advertir](./assets/advertir-1.png)
 
 ## Instruções para Adicionar Imagens no ImageBB
 
