@@ -1,4 +1,7 @@
 # /add-to-compet
+
+## Descrição
+
 Este comando adiciona um novo membro ao projeto. Ele realiza diversas tarefas automaticamente:
 - Adiciona o membro no Trello.
 - Adiciona o membro no Discord.

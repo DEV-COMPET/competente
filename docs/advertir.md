@@ -1,5 +1,7 @@
 # /advertir
 
+## Descrição
+
 Este comando adverte, isto é, dá uma advertência a um membro. Deve-se preencher duas informações:
 
 * Nome de quem será advertido

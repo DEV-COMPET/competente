@@ -1,4 +1,7 @@
 # /talks-feedback
+
+## Descrição
+
 Este comando retorna informações sobre uma palestra do projeto. O processo inclui:
 1. Apresentação de um menu de seleção com as 25 palestras mais recentes.
 2. Após selecionar uma palestra, são exibidas estatísticas detalhadas, incluindo:

@@ -1,4 +1,7 @@
 # /compet-em-numeros
+
+## Descrição
+
 Este comando lista diversos dados sobre o COMPET, incluindo:
 - Quantidade de membros atuais
 - Quantidade de ex-membros

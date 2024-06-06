@@ -1,4 +1,7 @@
 # /remove-from-compet
+
+## Descrição
+
 Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo diferentes plataformas onde o projeto está presente. O processo é interativo e guiado por menus de seleção. Abaixo está a descrição detalhada de cada etapa do comando.
 
 Ele remove o membro do drive do projeto, altera seu status no banco de dados e na planilha de membros. Além disso, ele remove o membro do Discord do projeto e do Trello (geral e da sua equipe)
