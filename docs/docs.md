@@ -10,6 +10,7 @@
     - [/talks-feedback](#talks-feedback)
     - [/remove-from-compet](#remove-from-compet)
     - [/advertir](#advertir)
+    - [/get-talks-info](#get-talks-info)
 2. [Instruções para Adicionar Imagens no ImageBB](#instruções-para-adicionar-imagens-no-imagebb)
 
 ## Comandos do Bot
@@ -161,6 +162,48 @@ Este comando adverte, isto é, dá uma advertência a um membro. Deve-se preench
 * O(s) motivo(s) da advertência. Caso haja mais de um motivo, separe-os entre ponto e vírgula (;)
 
 ![Modal do comando /advertir](./assets/advertir-1.png)
+
+
+### /get-talks-info
+
+#### Descrição
+
+O comando `get-talks-info` do bot possui 5 filtros: nome do evento (palestra), data do evento, nome da pessoa, email e matrícula. Esse comando permite obter o número de respostas no formulário de certificado, utilizando de um a cinco desses filtros simultaneamente.
+
+#### Passo a Passo
+
+1. **Digite o Comando**: Digite `/get-talks-info` no chat do Discord.
+2. **Seleção de Filtros**: Uma caixa de seleção aparecerá com os seguintes filtros disponíveis:
+   - Nome do evento (palestra)
+   - Data do evento
+   - Nome da pessoa
+   - Email
+   - Matrícula
+
+3. **Escolha dos Filtros**: Selecione no mínimo 1 e no máximo 5 filtros conforme necessário.
+4. **Confirmação da Seleção**: Clique fora do menu de seleção para confirmar os filtros escolhidos e iniciar o processamento.
+5. **Preenchimento das Informações**: Um modal (formulário) aparecerá para que você insira as informações correspondentes aos filtros selecionados.
+6. **Envio das Informações**: Após preencher todos os campos do formulário, clique em "Enviar".
+7. **Resultado**: O bot retornará a quantidade de registros que correspondem a todos os filtros selecionados.
+
+
+#### Imagens Exemplificativas:
+
+**Menu de Seleção dos Filtros**
+
+![Filtros Disponíveis no comando get-talks-info](./assets/get-talks-info-1.png)
+
+**Seleção de Filtros**
+
+![Seleção dos filtros no comando get-talks-info](./assets/get-talks-info-2.png)
+
+**Preenchimento do Formulário**
+
+![Formulário do get-talks-info preenchido com todos filtros selecionados](./assets/get-talks-info-3.png)
+
+**Resposta Retornada**
+
+![Resposta do get-talks-info](./assets/get-talks-info-4.png)
 
 ## Instruções para Adicionar Imagens no ImageBB
 
