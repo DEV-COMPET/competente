@@ -27,6 +27,9 @@ export async function fetchDataFromAPI({ method, url, json, bodyData }: FetchDat
 
     const createMemberUrl = createURL(url)
 
+    console.log("createdMemberUrl: ", createMemberUrl);
+    console.log("requestOptions: ", requestOptions);
+
     const response = await fetch(createMemberUrl, requestOptions);
     if (!(response.status >= 200 && response.status < 300)) {
         const { code, message, status }: { code: number; message: string; status: number } = await response.json();
