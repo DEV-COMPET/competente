@@ -8,7 +8,7 @@ Este comando adiciona um novo membro ao projeto. Ele realiza diversas tarefas au
 - Adiciona o membro no Google Drive.
 - Adiciona o membro em uma planilha de membros.
 
-## Passos:
+## Passo a Passo
 1. Solicita o número de celular do novo membro. (Campo obrigatório)
 
 2. Opcionalmente, permite a inclusão do Instagram do membro.

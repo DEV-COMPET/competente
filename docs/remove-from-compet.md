@@ -2,14 +2,14 @@
 
 ## Descrição
 
-Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo diferentes plataformas onde o projeto está presente. O processo é interativo e guiado por menus de seleção. Abaixo está a descrição detalhada de cada etapa do comando.
+Este comando remove um membro do projeto (COMPET) em várias etapas, abrangendo diferentes plataformas onde o projeto está presente. O processo é interativo e guiado por menus de seleção. Abaixo está o detalhamento de cada etapa do comando.
 
 Ele remove o membro do drive do projeto, altera seu status no banco de dados e na planilha de membros. Além disso, ele remove o membro do Discord do projeto e do Trello (geral e da sua equipe)
 
-## Passo a Passo:
+## Passo a Passo
 
 1. **Seleção de Membro para Remover do Drive e Alterar o Status no Banco de Dados e na Planilha de Membros:**
-    - **Descrição:** Primeiro, o bot apresenta um menu de seleção com todos os membros ativos, exceto os tutores. Caso o número de membros seja maior que 24, há a opção de "Próximo" para navegar entre as páginas de membros.
+    - **Explicação:** Primeiro, o bot apresenta um menu de seleção com todos os membros ativos, exceto os tutores. Caso o número de membros seja maior que 24, há a opção de "Próximo" para navegar entre as páginas de membros.
     - **Opções de Navegação:**
         - **Próximo:** Passa para a próxima página de membros.
         - **Anterior:** Volta para a página anterior de membros.
@@ -22,7 +22,7 @@ Ele remove o membro do drive do projeto, altera seu status no banco de dados e n
     ![Seleção de Membro no Drive](./assets/remove-from-compet_drive-1.png)
 
 2. **Seleção de Membro para Remover do Discord:**
-    - **Descrição:** Após o primeiro passo, o bot apresenta um segundo menu de seleção para remover o membro do Discord do projeto. Similarmente, é possível navegar pelas páginas de membros.
+    - **Explicação:** Após o primeiro passo, o bot apresenta um segundo menu de seleção para remover o membro do Discord do projeto. Similarmente, é possível navegar pelas páginas de membros.
     - **Opções de Navegação:**
         - **Próximo:** Passa para a próxima página de membros.
         - **Anterior:** Volta para a página anterior de membros.
@@ -34,7 +34,7 @@ Ele remove o membro do drive do projeto, altera seu status no banco de dados e n
     ![Seleção de Membro no Discord](./assets/remove-from-compet_discord-1.png)
 
 3. **Seleção de Membro para Remover do Trello Geral e da Equipe:**
-    - **Descrição:** Finalmente, o bot apresenta um terceiro menu de seleção para remover o membro do Trello geral do projeto e do Trello da equipe específica. Aqui, também é possível navegar entre as páginas de membros.
+    - **Explicação:** Finalmente, o bot apresenta um terceiro menu de seleção para remover o membro do Trello geral do projeto e do Trello da equipe específica. Aqui, também é possível navegar entre as páginas de membros.
     - **Opções de Navegação:**
         - **Próximo:** Passa para a próxima página de membros.
         - **Anterior:** Volta para a página anterior de membros.

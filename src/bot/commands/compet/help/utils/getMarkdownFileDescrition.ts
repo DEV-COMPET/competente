@@ -13,5 +13,5 @@ export function getDescription(filePath: string): string {
         // Retorna o conteúdo da subseção (sem a marcação)
         return match[1].trim();
     } 
-    else return "Sem descrição"; // Retorna null se não encontrar a subseção
+    else return "Sem descrição";
 }
