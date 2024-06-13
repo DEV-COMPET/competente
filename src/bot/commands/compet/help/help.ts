@@ -20,7 +20,6 @@ export default new Command({
         const docsFolder = path.join(projectRoot, 'docs'); // Caminho para a pasta "docs"
         const markdownFiles = getMarkdownFiles(docsFolder);
         const validMarkdownFiles = markdownFiles.filter(file => file !== 'docs');
-        console.log("The markdown files are: ", validMarkdownFiles);
 
         const menuOptions = makeStringSelectMenu({
             customId,

@@ -11,7 +11,6 @@ export default new SelectMenu({
     run: async ({ interaction }) => {
         await interaction.deferReply({ ephemeral: true });
         const selectedOption = interaction.values[0];
-        console.log("the selected options is", selectedOption);
 
         const projectRoot = process.cwd(); // Diretório raiz do projeto
         const docsFolder = path.join(projectRoot, 'docs') + '/' + selectedOption + '.md';
