@@ -23,13 +23,13 @@ export default new SelectMenu({
             inputFields: inputs.map(input => {
                 return {
                     customId: input as string,
-                    label: `FIltro sobre ${input}`,
+                    label: `Filtro sobre ${input}`,
                     style: 1,
                     type: ComponentType.TextInput,
                     required: false
                 }
             }), modalBuilderRequestData: {
-                title: "Finalize um Talks",
+                title: "Obtenha informações de talks",
                 customId: "get-talks-info",
                 components: []
             }

@@ -12,7 +12,8 @@ export default new SelectMenu({
 
         await interaction.deferReply({ ephemeral: true })
 
-        const selectedMemberName = interaction.values[0]
+        const selectedMemberName = interaction.values[0];
+        console.log("selectedMemberName: ", selectedMemberName);
 
         const getMemberData = await fetchDataFromAPI({
             json: true, method: "GET", url: selectedMemberName
