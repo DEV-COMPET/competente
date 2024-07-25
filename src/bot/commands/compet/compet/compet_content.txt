@@ -1,0 +1,10 @@
+Certificamos que
+ 
+# %nome%
+ 
+participou do evento COMPET Talks, organizado pelo COMPET,
+grupo PET de Engenharia de Computação do CEFET-MG, sobre 
+%evento%,
+
+no dia %data_inicio% durante  %horas_semanais% horas.
+

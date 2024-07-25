@@ -176,7 +176,7 @@ export default new Command({
     let template_path = "" // o diretório onde o template baixado será salvo internamente
     try {
       if (template_url) {
-        template_path = await downloadImage(template_url, "compet/templates")
+        template_path = await downloadImage(template_url, "compet/templates.png")
       }
     } catch (error) {
       console.error(error)
