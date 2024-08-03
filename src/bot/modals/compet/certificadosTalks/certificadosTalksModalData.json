@@ -1,0 +1,22 @@
+{
+    "modalBuilderRequest": {
+        "title": "Gere os certificados de um talks",
+        "customId": "talks-certificates"
+    },
+    "inputFields": [
+        {
+            "label": "Data do COMPET Talks",
+            "placeholder": "19/10/2024",
+            "customId": "data",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Minutos da palestra",
+            "placeholder": "85",
+            "customId": "minutos",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

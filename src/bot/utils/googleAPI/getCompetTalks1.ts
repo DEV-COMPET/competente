@@ -91,6 +91,20 @@ export async function getCompetTalksEligibleCertificateRecipients(talksEventName
   else return null;
 }
 
+export async function getNomesFromCertificateRecipients(talksEventName: string): Promise<Set<string>> {
+  const recipients = await getCompetTalksEligibleCertificateRecipients(talksEventName);
+
+  if (recipients !== null) {
+    const nomes = new Set<string>();
+    recipients.forEach(recipient => {
+      const formattedName = getFormattedName(recipient.nome);
+      nomes.add(formattedName);
+    });
+    return nomes;
+  }
+  return new Set<string>();
+}
+
 export async function getAllAnswersGrade(eventName: string): Promise<QuestionAnswers[] | null> {
   const certificateFormID = "1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w";
   const recipients = await getAllCertificateResponses(certificateFormID);
@@ -261,4 +275,17 @@ function calculateAverageValueOfEachQuestion(averageGrade: ClosedQuestionAnswers
   }
 
   return averageGrade;
+}
+
+export function getFormattedName(name: string): string {
+  name = name.trim();
+  return capitalizeFirstLetter(name);
+}
+
+function capitalizeFirstLetter(str: string): string {
+  const parts = str.split(' ');
+  const formattedParts = parts.map(part => {
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+  });
+  return formattedParts.join(' ');
 }
