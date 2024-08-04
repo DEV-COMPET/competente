@@ -7,6 +7,7 @@ import { ModalType } from "../typings/Modals";
 import { env } from "@/env";
 import { glob } from 'glob'
 import { StringSelectMenuType } from "../typings/SelectMenu";
+import { ButtonType } from "../typings/Button";
 
 const appId = env.DISCORD_CLIENT_ID;
 const token = env.DISCORD_TOKEN;
@@ -19,6 +20,7 @@ export class ExtendedClient extends Client {
     commands: Collection<string, CommandType> = new Collection();
     modals: Collection<string, ModalType> = new Collection();
     selectMenus: Collection<string, StringSelectMenuType> = new Collection();
+    buttons: Collection<string, ButtonType> = new Collection();
     webhook?: Webhook;
 
     constructor() {
@@ -44,6 +46,7 @@ export class ExtendedClient extends Client {
         await this.registerModals();
         await this.registerCommands({});
         await this.registerSelectMenus();
+        await this.registerButtons();
 
         await this.login(token);
     }
@@ -143,6 +146,27 @@ export class ExtendedClient extends Client {
                 if (!modal) return;
                 this.modals.set(modal.customId, modal);
             });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async registerButtons() {
+        try {
+            const { dirFiles, directory } = await this.folderFiles("buttons");
+    
+            console.log({ buttons: dirFiles });
+    
+            dirFiles.forEach(async (filepath) => {
+                const button: ButtonType = await this.importFile(
+                    path.join(directory, filepath)
+                );
+                if (!button) {
+                    return;
+                }
+                this.buttons.set(button.customId, button);
+            });
+    
         } catch (error) {
             console.error(error);
         }

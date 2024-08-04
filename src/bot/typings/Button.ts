@@ -1,20 +1,22 @@
-import { ButtonStyle, ButtonInteraction } from 'discord.js';
+import { ButtonStyle, ButtonInteraction, GuildMember, PermissionResolvable } from 'discord.js';
+import { ExtendedClient } from '../structures/Client';
 
-export interface ExtendedButton {
+export interface ExtendedButtonInteraction extends ButtonInteraction {
+  member: GuildMember;
+}
+
+interface RunOptions {
+  client: ExtendedClient;
+  interaction: ExtendedButtonInteraction;
+}
+
+type RunFunction = (options: RunOptions) => any;
+
+export type ButtonType = {
+  userPermissions?: PermissionResolvable[];
   customId: string;
   label: string;
   style: ButtonStyle;
   url?: string;
-}
-
-export type ButtonType = {
   run: RunFunction;
-} & ExtendedButton;
-
-export interface RunOptions {
-  // Defina as propriedades necessárias para as opções de execução
-  // Por exemplo:
-  interaction: ButtonInteraction;
-}
-
-export type RunFunction = (options: RunOptions) => any;
+};
