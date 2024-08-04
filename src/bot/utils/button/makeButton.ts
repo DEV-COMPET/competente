@@ -4,12 +4,31 @@ interface GenericButton {
     customId: string,
     label: string,
     style?: ButtonStyle,
-    custom_id?: string
+    url?: string,
+}
+
+interface GenericLinkButton extends GenericButton {
+    url: string,
 }
 
 // Função genérica para criar botões
 function makeButton(buttonData: GenericButton, style: ButtonStyle): ButtonBuilder {
-    return new ButtonBuilder(buttonData).setStyle(style);
+    const button = new ButtonBuilder()
+        .setLabel(buttonData.label)
+        .setStyle(style);
+
+    if(style === ButtonStyle.Link) {
+        if(!buttonData.url)
+            throw new Error('URL is required for link buttons');
+        button.setURL(buttonData.url);
+    } 
+    else {
+        if(!buttonData.customId)
+            throw new Error('Custom ID is required for non-link buttons');
+        button.setCustomId(buttonData.customId);
+    }
+
+    return button;
 }
 
 // Função para criar botões de sucesso
@@ -32,7 +51,8 @@ export function makeDangerButton(buttonData: GenericButton): ButtonBuilder {
 }
 
 // Função para criar botões de redirecionamento (link)
-export function makeRedirectLinkButton(buttonData: GenericButton): ButtonBuilder {
+// Não precisa de customId nem de criar um Button, pois é apenas um link
+export function makeRedirectLinkButton(buttonData: GenericLinkButton): ButtonBuilder {
     return makeButton(buttonData, ButtonStyle.Link);
 }
 

@@ -51,6 +51,7 @@ export default new Modal({
         const dataContent = `Data: ${data}`;
         const minutosContent = `Minutos: ${minutos}`;
 
+
         const buttonRow = await makeButtonsRow([confirmButtonCertificateTalks, cancelButtonCertificateTalks]);
 
         await interaction.editReply({
