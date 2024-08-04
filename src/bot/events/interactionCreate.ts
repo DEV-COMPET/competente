@@ -70,7 +70,6 @@ export default new Event("interactionCreate", "on", async (interaction) => {
   else if (interaction.isButton()) {
     const buttonInteraction: ButtonInteraction = interaction;
     const command = client.buttons.get(interaction.customId);
-    console.log("Interaction custom id", interaction.customId);
 
     if (!command) {
       await buttonInteraction.deferReply();

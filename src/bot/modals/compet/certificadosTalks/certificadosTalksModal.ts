@@ -25,7 +25,6 @@ export default new Modal({
     customId: "talks-certificates",
 
     run: async ({ interaction }) => {
-        console.log("98739279798327987983279879732979798")
         await interaction.deferReply({ ephemeral: true });
 
         if (interaction.channel === null)
@@ -36,7 +35,6 @@ export default new Modal({
             return isNotAdmin.value.response
 
         const inputData = extractInputData({ interaction, inputFields })
-        console.log('inputData is: ', inputData);
         
         const validateInputDataResponse = await validateInputData(inputData)
         if (validateInputDataResponse.isLeft())

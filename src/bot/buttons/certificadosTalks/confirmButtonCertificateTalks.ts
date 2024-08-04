@@ -18,7 +18,6 @@ export const confirmButtonCertificateTalks = makeSuccessButton({ customId, label
 export default new Button({
     customId,
     run: async ({ interaction }) => {
-        console.log("Button confirmed")
         await interaction.deferReply();
 
         const eventType = 'COMPET Talks';
