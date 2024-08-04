@@ -3,9 +3,10 @@ import { makeSuccessEmbed } from "../embed/makeSuccessEmbed"
 import { APIEmbedField } from "discord.js"
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu"
 import { ExtendedInteraction } from "@/bot/typings/Commands"
+import { ExtendedButtonInteraction } from "@/bot/typings/Button"
 
 interface EditSucessReplyRequest {
-    interaction: ExtendedModalInteraction | ExtendedStringSelectMenuInteraction | ExtendedInteraction
+    interaction: ExtendedModalInteraction | ExtendedStringSelectMenuInteraction | ExtendedInteraction | ExtendedButtonInteraction
     title: string
     fields?: APIEmbedField[]
     url_imagem?: string

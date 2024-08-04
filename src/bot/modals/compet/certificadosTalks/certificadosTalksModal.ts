@@ -1,4 +1,4 @@
-import { TextInputComponentData, ModalComponentData, ActionRowBuilder, ButtonBuilder } from "discord.js";
+import { TextInputComponentData, ModalComponentData } from "discord.js";
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
@@ -6,11 +6,10 @@ import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
-//import { talksViewersArray, talksName } from "@/bot/selectMenus/certificadosTalks/talksNameCertificateMenu";
-//import { generatePDFMultiplePages } from "@/bot/selectMenus/certificadosTalks/utils/pdf/multiplePagesPDF";
-import { makeButtonComponent, makeCancelButton, makeSuccessButton } from "@/bot/utils/button/makeButton";
-import { customId as customIdButton, label as labelButton } from "@/bot/buttons/certificadosTalks/confirmButtonCertificateInput.json";
+import { talksName } from "@/bot/selectMenus/certificadosTalks/talksNameCertificateMenu";
+import { makeButtonsRow } from "@/bot/utils/button/makeButton";
 import { confirmButtonCertificateTalks } from "@/bot/buttons/certificadosTalks/confirmButtonCertificateTalks";
+import { cancelButtonCertificateTalks } from "@/bot/buttons/certificadosTalks/cancelButtonCertificateTalks";
 //import { validateInputData } from "./utils/validateInputData";
 
 const { inputFields, modalBuilderRequest }: {
@@ -27,6 +26,7 @@ export default new Modal({
 
     run: async ({ interaction }) => {
         console.log("98739279798327987983279879732979798")
+        await interaction.deferReply({ ephemeral: true });
 
         if (interaction.channel === null)
             throw "Channel is not cached";
@@ -48,12 +48,16 @@ export default new Modal({
         const { data, minutos } = validateInputDataResponse.value.inputData;
         datasArray.push(data); minutosArray.push(minutos);
 
-        const cancelButton = makeCancelButton({ customId: "cancel", label: "Cancelar" });
-        
+        //const cancelButton = makeCancelButton({ customId: "cancel", label: "Cancelar" });
+        const talksNameContent = `Nome da palestra: ${talksName}`;
+        const dataContent = `Data: ${data}`;
+        const minutosContent = `Minutos: ${minutos}`;
 
-        await interaction.reply({
-            content: `As informações estão corretas?`,
-            components: [await makeButtonComponent(confirmButtonCertificateTalks), await makeButtonComponent(cancelButton)],
+        const buttonRow = await makeButtonsRow([confirmButtonCertificateTalks, cancelButtonCertificateTalks]);
+
+        await interaction.editReply({
+            content: `Confirme se as seguintes informações estão corretas:\n${talksNameContent}\n${dataContent}\n${minutosContent}`,
+            components: [buttonRow],
         });
     }
 });

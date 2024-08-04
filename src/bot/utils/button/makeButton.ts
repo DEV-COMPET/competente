@@ -19,6 +19,10 @@ export function makeSuccessButton(buttonData: GenericButton): ButtonBuilder {
 
 // Função para criar botões de cancelamento
 export function makeCancelButton(buttonData: GenericButton): ButtonBuilder {
+    return makeButton(buttonData, ButtonStyle.Danger);
+}
+
+export function makeGenericButton(buttonData: GenericButton): ButtonBuilder {
     return makeButton(buttonData, ButtonStyle.Secondary);
 }
 
@@ -32,7 +36,16 @@ export function makeRedirectLinkButton(buttonData: GenericButton): ButtonBuilder
     return makeButton(buttonData, ButtonStyle.Link);
 }
 
-// Função para criar linhas de ação com botões
+// Função para criar linhas de ação com botão
+// Terá um botão por linha
 export async function makeButtonComponent(button: ButtonBuilder): Promise<ActionRowBuilder<ButtonBuilder>> {
     return new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+}
+
+// Função que cria uma linha de ação com vários botões
+// Terá vários botões um do lado do outro
+export function makeButtonsRow(buttons: ButtonBuilder[]): ActionRowBuilder<ButtonBuilder> {
+    const actionRow = new ActionRowBuilder<ButtonBuilder>();
+    actionRow.addComponents(...buttons);
+    return actionRow;
 }
