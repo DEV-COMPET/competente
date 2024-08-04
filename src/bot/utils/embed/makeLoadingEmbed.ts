@@ -3,10 +3,11 @@ import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { makeEmbed } from "./makeEmbed";
 import { APIEmbedField, EmbedAssetData } from "discord.js";
 import { ExtendedInteraction } from "@/bot/typings/Commands";
+import { ExtendedButtonInteraction } from "@/bot/typings/Button";
 
 export interface makeEmbedRequest {
     json?: readJsonFileRequest
-    interaction: ExtendedModalInteraction | ExtendedInteraction
+    interaction: ExtendedModalInteraction | ExtendedInteraction | ExtendedButtonInteraction
     description?: string 
     title?: string
     fields?: APIEmbedField[]

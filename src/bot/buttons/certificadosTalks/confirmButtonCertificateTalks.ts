@@ -5,6 +5,8 @@ import { talksViewersArray, talksName } from "@/bot/selectMenus/certificadosTalk
 import { generatePDFMultiplePages } from "@/bot/selectMenus/certificadosTalks/utils/pdf/multiplePagesPDF";
 import { datasArray, minutosArray } from "@/bot/modals/compet/certificadosTalks/certificadosTalksModal";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
+import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
+import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 
 const { customId, label } = readJsonFile({
     dirname: __dirname,
@@ -21,8 +23,13 @@ export default new Button({
 
         const eventType = 'COMPET Talks';
         const local = 'Belo Horizonte';
+        const nomeSaida = talksName[talksName.length - 1] + ' - ' + datasArray[datasArray.length - 1] + ' - Certificados';
+
+        await editLoadingReply({ interaction, title: "Gerando certificados..." });
         await generatePDFMultiplePages(talksViewersArray, eventType, talksName[talksName.length - 1],
-                                        datasArray[datasArray.length - 1], minutosArray[minutosArray.length - 1], local);
+                                        datasArray[datasArray.length - 1], minutosArray[minutosArray.length - 1],
+                                        local, nomeSaida);
+        await uploadToFolder(`${nomeSaida}.pdf`);
 
         return editSucessReply({ interaction, title: "Certificados gerados com sucesso!" });
     }

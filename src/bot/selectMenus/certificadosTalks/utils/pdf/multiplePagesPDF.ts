@@ -53,12 +53,14 @@ function createInstructionalPDFPage(doc: jsPDF, base64Image: string) {
   centerTextAtGivenHeight(thirdLine, heightFromPixelsToInches(384), doc);
 }
 
-export async function generatePDFMultiplePages(nameArray: string[], eventType: string, eventName: string, date: string, minutes: string, local: string): Promise<void> {
+export async function generatePDFMultiplePages(nameArray: string[], eventType: string, eventName: string, date: string, minutes: string, local: string, nomeSaida: string = 'certificados.pdf'): Promise<void> {
   let doc = new jsPDF({
       orientation: 'landscape',
       unit: 'in',
       format: 'a4'
   });
+
+  if(!nomeSaida.endsWith('.pdf')) nomeSaida += '.pdf';
   
   nameArray.sort();
   const imagePath = join(__dirname, '.', 'assets', 'talks_template.jpg');
@@ -74,5 +76,5 @@ export async function generatePDFMultiplePages(nameArray: string[], eventType: s
       doc = await gerarPDF(name, eventType, eventName, date, minutes, local, doc);
       if(index < nameArray.length - 1) doc.addPage();
   }
-  doc.save('certificados.pdf');
+  doc.save(nomeSaida);
 }
