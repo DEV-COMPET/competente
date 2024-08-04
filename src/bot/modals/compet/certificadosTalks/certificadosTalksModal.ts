@@ -1,4 +1,4 @@
-import { TextInputComponentData, ModalComponentData } from "discord.js";
+import { TextInputComponentData, ModalComponentData, ActionRowBuilder, ButtonBuilder } from "discord.js";
 import { Modal } from "@/bot/structures/Modals";
 import { readJsonFile } from "@/bot/utils/json";
 import { makeModal } from "@/bot/utils/modal/makeModal"
@@ -6,8 +6,11 @@ import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
-import { talksViewersArray, talksName } from "@/bot/selectMenus/certificadosTalks/talksNameCertificateMenu";
-import { generatePDFMultiplePages } from "@/bot/selectMenus/certificadosTalks/utils/pdf/multiplePagesPDF";
+//import { talksViewersArray, talksName } from "@/bot/selectMenus/certificadosTalks/talksNameCertificateMenu";
+//import { generatePDFMultiplePages } from "@/bot/selectMenus/certificadosTalks/utils/pdf/multiplePagesPDF";
+import { makeButtonComponent, makeCancelButton, makeSuccessButton } from "@/bot/utils/button/makeButton";
+import { customId as customIdButton, label as labelButton } from "@/bot/buttons/certificadosTalks/confirmButtonCertificateInput.json";
+import { confirmButtonCertificateTalks } from "@/bot/buttons/certificadosTalks/confirmButtonCertificateTalks";
 //import { validateInputData } from "./utils/validateInputData";
 
 const { inputFields, modalBuilderRequest }: {
@@ -16,6 +19,8 @@ const { inputFields, modalBuilderRequest }: {
 } = readJsonFile({ dirname: __dirname, partialPath: 'certificadosTalksModalData.json' });
 
 const certificadosTalksModal = makeModal(inputFields, modalBuilderRequest);
+const datasArray: string[] = [];
+const minutosArray: string[] = [];
 
 export default new Modal({
     customId: "talks-certificates",
@@ -41,11 +46,16 @@ export default new Modal({
             })
         
         const { data, minutos } = validateInputDataResponse.value.inputData;
-        const talksNameString = talksName[talksName.length - 1];
-        const eventType = 'COMPET Talks';
-        const local = 'Belo Horizonte';
-        generatePDFMultiplePages(talksViewersArray, eventType, talksNameString, data, minutos, local).catch(console.error);
+        datasArray.push(data); minutosArray.push(minutos);
+
+        const cancelButton = makeCancelButton({ customId: "cancel", label: "Cancelar" });
+        
+
+        await interaction.reply({
+            content: `As informações estão corretas?`,
+            components: [await makeButtonComponent(confirmButtonCertificateTalks), await makeButtonComponent(cancelButton)],
+        });
     }
 });
 
-export { certificadosTalksModal };
+export { certificadosTalksModal, datasArray, minutosArray };
