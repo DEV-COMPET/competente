@@ -8,14 +8,35 @@ Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preen
 2. Após selecionar uma palestra, é exibido um Modal que pede para digitar algumas informações, sendo elas:
     - Data do talks
     - Duração do talks (em minutos)
-3. Há um botão ...
-4. Por fim, é criado um docs com o nome "Feedback de COMPET Talks: nome do talks" no drive do COMPET com as estatísticas retornadas. O caminho da pasta é: */COMPET/2023/2023.2/Desenvolvimento/Feedback Talks*
+3. Após o preenchimento do modal, é exibido um texto com o nome do Talks, a data do Talks e a duração do Talks
+4. Junto ao texto, há dois botões: um de confirmação e outro de cancelamento
+4. Por fim, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2023/2023.2/Desenvolvimento/Feedback Talks*
 
 ### Imagem Exemplificativa:
-**Modal retornado no Discord**
+**Menu com os talks**
 
-![Retorno do comando talks-feedback](./assets/talks-feedback-1.png)
+![Menu com os 25 talks mais recentes](./assets/talks-certificate-1.png)
 
-**O Docs na pasta do Drive**
+**Modal que pede a data do evento e sua duração**
 
-![Docs retornado pelo comando](./assets/talks-feedback-2.png)
+![Modal que pede a data do evento e sua duracao](./assets/talks-certificate-2.png)
+
+**Texto com as informações selecionadas e enviadas e botões de confirmação, de cancelamento e de redirecionamento**
+
+![Texto reconfirmando informacoes e butoes](./assets/talks-certificate-3.png)
+
+**Processamento da geração de certificados**
+
+![Processamento da geracao de certificados](./assets/talks-certificate-5.png)
+
+**Resposta de sucesso após confirmar a operação e gerar os certificados**
+
+![Resposta de sucesso apos geracao dos certificados](./assets/talks-certificate-4.png)
+
+**Resposta de sucesso após cancelar a operação**
+
+![Resposta de sucesso apos cancelamento da operacao](./assets/talks-certificate-6.png)
+
+**Pasta com os PDFs gerados**
+
+![Pasta com os pdfs gerados pelo comando]
