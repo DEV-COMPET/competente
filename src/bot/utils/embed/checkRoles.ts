@@ -22,18 +22,18 @@ async function checkIfRole(interaction: ExtendedInteraction | ExtendedModalInter
     return true;
 }
 
-export async function checkIfNotAdminRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
+export async function checkIfAdminRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
     return checkIfRole(interaction, "Administração");
 }
 
-export async function checkIfNotDevRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
+export async function checkIfDevRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
     return checkIfRole(interaction, "Desenvolvimento");
 }
 
-export async function checkIfNotEventRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
+export async function checkIfEventRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
     return checkIfRole(interaction, "Eventos");
 }
 
-export async function checkIfNotMarketingRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
+export async function checkIfMarketingRole(interaction: ExtendedInteraction | ExtendedModalInteraction): Promise<CheckIfNotRoleResponse> {
     return checkIfRole(interaction, "Marketing");
 }

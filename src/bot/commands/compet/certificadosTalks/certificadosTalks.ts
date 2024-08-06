@@ -11,7 +11,7 @@ import {Command} from "@/bot/structures/Command";
 import { getAllEventNames } from "@/bot/utils/googleAPI/getAllEventNames";
 import {readJsonFile} from "@/bot/utils/json";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
-import { checkIfNotAdminRole } from "@/bot/utils/embed/checkRoles";
+import { checkIfAdminRole } from "@/bot/utils/embed/checkRoles";
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
@@ -46,8 +46,8 @@ async function handleInteraction(interaction: ExtendedInteraction) {
     if (isNotAdmin.isRight())
         return isNotAdmin.value.response;
 
-    const isNotAdminRole = await checkIfNotAdminRole(interaction);
-    if (!isNotAdminRole) {
+    const isAdminRole = await checkIfAdminRole(interaction);
+    if (!isAdminRole) {
         return editErrorReply({
             interaction,
             error: new Error("Você não possui a função necessária: Administração."),
