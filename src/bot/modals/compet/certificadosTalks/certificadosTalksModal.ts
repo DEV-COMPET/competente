@@ -7,10 +7,9 @@ import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { talksName } from "@/bot/selectMenus/certificadosTalks/talksNameCertificateMenu";
-import { makeButtonsRow } from "@/bot/utils/button/makeButton";
+import { makeButtonsRow, makeRedirectLinkButton } from "@/bot/utils/button/makeButton";
 import { confirmButtonCertificateTalks } from "@/bot/buttons/certificadosTalks/confirmButtonCertificateTalks";
 import { cancelButtonCertificateTalks } from "@/bot/buttons/certificadosTalks/cancelButtonCertificateTalks";
-//import { validateInputData } from "./utils/validateInputData";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -46,13 +45,12 @@ export default new Modal({
         const { data, minutos } = validateInputDataResponse.value.inputData;
         datasArray.push(data); minutosArray.push(minutos);
 
-        //const cancelButton = makeCancelButton({ customId: "cancel", label: "Cancelar" });
         const talksNameContent = `Nome da palestra: ${talksName}`;
         const dataContent = `Data: ${data}`;
         const minutosContent = `Minutos: ${minutos}`;
 
-
-        const buttonRow = await makeButtonsRow([confirmButtonCertificateTalks, cancelButtonCertificateTalks]);
+        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: "https://drive.google.com/drive/u/0/folders/12kwuE0lalYPWzcE6gCyYg0fTdXoT33eh"});
+        const buttonRow = await makeButtonsRow([confirmButtonCertificateTalks, cancelButtonCertificateTalks, linkButton]);
 
         await interaction.editReply({
             content: `Confirme se as seguintes informações estão corretas:\n${talksNameContent}\n${dataContent}\n${minutosContent}`,
