@@ -50,8 +50,8 @@ async function handleInteraction(interaction: ExtendedInteraction) {
     if (!isAdminRole) {
         return editErrorReply({
             interaction,
-            error: new Error("Você não possui a função necessária: Administração."),
-            title: "Você não possui a função necessária: Administração.",
+            error: new Error("Você não possui o cargo necessário: Administração."),
+            title: "Você não possui o cargo necessário: Administração.",
         });
     }
 
