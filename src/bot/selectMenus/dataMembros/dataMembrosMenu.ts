@@ -14,7 +14,7 @@ export default new SelectMenu({
 
     run: async({ interaction }) => {
         const selectMember = interaction.values[0];
-        await interaction.deferReply({ ephemeral: true });
+        //await interaction.deferReply({ ephemeral: true });
 
         // próxima página
         if(selectMember == nextPage.nome.toString() + "$$$" + nextPage.email) {
