@@ -9,8 +9,8 @@ Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preen
     - Data do talks
     - Duração do talks (em minutos)
 3. Após o preenchimento do modal, é exibido um texto com o nome do Talks, a data do Talks e a duração do Talks
-4. Junto ao texto, há dois botões: um de confirmação e outro de cancelamento
-4. Por fim, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2023/2023.2/Desenvolvimento/Feedback Talks*
+4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento**
+4. Por fim, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados*
 
 ### Imagem Exemplificativa:
 **Menu com os talks**
@@ -39,4 +39,6 @@ Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preen
 
 **Pasta com os PDFs gerados**
 
-![Pasta com os pdfs gerados pelo comando]
+* *OBS*: Os PDFs no print são exemplos de teste que fizemos
+
+![Pasta com os pdfs gerados pelo comando](./assets/talks-certificate-7.png)
