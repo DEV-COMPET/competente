@@ -28,7 +28,7 @@ export default new Button({
         await generatePDFMultiplePages(talksViewersArray, eventType, talksName[talksName.length - 1],
                                         datasArray[datasArray.length - 1], minutosArray[minutosArray.length - 1],
                                         local, nomeSaida);
-        await uploadToFolder(`${nomeSaida}.pdf`);
+        await uploadToFolder(`${nomeSaida}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
 
         return editSucessReply({ interaction, title: "Certificados gerados com sucesso!" });
     }

@@ -49,7 +49,7 @@ export default new Modal({
         const dataContent = `Data: ${data}`;
         const minutosContent = `Minutos: ${minutos}`;
 
-        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: "https://drive.google.com/drive/u/0/folders/12kwuE0lalYPWzcE6gCyYg0fTdXoT33eh"});
+        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: "https://drive.google.com/drive/folders/1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R"});
         const buttonRow = await makeButtonsRow([confirmButtonCertificateTalks, cancelButtonCertificateTalks, linkButton]);
 
         await interaction.editReply({
