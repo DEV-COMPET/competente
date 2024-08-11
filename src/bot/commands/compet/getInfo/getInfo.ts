@@ -32,7 +32,7 @@ export default new Command({
         });
 
         await interaction.editReply({
-            content: "Times Disponíveis:",
+            content: "Filtros Disponíveis:",
             components: [await makeStringSelectMenuComponent(listTeamsToBeRemovedMenu)],
         });
     },

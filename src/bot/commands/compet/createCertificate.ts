@@ -7,6 +7,8 @@ import { promises as fsPromise } from "fs"
 import fs from 'fs';
 import path from 'path';
 import { competDirectories } from "@/bot/utils/python/constants";
+import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
+import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 
 async function deleteImage(img_path: string) {
   await fsPromise.unlink(path.join(__dirname, img_path))
@@ -138,6 +140,9 @@ export default new Command({
     }
   ],
   run: async ({ interaction }) => {
+
+    await interaction.deferReply({ ephemeral: true })
+
     const member = await interaction.guild?.members.fetch(interaction.user.id);
     const isADM = member?.permissions.has("Administrator");
     if (!isADM) {
@@ -180,29 +185,47 @@ export default new Command({
       }
     } catch (error) {
       console.error(error)
-      return await interaction.reply({
-        content: "Ocorreu um erro ao baixar o template, verifique se o arquivo enviado é uma imagem no formato png ou jpg",
-        ephemeral: true,
-      });
+
+      return await editErrorReply({
+        interaction, title: "Ocorreu um erro ao baixar o template, verifique se o arquivo enviado é uma imagem no formato png ou jpg",
+         error: new Error()
+      })
+
+      // return await interaction.reply({
+      //   content: "Ocorreu um erro ao baixar o template, verifique se o arquivo enviado é uma imagem no formato png ou jpg",
+      //   ephemeral: true,
+      // });
     }
     if (!descricao) {
-      return await interaction.reply({
-        content: "Você precisa informar a descricao do evento",
-        ephemeral: true,
-      });
+
+      return await editErrorReply({
+        interaction, title: "Você precisa informar a descricao do evento",
+         error: new Error()
+      })
+
+      // return await interaction.reply({
+      //   content: "Você precisa informar a descricao do evento",
+      //   ephemeral: true,
+      // });
     }
     if (!nome) {
-      return await interaction.reply({
-        content: "Você precisa informar o nome de quem vai receber o certificado",
-        ephemeral: true,
-      });
+
+      return await editErrorReply({
+        interaction, title: "Você precisa informar o nome de quem vai receber o certificado",
+         error: new Error()
+      })
+
+      // return await interaction.reply({
+      //   content: "Você precisa informar o nome de quem vai receber o certificado",
+      //   ephemeral: true,
+      // });
     }
     try {
 
       /* Essa parte do código é responsável por gerar o pdf e enviar para o autentique,
       * no caso de um link não ter sido fornecido diretamente no input do comando
       */
-      await interaction.reply({ content: "boa", ephemeral: true });
+      // await interaction.reply({ content: "boa", ephemeral: true });
       const filePath = await createCompetCertificate({
         descricao_certificado: descricao,
         data_inicio: formatarData(new Date(data_inicial)),
@@ -211,22 +234,32 @@ export default new Command({
         horas_semanais: horas_semanais.toString(),
         dir_template: template_path
       });
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      await submitToAutentique({
-        numPages: 1,
-        titulo: descricao,
-        filePath,
-        signer: { name: assigner_name, email: assigner_mail },
-      });
-      if (template_path)
-        await deleteImage(template_path)
-      return;
+      // await new Promise((resolve) => setTimeout(resolve, 5000));
+      // await submitToAutentique({
+      //   numPages: 1,
+      //   titulo: descricao,
+      //   filePath,
+      //   signer: { name: assigner_name, email: assigner_mail },
+      // });
+      // if (template_path)
+      //   await deleteImage(template_path)
+
+      return await editSucessReply({
+        interaction, title: "Certificado criado e enviado com sucesso " + filePath
+      })
+
     } catch (error: any) {
       console.error(error);
-      return await interaction.reply({
-        content: "Ocorreu um erro no processo de envio do certificado, verifique se os dados fornecidos estão corretos",
-        ephemeral: true,
-      });
+
+      return await editErrorReply({
+        interaction, title: "Ocorreu um erro no processo de envio do certificado, verifique se os dados fornecidos estão corretos",
+         error
+      })
+
+      // return await interaction.reply({
+      //   content: "Ocorreu um erro no processo de envio do certificado, verifique se os dados fornecidos estão corretos",
+      //   ephemeral: true,
+      // });
     }
   }
 

@@ -94,7 +94,7 @@ export async function uploadToTalksFeedbackFolder(document: GaxiosResponse<docs_
   }
 }
 
-export async function uploadToFolder(path_to_certificates: string): Promise<UploadToFolderResponse> {
+export async function uploadToFolder(path_to_certificates: string, folderId: string = "12kwuE0lalYPWzcE6gCyYg0fTdXoT33eh"): Promise<UploadToFolderResponse> {
   const auth = new google.auth.GoogleAuth({
     keyFile: partial_to_full_path({
       dirname: __dirname,
@@ -103,8 +103,6 @@ export async function uploadToFolder(path_to_certificates: string): Promise<Uplo
     scopes: 'https://www.googleapis.com/auth/drive',
   });
   const service = google.drive({ version: 'v3', auth });
-
-  const folderId = "12kwuE0lalYPWzcE6gCyYg0fTdXoT33eh"
   const fileMetadata = {
     name: path_to_certificates.split('/').pop(),
     parents: [folderId],

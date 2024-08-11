@@ -3,10 +3,11 @@ import { ExtendedModalInteraction } from "@/bot/typings/Modals";
 import { ExtendedStringSelectMenuInteraction } from "@/bot/typings/SelectMenu";
 import { makeEmbed } from "./makeEmbed";
 import { ExtendedInteraction } from "@/bot/typings/Commands";
+import { ExtendedButtonInteraction } from "@/bot/typings/Button";
 
 export interface makeEmbedRequest {
     json?: readJsonFileRequest
-    interaction: ExtendedModalInteraction | ExtendedStringSelectMenuInteraction | ExtendedInteraction | ExtendedInteraction | ExtendedStringSelectMenuInteraction
+    interaction: ExtendedModalInteraction | ExtendedStringSelectMenuInteraction | ExtendedInteraction | ExtendedInteraction | ExtendedStringSelectMenuInteraction | ExtendedButtonInteraction
     error: {
         code: number,
         message: string

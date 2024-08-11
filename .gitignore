@@ -6,3 +6,4 @@ tmp
 *.development.json
 venv
 jsons
+*.pdf
