@@ -18,7 +18,7 @@ export class GetCompetianoByEmailUseCase {
     constructor(private readonly repository: InterfaceCompetianoRepository) { }
 
     async execute({ email }: GetCompetianoByEmailUseCaseRequest): Promise<GetCompetianoByEmailUseCaseResponse> {
-        const competiano = await this.repository.getByEmail(email);
+        const competiano = await this.repository.getByName(email);
 
         if (!competiano)
             return left(new ResourceNotFoundError("Competiano"))

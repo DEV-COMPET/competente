@@ -11,10 +11,12 @@ export async function getCompetianoByEmail(request: FastifyRequest, reply: Fasti
 
 	const { email } = userEmailBodySchema.parse(request.params);
 
+/*	
 	if (!validateEmail(email))
 		return reply
 			.status(422)
 			.send({ message: "Entrada inválida! O email fornecido não corresponde a um email válido para busca." })
+*/
 
 	const getCompetianoByEmailUseCase = makeGetCompetianoByEmailUseCase()
 
@@ -26,5 +28,5 @@ export async function getCompetianoByEmail(request: FastifyRequest, reply: Fasti
 			.send({ message: "Membro não encontrado", error_message: user.value.message })
 	}
 
-	return reply.status(201).send({ updated_user: user.value.competiano });
+	return reply.status(201).send(user.value.competiano);
 }

@@ -4,3 +4,5 @@ dist
 *.production.json
 tmp
 *.development.json
+venv
+jsons

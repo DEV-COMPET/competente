@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Adicione um membro ao Trello",
+        "customId": "addmembertotrello"
+    },
+    "inputFields": [
+        {
+            "label": "Qual o email do novo membro no trello?",
+            "placeholder": "Andrejogadorcarodacruz@gmail.com",
+            "customId": "email",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Remova um membro do Trello",
+        "customId": "removefromtrello"
+    },
+    "inputFields": [
+        {
+            "label": "Qual é o username do membro no Trello?",
+            "placeholder": "Andrejogadorcarodacruz",
+            "customId": "trelloUsername",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

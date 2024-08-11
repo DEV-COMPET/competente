@@ -13,6 +13,7 @@ export type CompetianoType = {
   linkedin?: string | undefined;
   depoimentos?: string | undefined;
   url_imagem?: string | undefined;
+  advertencias?: number | undefined
 };
 export class Competiano implements CompetianoType {
   nome: string;
@@ -27,6 +28,7 @@ export class Competiano implements CompetianoType {
   linkedin?: string | undefined;
   depoimentos?: string | undefined;
   url_imagem?: string | undefined;
+  advertencias: number;
   constructor(competiano: CompetianoType) {
     this.url_imagem = competiano.url_imagem || "";
     this.nome = competiano.nome;
@@ -40,6 +42,7 @@ export class Competiano implements CompetianoType {
     this.linkedin = competiano.linkedin || "";
     this.lates = competiano.lates || "";
     this.data_fim = competiano.data_fim || new Date("05/09/1899");
+    this.advertencias = 0
   }
 }
 export interface existentCompetiano extends CompetianoType {
@@ -59,6 +62,7 @@ const schema = new mongoose.Schema<CompetianoType>(
     intercambio: { type: Boolean, required: true },
     depoimentos: { type: String, required: false },
     url_imagem: { type: String, required: false },
+    advertencias: { type: Number, required: true, default: 0 }
   },
 
   {

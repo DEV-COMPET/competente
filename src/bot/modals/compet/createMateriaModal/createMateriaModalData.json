@@ -1,0 +1,53 @@
+{
+    "modalBuilderRequest": {
+        "title": "Adicione uma materia no DB",
+        "customId": "addmateria"
+    },
+    "inputFields": [
+        {
+            "label": "Qual o nome da materia?",
+            "placeholder": "Logica de Programacao",
+            "customId": "nome",
+            "required": true,
+            "minLength": 3,
+            "maxLength": 161,
+            "style": 1
+        },
+        {
+            "label": "Qual o periodo da materia?",
+            "placeholder": "1",
+            "customId": "periodo",
+            "required": true,
+            "minLength": 1,
+            "maxLength": 2,
+            "style": 1
+        },
+        {
+            "label": "Qual a natureza da materia?",
+            "placeholder": "Obrigatoria",
+            "customId": "natureza",
+            "required": true,
+            "minLength": 1,
+            "maxLength": 161,
+            "style": 1
+        },
+        {
+            "label": "Quais os corequisitos da materia?",
+            "placeholder": "Logica de Programacao",
+            "customId": "corequisitos",
+            "required": false,
+            "minLength": 3,
+            "maxLength": 161,
+            "style": 1
+        },
+        {
+            "label": "Quais os prerequisitos da materia?",
+            "placeholder": "Logica de Programacao",
+            "customId": "prerequisitos",
+            "required": false,
+            "minLength": 3,
+            "maxLength": 161,
+            "style": 1
+        }
+    ]
+}

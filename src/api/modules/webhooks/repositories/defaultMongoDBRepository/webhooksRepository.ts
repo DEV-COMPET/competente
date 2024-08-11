@@ -30,7 +30,7 @@ export class WebhookRepository extends DefaultMongoDBRepository<WebhookType>impl
         if (!deletedWebhooks){
             return
         }
-        await deletedWebhooks.delete()
+        await deletedWebhooks.deleteOne()
         return deletedWebhooks.toJSON<WebhookType>()
     }
     public async getById(id: string): Promise<WebhookType | undefined> {
