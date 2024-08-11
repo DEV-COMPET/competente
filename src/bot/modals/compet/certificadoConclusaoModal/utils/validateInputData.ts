@@ -17,10 +17,21 @@ export function validateInputData({ datae, datas }: ExtractInputDataResponse): V
     const invalidInputs: string[] = [];
 
     if(!validateDate(datae))
-        invalidInputs.push("data");
+        invalidInputs.push("Data de entrada inválida");
 
     if(!validateDate(datas))
-        invalidInputs.push("data");
+        invalidInputs.push("Data de saída inválida");
+
+    if (invalidInputs.length > 0)
+        return left({ error: new InvalidInputLinkError(invalidInputs) });
+
+    // Parse dates
+    const dateEntrada = new Date(datae);
+    const dateSaida = new Date(datas);
+
+    // Check if datae is greater than datas
+    if (dateEntrada > dateSaida)
+        invalidInputs.push("A data de entrada deve ser menor ou igual a data de saída");
 
     if (invalidInputs.length > 0)
         return left({ error: new InvalidInputLinkError(invalidInputs) });

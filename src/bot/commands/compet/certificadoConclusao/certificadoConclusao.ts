@@ -7,13 +7,13 @@ import { editErrorReply } from "../../../utils/discord/editErrorReply";
 import { CompetianoType } from "../../../../api/modules/competianos/entities/competiano.entity";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { nextPage } from "@/bot/selectMenus/compet/selectMenuList";
-import { customId as customIdDB, minMax as minMaxDB } from '@/bot/selectMenus/dataMembros/dataMembrosMenuData.json';
+import { customId as customIdDB, minMax as minMaxDB } from '@/bot/selectMenus/certificadoConclusao/certificadoConclusaoMenuData.json';
 import { cancelOption, currentPage, getElementsPerPage, selectMenuList } from "@/bot/selectMenus/compet/selectMenuList";
 
 
 const { name, description }: ChatInputApplicationCommandData = readJsonFile({
     dirname: __dirname,
-    partialPath: "dataMembrosInput.json"
+    partialPath: "certificadoConclusaoInput.json"
 });
 
 export default new Command({
@@ -62,6 +62,8 @@ export default new Command({
         competianosDBMenu.addOptions({ label: cancelOption.nome, value: cancelOption.nome + "$$$" + 
             cancelOption.email
          });
+
+         console.log("Command dataMembros executed");
             
         await interaction.editReply({
             content: 'Selecione o membro',

@@ -1,20 +1,23 @@
 import { SelectMenu } from "@/bot/structures/SelectMenu";
-import { customId, minMax } from './dataMembrosMenuData.json';
-import { customId as customIdDiscord, minMax as minMaxDiscord } from './dataMembrosMenuData.json'
-import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList, cancelOption } from "./../compet/selectMenuList";
+import { customId, minMax } from './certificadoConclusaoMenuData.json';
+import { customId as customIdDiscord, minMax as minMaxDiscord } from './certificadoConclusaoMenuData.json'
+import { previousPage, currentPage, nextPage, getElementsPerPage, selectMenuList, cancelOption } from "../compet/selectMenuList";
 import { currentPage as currentPageDiscord, nextPage as nextPageDiscord,
-            getElementsPerPage as getElementsPerPageDiscord, selectMenuList as selectMenuListDiscord } from "./../discord/selectMenuList";
+            getElementsPerPage as getElementsPerPageDiscord, selectMenuList as selectMenuListDiscord } from "../discord/selectMenuList";
 import { makeStringSelectMenu, makeStringSelectMenuComponent } from "@/bot/utils/modal/makeSelectMenu";
 import { ComponentType } from "discord.js";
 import { getDiscordMembers } from "@/bot/modals/compet/removeFromDrive/removeFromDriveModal";
-import { dataMembrosModal } from "@/bot/modals/compet/dataMembrosModal/dataMembrosModal";
+import { dataMembrosModal } from "@/bot/modals/compet/certificadoConclusaoModal/certificadoConclusaoModal";
+
+const selectedMembers: string[] = [];
 
 export default new SelectMenu({
     customId,
 
     run: async({ interaction }) => {
         const selectMember = interaction.values[0];
-        //await interaction.deferReply({ ephemeral: true });
+        console.log("Menu dataMembros executed");
+        selectedMembers.push(selectMember);
 
         // próxima página
         if(selectMember == nextPage.nome.toString() + "$$$" + nextPage.email) {
@@ -128,3 +131,5 @@ export default new SelectMenu({
         }
     }
 })
+
+export { selectedMembers };
