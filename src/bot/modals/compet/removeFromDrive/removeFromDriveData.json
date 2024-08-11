@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Remova acesso do drive",
+        "customId": "remove-from-drive"
+    },
+    "inputFields": [
+        {
+            "label": "Emails a serem removido",
+            "placeholder": "compet@gmail.com",
+            "customId": "email",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

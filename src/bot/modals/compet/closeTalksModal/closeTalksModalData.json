@@ -1,0 +1,22 @@
+{
+    "modalBuilderRequest": {
+        "title": "Finalize um Talks",
+        "customId": "close-talks"
+    },
+    "inputFields": [
+        {
+            "label": "Qual o titulo do evento?",
+            "placeholder": "COMPET Talks",
+            "customId": "titulo",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Quanto tempo, em minutos, durou o talks?",
+            "placeholder": "90",
+            "customId": "minutos_totais",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

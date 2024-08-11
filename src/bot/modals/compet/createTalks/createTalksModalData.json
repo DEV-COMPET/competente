@@ -1,0 +1,36 @@
+{
+    "modalBuilderRequest": {
+        "title": "Crie um novo talks",
+        "customId": "createtalks"
+    },
+    "inputFields": [
+        {
+            "label": "Qual o titulo do evento?",
+            "placeholder": "COMPET Talks",
+            "customId": "titulo",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Quais os nomes dos palestrantes?",
+            "placeholder": "Sandro Renato, André Rodrigues, Natália Batista",
+            "customId": "palestrantes",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Qual a data do talks?",
+            "placeholder": "01-02-2004",
+            "customId": "data",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Qual o horario do talks?",
+            "placeholder": "12:30",
+            "customId": "hora",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

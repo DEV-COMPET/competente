@@ -1,0 +1,22 @@
+{
+    "modalBuilderRequest": {
+        "title": "Advirta um membro",
+        "customId": "advertir"
+    },
+    "inputFields": [
+        {
+            "label": "Quem será advertido?",
+            "placeholder": "André Rodrigues da Cruz",
+            "customId": "pessoas",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Motivos das advertências (separados por ';')",
+            "placeholder": "Motivo A; Motivo B; Motivo C",
+            "customId": "motivos",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

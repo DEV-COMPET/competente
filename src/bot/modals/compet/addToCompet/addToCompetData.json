@@ -1,0 +1,43 @@
+{
+    "modalBuilderRequest": {
+        "title": "Adicionando um novo competiano",
+        "customId": "add-to-compet"
+    },
+    "inputFields": [
+        {
+            "label": "Qual o nome do novo membro?",
+            "customId": "nome",
+            "placeholder": "Sandro Renato Dias",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Qual o email do novo membro?",
+            "customId": "email",
+            "placeholder": "Andrejogadorcarodacruz@gmail.com",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Lattes",
+            "customId": "lates",
+            "placeholder": "http://lattes.cnpq.br/1234567890123456",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Linkedin",
+            "customId": "linkedin",
+            "placeholder": "https://www.linkedin.com/in/compet/",
+            "required": false,
+            "style": 1
+        },
+        {
+            "label": "ImageBB",
+            "customId": "url_imagem",
+            "placeholder": "https://i.ibb.co/0t3J2Jd/natalia.jpg",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

@@ -7,5 +7,8 @@ export async function listCompetiano(request: FastifyRequest, reply: FastifyRepl
 
 	const competianos = await listCompetianoUseCase.execute()
 
-	return reply.status(404).send(competianos);
+	if(competianos.isLeft())
+		return reply.status(400).send({message: "Erro"})
+
+	return reply.status(200).send(competianos.value.competianos);
 }

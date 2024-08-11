@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { makeUpdateCompetianoUseCase } from './makeUpdateCompetianoUseCase';
 
-const updateUserDateParamsSchema = z.object({
+const updateUserDataBodySchema = z.object({
     nome: z.string().optional(),
     data_inicio: z.date().optional(),
     email: z.string().optional(),
@@ -10,30 +10,30 @@ const updateUserDateParamsSchema = z.object({
     tutor: z.boolean().optional(),
     scrum_master: z.boolean().optional(),
     intercambio: z.boolean().optional(),
-    data_fim: z.date().optional(),
+    data_fim: z.string().optional(),
     lates: z.string().optional(),
     linkedin: z.string().optional(),
     depoimentos: z.string().optional(),
     url_imagem: z.string().optional(),
+    advertencias: z.number().optional()
 })
 
 const updateUserNameBodySchema = z.object({
     nome: z.string(),
 });
 
-const updateUserDataBodySchema = z.object({
-    updateUserDateParamsSchema,
-});
 
 export async function updateCompetiano(request: FastifyRequest, reply: FastifyReply) {
 
     const { nome } = updateUserNameBodySchema.parse(request.params)
 
-    const { updateUserDateParamsSchema } = updateUserDataBodySchema.parse(request.body);
+    const updateUserDateParamsSchema = updateUserDataBodySchema.parse(request.body);
+
+    const updatedDate = {...updateUserDateParamsSchema, data_fim: updateUserDateParamsSchema.data_fim ? new Date(updateUserDateParamsSchema.data_fim) : undefined}
 
     const updateUserUseCase = makeUpdateCompetianoUseCase()
 
-    const user = await updateUserUseCase.execute({ nome, updatedDate: updateUserDateParamsSchema })
+    const user = await updateUserUseCase.execute({ nome, updatedDate })
 
     if (user.isLeft()) {
         return reply

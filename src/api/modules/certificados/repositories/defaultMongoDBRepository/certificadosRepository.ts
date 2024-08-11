@@ -15,7 +15,7 @@ export class CertificatesRepository
     if (!deletedCertificates) {
       return;
     }
-    await deletedCertificates.delete();
+    await deletedCertificates.deleteOne();
     return deletedCertificates.toJSON<CertificatesType>();
   }
   public async create(data: CertificatesType): Promise<CertificatesType> {

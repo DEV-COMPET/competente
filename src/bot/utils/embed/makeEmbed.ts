@@ -2,15 +2,18 @@ import { EmbedBuilder, EmbedData } from "discord.js";
 import { readJsonFile, readJsonFileRequest } from "../json";
 
 export interface makeEmbedRequest {
-    data?: EmbedData,
+    data: EmbedData,
     json?: readJsonFileRequest
 }
 
 export function makeEmbed({ data, json }: makeEmbedRequest) {
 
-    if(json) {
-        return new EmbedBuilder({...readJsonFile(json), data})
-    }
+    let embed: EmbedBuilder;
 
-    return new EmbedBuilder(data)
+    if(json) embed = new EmbedBuilder(Object.assign({}, readJsonFile(json), data))
+    else     embed = new EmbedBuilder(data)
+
+    embed.setTimestamp()
+
+    return embed
 }

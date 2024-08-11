@@ -1,0 +1,7 @@
+{
+    "customId": "get-trello-member",    
+    "minMax": {
+        "min": 1,
+        "max": 1
+    }
+}

@@ -12,10 +12,13 @@ import {
   SignerInput,
 } from "./graphql/resolvers-types";
 import { AwesomeGraphQLClient } from "awesome-graphql-client";
-import nodeFetch from "node-fetch";
 import { DocumentNode, print } from "graphql";
 import { CertificatePositionAssign } from "../../typings/talks";
 import { env } from "@/env";
+import { RequestInfo, RequestInit } from 'node-fetch';
+
+const nodeFetch = (url: RequestInfo, init?: RequestInit) =>
+  import('node-fetch').then(({ default: fetch }) => fetch(url, init));
 
 const environment = env.ENVIRONMENT;
 const API_URL = env.AUTENTIQUE_URL;
@@ -127,6 +130,7 @@ const mutations = {
   development: CREATE_DOCUMENT_MUTATION_DEVELOPMENT,
   production: CREATE_DOCUMENT_MUTATION_PRODUCTION,
 };
+
 function setupAssignPositions(numPages: number): PositionInput[] {
   const positions: PositionInput[] = [];
   for (let i = 1; i <= numPages; i++) {
@@ -141,11 +145,7 @@ function setupAssignPositions(numPages: number): PositionInput[] {
   return positions;
 }
 
-async function createDocument({
-  signers,
-  document,
-  filePath,
-}: CreateDocumentProps) {
+async function createDocument({ signers, document, filePath, }: CreateDocumentProps) {
   if (environment == "development") {
     const response = await client.request(mutations.development, {
       file: fs.createReadStream(filePath),
@@ -161,12 +161,8 @@ async function createDocument({
   });
   return response;
 }
-export async function submitToAutentique({
-  numPages,
-  titulo,
-  signer,
-  filePath,
-}: InterfaceSubmitToAutentiqueProps) {
+
+export async function submitToAutentique({ numPages, titulo, signer, filePath }: InterfaceSubmitToAutentiqueProps) {
   const signers: SignerInput[] = [
     {
       action: ActionEnum.Sign,

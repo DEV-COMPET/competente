@@ -1,0 +1,43 @@
+{
+    "modalBuilderRequest": {
+        "title": "Crie os certificados de um dos Talks",
+        "customId": "registertalks"
+    },
+    "inputFields": [
+        {
+            "label": "Qual o titulo do talks realizado?",
+            "placeholder": "COMPET Talks: Otimização",
+            "customId": "titulo",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Qual o email do assinante?",
+            "placeholder": "sandro.renato@cefet.br",
+            "customId": "email_assinante",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Qual o nome do assinante do documento?",
+            "placeholder": "Sandro Renato Dias",
+            "customId": "nome_assinante",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Quantos minutos de duração do talks?",
+            "placeholder": "200",
+            "customId": "minutos_totais",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Qual a data do talks realizado?",
+            "placeholder": "01-02-2023",
+            "customId": "data_new",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

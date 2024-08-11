@@ -1,7 +1,7 @@
 import { ResourceAlreadyExistsError } from "@/api/errors/resourceAlreadyExistsError";
 import type { CompetianoRepository as InterfaceCreateCompetianoRepository } from "../../repositories";
 import { Either, left, right } from "@/api/@types/either";
-import { Competiano, CompetianoType } from "../../entities/competiano.entity";
+import { Competiano } from "../../entities/competiano.entity";
 
 interface CreateCompetianoUseCaseRequest {
     nome: string;
@@ -14,7 +14,7 @@ interface CreateCompetianoUseCaseRequest {
 
 type CreateCompetianoUseCaseResponse = Either<
     ResourceAlreadyExistsError,
-    { competiano: CompetianoType }
+    { competiano: Competiano }
 >
 
 export class CreateCompetianoUseCase  {
@@ -31,8 +31,9 @@ export class CreateCompetianoUseCase  {
     const competiano = new Competiano({
         data_inicio, email, nome, url_imagem, linkedin, lates, 
     });
-    
+
     await this.repository.create(competiano);
+    
     return right({competiano});
   }
 }
