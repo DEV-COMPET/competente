@@ -45,7 +45,7 @@ export default new Modal({
         const { data, minutos } = validateInputDataResponse.value.inputData;
         datasArray.push(data); minutosArray.push(minutos);
 
-        const talksNameContent = `Nome da palestra: ${talksName}`;
+        const talksNameContent = `Nome da palestra: ${talksName[talksName.length-1]}`;
         const dataContent = `Data: ${data}`;
         const minutosContent = `Minutos: ${minutos}`;
 
