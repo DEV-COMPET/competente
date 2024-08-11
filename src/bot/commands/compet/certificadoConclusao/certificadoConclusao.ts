@@ -94,11 +94,3 @@ function removeDuplicates(arr: ExtractDataResponse[]): ExtractDataResponse[] {
 
     return uniqueArray;
 }
-
-async function extractData({ competianos }: ExtractDataRequest): Promise<ExtractDataResponse[]> {
-    // Filter active competianos
-    const activeCompetianos: ExtractDataResponse[] = competianos.filter(competiano => competiano.membro_ativo === true)
-                                         .filter(competiano => !competiano.tutor)
-                                         .map(competiano => ({ nome: competiano.nome, email: competiano.email }));
-    return activeCompetianos;
-}
