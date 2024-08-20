@@ -15,12 +15,6 @@ export const socialMedia: SociaMediaData = {
     telefone: ""
 }
 
-/**
- * @author: Arthur dos Santos Oliveira
- * @description: Comando que adiciona um novo competiano ao compet, recebendo dados como, nome, email, linkedin,
- * equipe, telefone, instagram, foto no imageBB e data inicial
- */
-
 export default new Command({
     name, description,
     options: [
