@@ -1,6 +1,7 @@
 import { Event } from "../structures/Event";
 import { client } from "..";
 import {
+  ButtonInteraction,
   CommandInteractionOptionResolver,
   ModalSubmitInteraction,
   StringSelectMenuInteraction,
@@ -8,6 +9,7 @@ import {
 import { ExtendedInteraction } from "../typings/Commands";
 import { ExtendedModalInteraction } from "../typings/Modals";
 import { ExtendedStringSelectMenuInteraction } from "../typings/SelectMenu";
+import { ExtendedButtonInteraction } from "../typings/Button";
 export default new Event("interactionCreate", "on", async (interaction) => {
   if (interaction.isChatInputCommand()) {
 
@@ -60,6 +62,24 @@ export default new Event("interactionCreate", "on", async (interaction) => {
       await command.run({
         client,
         interaction: selectMenuInteraction as ExtendedStringSelectMenuInteraction,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  else if (interaction.isButton()) {
+    const buttonInteraction: ButtonInteraction = interaction;
+    const command = client.buttons.get(interaction.customId);
+
+    if (!command) {
+      await buttonInteraction.deferReply();
+      await buttonInteraction.followUp("Você usou um botão não existente");
+      return;
+    }
+    try {
+      await command.run({
+        client,
+        interaction: buttonInteraction as ExtendedButtonInteraction,
       });
     } catch (error) {
       console.error(error);

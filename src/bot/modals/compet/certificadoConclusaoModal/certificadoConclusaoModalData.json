@@ -1,0 +1,22 @@
+{
+    "modalBuilderRequest": {
+        "title": "Datas de entrada e saida",
+        "customId": "input-dataeands"
+    },
+    "inputFields": [
+        {
+            "label": "Data de entrada",
+            "placeholder": "DD/MM/YYYY",
+            "customId": "datae",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Data de saida",
+            "placeholder": "DD/MM/YYYY",
+            "customId": "datas",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

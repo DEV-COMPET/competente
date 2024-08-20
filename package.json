@@ -50,6 +50,7 @@
     "glob": "^10.3.4",
     "googleapis": "^126.0.1",
     "graphql": "^16.8.0",
+    "jspdf": "^2.5.1",
     "mongoose": "^7.5.0",
     "ngrok": "^4.3.3",
     "node-fetch": "^2.6.7",

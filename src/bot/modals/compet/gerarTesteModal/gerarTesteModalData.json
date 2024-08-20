@@ -1,0 +1,36 @@
+{
+    "modalBuilderRequest": {
+        "title": "Teste",
+        "customId": "gerar-teste"
+    },
+    "inputFields": [
+        {
+            "label": "Nome do evento",
+            "placeholder": "COMPET Talks",
+            "customId": "titulo",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Tempo da palestra",
+            "placeholder": "90",
+            "customId": "minutos_totais",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Data do evento",
+            "placeholder": "DD/MM/YYYY",
+            "customId": "data",
+            "required": true,
+            "style": 1
+        },
+        {
+            "label": "Nome",
+            "placeholder": "Caio",
+            "customId": "nome",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

@@ -1,9 +1,10 @@
 import { ExtendedModalInteraction } from "@/bot/typings/Modals"
 import { makeLoadingEmbed } from "../embed/makeLoadingEmbed"
 import { ExtendedInteraction } from "@/bot/typings/Commands"
+import { ExtendedButtonInteraction } from "@/bot/typings/Button"
 
 interface EditLoadingReplyRequest {
-    interaction: ExtendedModalInteraction | ExtendedInteraction
+    interaction: ExtendedModalInteraction | ExtendedInteraction | ExtendedButtonInteraction
     title: string
 }
 
