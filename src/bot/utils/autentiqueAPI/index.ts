@@ -20,7 +20,6 @@ import { RequestInfo, RequestInit } from 'node-fetch';
 const nodeFetch = (url: RequestInfo, init?: RequestInit) =>
   import('node-fetch').then(({ default: fetch }) => fetch(url, init));
 
-const environment = env.ENVIRONMENT;
 const API_URL = env.AUTENTIQUE_URL;
 const authToken = env.AUTENTIQUE_TOKEN;
 interface CreateDocumentProps {
@@ -146,20 +145,32 @@ function setupAssignPositions(numPages: number): PositionInput[] {
 }
 
 async function createDocument({ signers, document, filePath, }: CreateDocumentProps) {
-  if (environment == "development") {
-    const response = await client.request(mutations.development, {
-      file: fs.createReadStream(filePath),
-      document,
-      signers,
-    });
-    return response;
-  }
+  // if (environment == "development") {
+  //   const response = await client.request(mutations.development, {
+  //     file: fs.createReadStream(filePath),
+  //     document,
+  //     signers,
+  //   });
+  //   return response;
+  // }
+
+  console.log("ANTES")
+
+  const file = fs.createReadStream(filePath)
+
+  console.dir({file}, {depth: null})
+
   const response = await client.request(mutations.production, {
-    file: fs.createReadStream(filePath),
+    file,
     document,
     signers,
   });
+
+
+  console.log("DEPOIS")
+
   return response;
+
 }
 
 export async function submitToAutentique({ numPages, titulo, signer, filePath }: InterfaceSubmitToAutentiqueProps) {
@@ -179,6 +190,9 @@ export async function submitToAutentique({ numPages, titulo, signer, filePath }:
     show_audit_page: false,
     footer: FooterEnum.Bottom,
   };
+
+  console.dir({documentoAntes: document}, {depth: null})
+
   const result = await createDocument({
     document,
     filePath,
