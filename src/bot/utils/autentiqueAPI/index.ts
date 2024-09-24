@@ -136,7 +136,7 @@ function setupAssignPositions(numPages: number): PositionInput[] {
     const position: PositionInput = {
       x: CertificatePositionAssign.eixoX, //Posição x da assinatura do modelo em porcentagem
       y: CertificatePositionAssign.eixoY, //Posição y da assinatura do modelo em porcentagem
-      z: i + 1, //Numero da página
+      z: i, //Numero da página
       element: PositionElementEnum.Signature,
     };
     positions.push(position);
