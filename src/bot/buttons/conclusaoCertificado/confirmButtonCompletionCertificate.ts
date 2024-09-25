@@ -1,13 +1,13 @@
 import { Button } from "@/bot/structures/Button";
 import { makeSuccessButton } from "@/bot/utils/button/makeButton";
-import { partial_to_full_path, readJsonFile } from "@/bot/utils/json";
+import { readJsonFile } from "@/bot/utils/json";
 import { selectedMembers } from "@/bot/selectMenus/certificadoConclusao/certificadoConclusaoMenu";
 import { dataEntrada, dataSaida } from "@/bot/modals/compet/certificadoConclusaoModal/certificadoConclusaoModal";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { gerarPDF } from "@/bot/utils/pdf/completionCertificate/completionCertificate";
-import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
+import { submitCompletionCertificateToAutentique } from "@/bot/utils/autentiqueAPI";
 import { env } from "@/env";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 
@@ -39,12 +39,9 @@ export default new Button({
         await editLoadingReply({ interaction, title: "Gerando certificado..." });
         await uploadToFolder(`${pdfPath}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
         await editLoadingReply({ interaction, title: "Enviando o documento ao Autentique..." });
-        
-        console.log(`${pdfPath}.pdf`)
 
         try {
-            await submitToAutentique({
-                numPages: 1,
+            await submitCompletionCertificateToAutentique({
                 titulo: `COMPET - Certificado de Conclusão de ${memberName}`,
                 signer: { 
                     name: env.AUTENTIQUE_RECIPIENT_NAME, 

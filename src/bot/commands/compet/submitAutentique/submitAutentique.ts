@@ -2,7 +2,7 @@ import { Command } from "../../../structures/Command";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { partial_to_full_path, readJsonFile } from "@/bot/utils/json";
 import { collectDocumentInfo } from "./utils/extractInputData";
-import { submitToAutentique } from "@/bot/utils/autentiqueAPI/index";
+import { submitCompletionCertificateToAutentique } from "@/bot/utils/autentiqueAPI/index";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
@@ -41,8 +41,7 @@ export default new Command({
     // Envia o documento para assinatura no Autentique
     //Trocar os inputs
     try {
-      const result = await submitToAutentique({
-        numPages: 1,
+      const result = await submitCompletionCertificateToAutentique({
         titulo: "COMPET - Certificado de Conclusão de Pedro Vitor Melo Bitencourt",
         signer: { 
           name: env.AUTENTIQUE_RECIPIENT_NAME, 
@@ -50,8 +49,6 @@ export default new Command({
         },
         filePath: fullPath
       });
-    
-
 
       await editSucessReply({
         interaction, title: `Documento "${documentInfo.titulo}" enviado para assinatura de ${documentInfo.nome} (${documentInfo.email}) com sucesso!`,

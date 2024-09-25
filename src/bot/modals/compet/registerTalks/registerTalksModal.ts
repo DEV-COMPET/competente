@@ -14,7 +14,8 @@ import { makeErrorEmbed } from "@/bot/utils/embed/makeErrorEmbed";
 import { makeSuccessEmbed } from "@/bot/utils/embed/makeSuccessEmbed";
 import { extractInputData } from "./utils/extractInputData";
 import { createCertificatesInDatabase } from "./utils/createCertificatesInDB";
-import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
+import { submitTalksCertificateToAutentique } from "@/bot/utils/autentiqueAPI";
+import { CertificatePositionAssign } from "@/bot/typings/talks";
 
 // import { submitToAutentique } from "@/bot/utils/autentiqueAPI";
 
@@ -141,10 +142,8 @@ export default new Modal({
                 ]
             })
 
-        const numPages = listaNomes.length;
 
-        const submitToAutentiqueResponse = await submitToAutentique({
-            numPages,
+        const submitToAutentiqueResponse = await submitTalksCertificateToAutentique({
             titulo: titulo as string,
             filePath: filePathResponse.value.path_to_certificates,
             signer: { name: nome_assinante, email: email_assinante },
