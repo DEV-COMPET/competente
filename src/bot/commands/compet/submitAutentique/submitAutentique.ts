@@ -6,6 +6,7 @@ import { submitToAutentique } from "@/bot/utils/autentiqueAPI/index";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
+import { env } from "@/env";
 
 const { name, description } = readJsonFile({
   dirname: __dirname,
@@ -31,19 +32,23 @@ export default new Command({
 
     await editLoadingReply({ interaction, title: "Enviando o documento para o Autentique" });
 
+    const fullPath = partial_to_full_path({
+      dirname: __dirname, partialPath: '../../../buttons/conclusaoCertificado/static/pdfs/Pedro Vitor Melo Bitencourt - Certificado Conclusão.pdf'
+    })
+
+    console.log("uihisdyhiu: ", fullPath)
+
     // Envia o documento para assinatura no Autentique
     //Trocar os inputs
     try {
       const result = await submitToAutentique({
         numPages: 1,
-        titulo: "Titulo teste",
+        titulo: "COMPET - Certificado de Conclusão de Pedro Vitor Melo Bitencourt",
         signer: { 
-          name: "Pedro", 
-          email: "pedroaugustogabironzani@gmail.com",
+          name: env.AUTENTIQUE_RECIPIENT_NAME, 
+          email: env.AUTENTIQUE_RECIPIENT_EMAIL,
         },
-        filePath: partial_to_full_path({
-          dirname: __dirname, partialPath: 'Certificado.pdf'
-        })
+        filePath: fullPath
       });
     
 

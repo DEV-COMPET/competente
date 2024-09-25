@@ -13,6 +13,8 @@ const envSchema = z.object({
     GOOGLE_DRIVE_FOLDER_ID: z.string(),
     AUTENTIQUE_TOKEN: z.string(),
     AUTENTIQUE_URL: z.string(),
+    AUTENTIQUE_RECIPIENT_NAME: z.string(),
+    AUTENTIQUE_RECIPIENT_EMAIL: z.string(),
     HOST: z.string().default("http://localhost:3000"),
     MONGODB_USER: z.string().optional(),
     MONGODB_PASSWORD: z.string().optional(),
