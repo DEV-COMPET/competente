@@ -7,6 +7,8 @@ import { datasArray, minutosArray } from "@/bot/modals/compet/certificadosTalks/
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
+import { submitTalksCertificateToAutentique } from "@/bot/utils/autentiqueAPI";
+import { env } from "@/env";
 
 const { customId, label } = readJsonFile({
     dirname: __dirname,
@@ -24,12 +26,32 @@ export default new Button({
         const local = 'Belo Horizonte';
         const nomeSaida = talksName[talksName.length - 1] + ' - ' + datasArray[datasArray.length - 1] + ' - Certificados';
 
+        const pdfFolder = __dirname + "/static/pdfs";
+        const pdfPath = pdfFolder + "/" + nomeSaida;
+
         await editLoadingReply({ interaction, title: "Gerando certificados..." });
         await generatePDFMultiplePages(talksViewersArray, eventType, talksName[talksName.length - 1],
                                         datasArray[datasArray.length - 1], minutosArray[minutosArray.length - 1],
-                                        local, nomeSaida);
-        await uploadToFolder(`${nomeSaida}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
+                                        local, nomeSaida, pdfFolder);
+        await editLoadingReply({ interaction, title: "Enviando os certificados ao Drive..." })
+        await uploadToFolder(`${pdfPath}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
+        await editLoadingReply({ interaction, title: "Enviando os certificados ao Autentique..." });
 
-        return editSucessReply({ interaction, title: "Certificados gerados com sucesso!" });
+        const titulo = `COMPET - Certificados de ${talksName[talksName.length - 1]}`;
+        const signer = {
+            name: env.AUTENTIQUE_RECIPIENT_NAME, 
+            email: env.AUTENTIQUE_RECIPIENT_EMAIL,
+        };
+        const filePath = `${pdfPath}.pdf`;
+
+        try {
+            await submitTalksCertificateToAutentique({ titulo, signer, filePath });
+            return editSucessReply({ interaction, title: "Certificados gerados com sucesso!" });
+        }
+        catch(e) {
+            console.error(`Erro ao enviar o documento ao Autentique: ${e}`);
+            return e;
+        }
+
     }
 });

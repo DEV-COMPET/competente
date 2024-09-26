@@ -185,7 +185,7 @@ async function createDocument({ signers, document, filePath, }: CreateDocumentPr
 
 }
 
-async function submitToAutentique({ numPages, titulo, signer, filePath, x, y, startPage }: InterfaceSubmitToAutentiqueProps) {
+export async function submitToAutentique({ numPages, titulo, signer, filePath, x, y, startPage }: InterfaceSubmitToAutentiqueProps) {
   const signers: SignerInput[] = [
     {
       action: ActionEnum.Sign,
@@ -224,6 +224,7 @@ export async function submitTalksCertificateToAutentique({ titulo, signer, fileP
   const x = TalksCertificatePositionAssign.eixoX;
   const y = TalksCertificatePositionAssign.eixoY;
   const numPages = await getNumberOfPages(filePath);
+  console.log("O número de páginas", numPages);
 
   return submitToAutentique({ numPages, titulo, signer, filePath, x, y, startPage: 2 });
 }

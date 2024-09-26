@@ -2,11 +2,12 @@ import { Command } from "../../../structures/Command";
 import { checkIfNotAdmin } from "@/bot/utils/embed/checkIfNotAdmin";
 import { partial_to_full_path, readJsonFile } from "@/bot/utils/json";
 import { collectDocumentInfo } from "./utils/extractInputData";
-import { submitCompletionCertificateToAutentique } from "@/bot/utils/autentiqueAPI/index";
+import { submitCompletionCertificateToAutentique, submitToAutentique } from "@/bot/utils/autentiqueAPI/index";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { env } from "@/env";
+import { compressPDF } from "@/bot/utils/pdf/comprimirPDF";
 
 const { name, description } = readJsonFile({
   dirname: __dirname,
@@ -33,21 +34,31 @@ export default new Command({
     await editLoadingReply({ interaction, title: "Enviando o documento para o Autentique" });
 
     const fullPath = partial_to_full_path({
-      dirname: __dirname, partialPath: '../../../buttons/conclusaoCertificado/static/pdfs/Pedro Vitor Melo Bitencourt - Certificado Conclusão.pdf'
-    })
+      dirname: __dirname, partialPath: '../../../buttons/certificadosTalks/static/pdfs/COMPET Talks: Aplicações da Inteligência Artificial na Aeropalinologia - 18 de Agosto de 2023 - Certificados.pdf'
+    });
 
-    console.log("uihisdyhiu: ", fullPath)
+    const outputPath = partial_to_full_path({
+      dirname: __dirname, partialPath: '../../../buttons/certificadosTalks/static/pdfs/COMPET Talks: Aplicações da Inteligência Artificial na Aeropalinologia - 18 de Agosto de 2023 - Certificados_Compressed.pdf'
+    });
+
+    await compressPDF(fullPath, outputPath);
+
+    console.log("uihisdyhiu: ", outputPath)
 
     // Envia o documento para assinatura no Autentique
     //Trocar os inputs
     try {
-      const result = await submitCompletionCertificateToAutentique({
-        titulo: "COMPET - Certificado de Conclusão de Pedro Vitor Melo Bitencourt",
+      const result = await submitToAutentique({
+        numPages: 9,
+        titulo: "COMPET - Certificados de COMPET Talks: Aplicações da Inteligência Artificial na Aeropalinologia",
         signer: { 
           name: env.AUTENTIQUE_RECIPIENT_NAME, 
           email: env.AUTENTIQUE_RECIPIENT_EMAIL,
         },
-        filePath: fullPath
+        filePath: outputPath,
+        x: "70",
+        y: "71",
+        startPage: 2
       });
 
       await editSucessReply({
