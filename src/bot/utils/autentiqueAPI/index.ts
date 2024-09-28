@@ -166,8 +166,6 @@ async function createDocument({ signers, document, filePath, }: CreateDocumentPr
   //   return response;
   // }
 
-  console.log("ANTES")
-
   const file = fs.createReadStream(filePath)
 
   console.dir({file}, {depth: null})
@@ -177,9 +175,6 @@ async function createDocument({ signers, document, filePath, }: CreateDocumentPr
     document,
     signers,
   });
-
-
-  console.log("DEPOIS")
 
   return response;
 
@@ -203,8 +198,6 @@ export async function submitToAutentique({ numPages, titulo, signer, filePath, x
     footer: FooterEnum.Bottom,
   };
 
-  console.dir({documentoAntes: document}, {depth: null})
-
   const result = await createDocument({
     document,
     filePath,
@@ -224,7 +217,6 @@ export async function submitTalksCertificateToAutentique({ titulo, signer, fileP
   const x = TalksCertificatePositionAssign.eixoX;
   const y = TalksCertificatePositionAssign.eixoY;
   const numPages = await getNumberOfPages(filePath);
-  console.log("O número de páginas", numPages);
 
   return submitToAutentique({ numPages, titulo, signer, filePath, x, y, startPage: 2 });
 }

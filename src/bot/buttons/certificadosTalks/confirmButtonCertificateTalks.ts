@@ -9,6 +9,9 @@ import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { submitTalksCertificateToAutentique } from "@/bot/utils/autentiqueAPI";
 import { env } from "@/env";
+import { compressPdf } from "@/bot/utils/pdf/comprimirPDF";
+import { deletePdf } from "@/bot/utils/pdf/deletePDF";
+import { renamePdf } from "@/bot/utils/pdf/renamePDF";
 
 const { customId, label } = readJsonFile({
     dirname: __dirname,
@@ -20,7 +23,7 @@ export const confirmButtonCertificateTalks = makeSuccessButton({ customId, label
 export default new Button({
     customId,
     run: async ({ interaction }) => {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         const eventType = 'COMPET Talks';
         const local = 'Belo Horizonte';
@@ -28,25 +31,31 @@ export default new Button({
 
         const pdfFolder = __dirname + "/static/pdfs";
         const pdfPath = pdfFolder + "/" + nomeSaida;
+        const compressedPdfPath = pdfFolder + "/" + "output.pdf";
 
         await editLoadingReply({ interaction, title: "Gerando certificados..." });
         await generatePDFMultiplePages(talksViewersArray, eventType, talksName[talksName.length - 1],
                                         datasArray[datasArray.length - 1], minutosArray[minutosArray.length - 1],
                                         local, nomeSaida, pdfFolder);
+
+        await compressPdf(`${pdfPath}.pdf`, compressedPdfPath);
+        await deletePdf(`${pdfPath}.pdf`);
+        await renamePdf(compressedPdfPath, `${pdfPath}.pdf`);
+
         await editLoadingReply({ interaction, title: "Enviando os certificados ao Drive..." })
         await uploadToFolder(`${pdfPath}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
         await editLoadingReply({ interaction, title: "Enviando os certificados ao Autentique..." });
 
         const titulo = `COMPET - Certificados de ${talksName[talksName.length - 1]}`;
         const signer = {
-            name: env.AUTENTIQUE_RECIPIENT_NAME, 
-            email: env.AUTENTIQUE_RECIPIENT_EMAIL,
+            name: env.AUTENTIQUE_TALKS_RECIPIENT_NAME, 
+            email: env.AUTENTIQUE_TALKS_RECIPIENT_EMAIL,
         };
         const filePath = `${pdfPath}.pdf`;
 
         try {
             await submitTalksCertificateToAutentique({ titulo, signer, filePath });
-            return editSucessReply({ interaction, title: "Certificados gerados com sucesso!" });
+            return editSucessReply({ interaction, title: `Certificados do ${talksName[talksName.length - 1]} gerados com sucesso!` });
         }
         catch(e) {
             console.error(`Erro ao enviar o documento ao Autentique: ${e}`);

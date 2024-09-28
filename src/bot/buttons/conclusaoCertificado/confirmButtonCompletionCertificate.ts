@@ -21,7 +21,7 @@ export const confirmButtonCompletionCertificate = makeSuccessButton({ customId, 
 export default new Button({
     customId,
     run: async ({ interaction }) => {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         console.log("Button confirmed completion certificate");
 
@@ -35,8 +35,9 @@ export default new Button({
         const pdfFolder = __dirname + "/static/pdfs";
         const pdfPath = pdfFolder + "/" + nomeSaida;
 
-        await gerarPDF(memberName, local, dataEntradaMembro, dataSaidaMembro, dataSaidaMembro, nomeSaida, pdfFolder);
         await editLoadingReply({ interaction, title: "Gerando certificado..." });
+        await gerarPDF(memberName, local, dataEntradaMembro, dataSaidaMembro, dataSaidaMembro, nomeSaida, pdfFolder);
+        await editLoadingReply({ interaction, title: "Enviando o documento ao Drive..." })
         await uploadToFolder(`${pdfPath}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
         await editLoadingReply({ interaction, title: "Enviando o documento ao Autentique..." });
 
@@ -44,8 +45,8 @@ export default new Button({
             await submitCompletionCertificateToAutentique({
                 titulo: `COMPET - Certificado de Conclusão de ${memberName}`,
                 signer: { 
-                    name: env.AUTENTIQUE_RECIPIENT_NAME, 
-                    email: env.AUTENTIQUE_RECIPIENT_EMAIL,
+                    name: env.AUTENTIQUE_COMPLETION_RECIPIENT_NAME, 
+                    email: env.AUTENTIQUE_COMPLETION_RECIPIENT_EMAIL,
                 },
                 filePath: `${pdfPath}.pdf`
             });

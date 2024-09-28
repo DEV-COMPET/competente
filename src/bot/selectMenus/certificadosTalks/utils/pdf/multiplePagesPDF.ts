@@ -63,7 +63,6 @@ export async function generatePDFMultiplePages(nameArray: string[], eventType: s
   if(!nomeSaida.endsWith('.pdf')) nomeSaida += '.pdf';
 
   const caminhoDestino = join(pastaDestino, nomeSaida);
-  console.log("HEEEEEERE: ", caminhoDestino);
   
   nameArray.sort();
   const imagePath = join(__dirname, '.', 'assets', 'talks_template.jpg');
