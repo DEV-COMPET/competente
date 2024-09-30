@@ -10,6 +10,7 @@ import { gerarPDF } from "@/bot/utils/pdf/completionCertificate/completionCertif
 import { submitCompletionCertificateToAutentique } from "@/bot/utils/autentiqueAPI";
 import { env } from "@/env";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
+import { deletePdf } from "@/bot/utils/pdf/deletePDF";
 
 const { customId, label } = readJsonFile({
     dirname: __dirname,
@@ -50,7 +51,7 @@ export default new Button({
                 },
                 filePath: `${pdfPath}.pdf`
             });
-
+            await deletePdf(`${pdfPath}.pdf`);
             return editSucessReply({ interaction, title: `Certificado de ${memberName} gerado com sucesso!` });
       } 
       catch(error) {
