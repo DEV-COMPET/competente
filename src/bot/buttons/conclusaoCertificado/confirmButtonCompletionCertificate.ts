@@ -39,7 +39,7 @@ export default new Button({
         await editLoadingReply({ interaction, title: "Gerando certificado..." });
         await gerarPDF(memberName, local, dataEntradaMembro, dataSaidaMembro, dataSaidaMembro, nomeSaida, pdfFolder);
         await editLoadingReply({ interaction, title: "Enviando o documento ao Drive..." })
-        await uploadToFolder(`${pdfPath}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
+        await uploadToFolder(`${pdfPath}.pdf`, env.GOOGLE_DRIVE_COMPLETION_CERTIFICATE_FOLDER_ID);
         await editLoadingReply({ interaction, title: "Enviando o documento ao Autentique..." });
 
         try {

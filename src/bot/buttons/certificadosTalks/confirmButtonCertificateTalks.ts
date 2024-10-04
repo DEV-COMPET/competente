@@ -43,7 +43,7 @@ export default new Button({
         await renamePdf(compressedPdfPath, `${pdfPath}.pdf`);
 
         await editLoadingReply({ interaction, title: "Enviando os certificados ao Drive..." })
-        await uploadToFolder(`${pdfPath}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
+        await uploadToFolder(`${pdfPath}.pdf`, env.GOOGLE_DRIVE_TALKS_FOLDER_ID);
         await editLoadingReply({ interaction, title: "Enviando os certificados ao Autentique..." });
 
         const titulo = `COMPET - Certificados de ${talksName[talksName.length - 1]}`;
