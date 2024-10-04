@@ -19,13 +19,14 @@ export default new SelectMenu({
 
         //await interaction.deferReply();
 
+        talksViewersArray.length = 0; // clean the array
         const selectedOption = interaction.values[0];
         talksName.push(selectedOption);
         const talksViewersSet = await getNomesFromCertificateRecipients(selectedOption);
         
         for(const viewer of talksViewersSet)
             talksViewersArray.push(viewer);
-    
+        
         await interaction.showModal(certificadosTalksModal);
     }
 });

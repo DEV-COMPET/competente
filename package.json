@@ -38,6 +38,8 @@
   "author": "Compet",
   "license": "MIT",
   "dependencies": {
+    "@ilovepdf/ilovepdf-js": "^0.3.0",
+    "@ilovepdf/ilovepdf-js-core": "^0.3.1",
     "@types/nodemailer": "^6.4.10",
     "awesome-graphql-client": "^0.14.1",
     "blob-util": "^2.0.2",
@@ -50,6 +52,7 @@
     "glob": "^10.3.4",
     "googleapis": "^126.0.1",
     "graphql": "^16.8.0",
+    "ilovepdf-sdk": "^0.0.5",
     "jspdf": "^2.5.1",
     "mongoose": "^7.5.0",
     "ngrok": "^4.3.3",

@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from "discord.js";
 import { Command } from "../../structures/Command";
-import { submitToAutentique } from "../../utils/autentiqueAPI";
 import { createCertificate } from "../../utils/python";
 import { formatarData } from "@/bot/utils/formatting/formatarData";
 import { promises as fsPromise } from "fs"

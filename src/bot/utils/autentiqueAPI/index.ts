@@ -13,14 +13,15 @@ import {
 } from "./graphql/resolvers-types";
 import { AwesomeGraphQLClient } from "awesome-graphql-client";
 import { DocumentNode, print } from "graphql";
-import { CertificatePositionAssign } from "../../typings/talks";
+import { CertificatePositionAssign as TalksCertificatePositionAssign } from "../../typings/talks";
 import { env } from "@/env";
 import { RequestInfo, RequestInit } from 'node-fetch';
+import { CertificatePositionAssign as CompletionCertificatePositionAssign } from "@/bot/typings/CompletionCertificate";
+import { getNumberOfPages } from "../pdf/getNumberOfPages";
 
 const nodeFetch = (url: RequestInfo, init?: RequestInit) =>
   import('node-fetch').then(({ default: fetch }) => fetch(url, init));
 
-const environment = env.ENVIRONMENT;
 const API_URL = env.AUTENTIQUE_URL;
 const authToken = env.AUTENTIQUE_TOKEN;
 interface CreateDocumentProps {
@@ -38,7 +39,17 @@ interface InterfaceSubmitToAutentiqueProps {
   titulo: string;
   signer: Signer;
   filePath: string;
+  startPage: number;
+  x: string;
+  y: string;
 }
+
+interface GenericSubmitToAutentiqueInterface {
+  titulo: string;
+  signer: Signer;
+  filePath: string;
+}
+
 const client = new AwesomeGraphQLClient({
   endpoint: API_URL,
   fetch: nodeFetch,
@@ -131,13 +142,13 @@ const mutations = {
   production: CREATE_DOCUMENT_MUTATION_PRODUCTION,
 };
 
-function setupAssignPositions(numPages: number): PositionInput[] {
+function setupAssignPositions(numPages: number, x: string, y: string, startPage: number = 1): PositionInput[] {
   const positions: PositionInput[] = [];
-  for (let i = 1; i <= numPages; i++) {
+  for (let i = startPage; i <= numPages; i++) {
     const position: PositionInput = {
-      x: CertificatePositionAssign.eixoX, //Posição x da assinatura do modelo em porcentagem
-      y: CertificatePositionAssign.eixoY, //Posição y da assinatura do modelo em porcentagem
-      z: i + 1, //Numero da página
+      x: x, //Posição x da assinatura do modelo em porcentagem
+      y: y, //Posição y da assinatura do modelo em porcentagem
+      z: i, //Numero da página
       element: PositionElementEnum.Signature,
     };
     positions.push(position);
@@ -146,28 +157,35 @@ function setupAssignPositions(numPages: number): PositionInput[] {
 }
 
 async function createDocument({ signers, document, filePath, }: CreateDocumentProps) {
-  if (environment == "development") {
-    const response = await client.request(mutations.development, {
-      file: fs.createReadStream(filePath),
-      document,
-      signers,
-    });
-    return response;
-  }
+  // if (environment == "development") {
+  //   const response = await client.request(mutations.development, {
+  //     file: fs.createReadStream(filePath),
+  //     document,
+  //     signers,
+  //   });
+  //   return response;
+  // }
+
+  const file = fs.createReadStream(filePath)
+
+  console.dir({file}, {depth: null})
+
   const response = await client.request(mutations.production, {
-    file: fs.createReadStream(filePath),
+    file,
     document,
     signers,
   });
+
   return response;
+
 }
 
-export async function submitToAutentique({ numPages, titulo, signer, filePath }: InterfaceSubmitToAutentiqueProps) {
+export async function submitToAutentique({ numPages, titulo, signer, filePath, x, y, startPage }: InterfaceSubmitToAutentiqueProps) {
   const signers: SignerInput[] = [
     {
       action: ActionEnum.Sign,
       email: signer.email,
-      positions: setupAssignPositions(numPages),
+      positions: setupAssignPositions(numPages, x, y, startPage),
       delivery_method: DeliveryMethodEnum.DeliveryMethodEmail,
       name: signer.name,
     },
@@ -179,6 +197,7 @@ export async function submitToAutentique({ numPages, titulo, signer, filePath }:
     show_audit_page: false,
     footer: FooterEnum.Bottom,
   };
+
   const result = await createDocument({
     document,
     filePath,
@@ -186,4 +205,18 @@ export async function submitToAutentique({ numPages, titulo, signer, filePath }:
     numPages,
   });
   return result;
+}
+
+export async function submitCompletionCertificateToAutentique({ titulo, signer, filePath }: GenericSubmitToAutentiqueInterface) {
+  const x = CompletionCertificatePositionAssign.eixoX;
+  const y = CompletionCertificatePositionAssign.eixoY;
+  return submitToAutentique({ numPages: 1, titulo, signer, filePath, x, y, startPage: 1  });
+}
+
+export async function submitTalksCertificateToAutentique({ titulo, signer, filePath }: GenericSubmitToAutentiqueInterface) {
+  const x = TalksCertificatePositionAssign.eixoX;
+  const y = TalksCertificatePositionAssign.eixoY;
+  const numPages = await getNumberOfPages(filePath);
+
+  return submitToAutentique({ numPages, titulo, signer, filePath, x, y, startPage: 2 });
 }

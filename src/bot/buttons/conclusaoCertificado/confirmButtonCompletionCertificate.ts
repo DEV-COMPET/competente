@@ -7,6 +7,10 @@ import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
 import { uploadToFolder } from "@/bot/utils/googleAPI/googleDrive";
 import { editLoadingReply } from "@/bot/utils/discord/editLoadingReply";
 import { gerarPDF } from "@/bot/utils/pdf/completionCertificate/completionCertificate";
+import { submitCompletionCertificateToAutentique } from "@/bot/utils/autentiqueAPI";
+import { env } from "@/env";
+import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
+import { deletePdf } from "@/bot/utils/pdf/deletePDF";
 
 const { customId, label } = readJsonFile({
     dirname: __dirname,
@@ -18,7 +22,7 @@ export const confirmButtonCompletionCertificate = makeSuccessButton({ customId, 
 export default new Button({
     customId,
     run: async ({ interaction }) => {
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
 
         console.log("Button confirmed completion certificate");
 
@@ -29,9 +33,34 @@ export default new Button({
         const local = 'Belo Horizonte';
         const nomeSaida = memberName + ' - Certificado Conclusão';
 
-        await gerarPDF(memberName, local, dataEntradaMembro, dataSaidaMembro, dataSaidaMembro, nomeSaida);
+        const pdfFolder = __dirname + "/static/pdfs";
+        const pdfPath = pdfFolder + "/" + nomeSaida;
+
         await editLoadingReply({ interaction, title: "Gerando certificado..." });
-        await uploadToFolder(`${nomeSaida}.pdf`, "1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R");
-        return editSucessReply({ interaction, title: `Certificado de ${memberName} gerado com sucesso!` });
+        await gerarPDF(memberName, local, dataEntradaMembro, dataSaidaMembro, dataSaidaMembro, nomeSaida, pdfFolder);
+        await editLoadingReply({ interaction, title: "Enviando o documento ao Drive..." })
+        await uploadToFolder(`${pdfPath}.pdf`, env.GOOGLE_DRIVE_COMPLETION_CERTIFICATE_FOLDER_ID);
+        await editLoadingReply({ interaction, title: "Enviando o documento ao Autentique..." });
+
+        try {
+            await submitCompletionCertificateToAutentique({
+                titulo: `COMPET - Certificado de Conclusão de ${memberName}`,
+                signer: { 
+                    name: env.AUTENTIQUE_COMPLETION_RECIPIENT_NAME, 
+                    email: env.AUTENTIQUE_COMPLETION_RECIPIENT_EMAIL,
+                },
+                filePath: `${pdfPath}.pdf`
+            });
+            await deletePdf(`${pdfPath}.pdf`);
+            return editSucessReply({ interaction, title: `Certificado de ${memberName} gerado com sucesso!` });
+      } 
+      catch(error) {
+        console.error("Erro ao enviar documento para assinatura:", JSON.stringify(error, null, 2));
+  
+        return await editErrorReply({
+          error: new Error(), interaction, title: "Erro ao enviar documento para assinatura"
+        })
+      }
+        
     }
 });

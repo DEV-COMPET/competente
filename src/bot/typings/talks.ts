@@ -41,6 +41,6 @@ export interface Aluno {
   nome: string;
 }
 export enum CertificatePositionAssign {
-  eixoX = "73",
-  eixoY = "70",
+  eixoX = "61",
+  eixoY = "64",
 }
