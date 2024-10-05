@@ -9,6 +9,7 @@ import { selectedMembers } from "@/bot/selectMenus/certificadoConclusao/certific
 import { makeButtonsRow, makeRedirectLinkButton } from "@/bot/utils/button/makeButton";
 import { confirmButtonCompletionCertificate } from "@/bot/buttons/conclusaoCertificado/confirmButtonCompletionCertificate";
 import { cancelButtonCompletionCertificate } from "@/bot/buttons/conclusaoCertificado/cancelButtonCompletionCertificate";
+import { env } from "@/env";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -50,7 +51,7 @@ export default new Modal({
         dataEntrada.push(formated.datae);
         dataSaida.push(formated.datas);
 
-        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: "https://drive.google.com/drive/folders/1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R"});
+        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: `https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_COMPLETION_CERTIFICATE_FOLDER_ID}`});
         const buttonRow = await makeButtonsRow([confirmButtonCompletionCertificate, cancelButtonCompletionCertificate, linkButton]);
 
         await interaction.editReply({

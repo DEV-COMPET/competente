@@ -10,6 +10,7 @@ import { talksName } from "@/bot/selectMenus/talksSpeakerCertificate/talksSpeake
 import { makeButtonsRow, makeRedirectLinkButton } from "@/bot/utils/button/makeButton";
 import { confirmButtonTalksSpeakersCertificate } from "@/bot/buttons/certificadosPalestrantesTalks/confirmButtonTalksSpeakerCertificate";
 import { cancelButtonTalksSpeakersCertificate } from "@/bot/buttons/certificadosPalestrantesTalks/cancelButtonTalksSpeakerCertificate";
+import { env } from "@/env";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -51,7 +52,7 @@ export default new Modal({
         const minutosContent = `Minutos: ${minutos}`;
         const speakersText = `Palestrantes: ${palestrantes.join(', ')}`;
 
-        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: "https://drive.google.com/drive/folders/1LkLlx8raqObL_8CxIfOlLtPRBUM_yE_R"});
+        const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: `https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_TALKS_SPEAKERS_FOLDER_ID}`});
         const buttonRow = await makeButtonsRow([confirmButtonTalksSpeakersCertificate, cancelButtonTalksSpeakersCertificate, linkButton]);
 
         await interaction.editReply({
