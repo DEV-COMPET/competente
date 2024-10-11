@@ -12,6 +12,7 @@ const envSchema = z.object({
     GOOGLE_FORM_INSCRICAO_ID: z.string(),
     GOOGLE_DRIVE_FOLDER_ID: z.string(),
     GOOGLE_DRIVE_TALKS_FOLDER_ID: z.string(),
+    GOOGLE_DRIVE_TALKS_SPEAKERS_FOLDER_ID: z.string(),
     GOOGLE_DRIVE_COMPLETION_CERTIFICATE_FOLDER_ID: z.string(),
     AUTENTIQUE_TOKEN: z.string(),
     AUTENTIQUE_URL: z.string(),

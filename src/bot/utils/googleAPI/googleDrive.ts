@@ -94,7 +94,7 @@ export async function uploadToTalksFeedbackFolder(document: GaxiosResponse<docs_
   }
 }
 
-export async function uploadToFolder(path_to_certificates: string, folderId: string = "12kwuE0lalYPWzcE6gCyYg0fTdXoT33eh"): Promise<UploadToFolderResponse> {
+export async function uploadToFolder(path_to_certificates: string, folderId: string = env.GOOGLE_DRIVE_FOLDER_ID): Promise<UploadToFolderResponse> {
   const auth = new google.auth.GoogleAuth({
     keyFile: partial_to_full_path({
       dirname: __dirname,

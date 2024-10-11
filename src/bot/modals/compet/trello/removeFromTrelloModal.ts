@@ -7,6 +7,7 @@ import { extractInputData } from "./utils/extractInputData";
 import { validateInputData } from "./utils/validateInputData";
 import { editErrorReply } from "@/bot/utils/discord/editErrorReply";
 import { editSucessReply } from "@/bot/utils/discord/editSucessReply";
+import { env } from "@/env";
 
 const { inputFields, modalBuilderRequest }: {
     inputFields: TextInputComponentData[];
@@ -33,7 +34,7 @@ export default new Modal({
             });
         }
 
-        fetch('https://api.trello.com/1/boards/EHISYWtc/members?key=9fbd93571f3419b52bb337324d0fb72f&token=ATTA565430860ae464d902f57b17c96a2737f6b79ac33077f63b147ee6ab67e828253796F1BB', {
+        fetch(`https://api.trello.com/1/boards/${env.TRELLO_BOARD_ID}/members?key=${env.TRELLO_API_KEY}&token=${env.TRELLO_ACCOUNT_TOKEN}`, {
             method: 'GET'
         })
         .then(response => {
@@ -63,7 +64,7 @@ export default new Modal({
                 });
             }
             else {
-                fetch(`https://api.trello.com/1/boards/EHISYWtc/members/${id}?key=9fbd93571f3419b52bb337324d0fb72f&token=ATTA565430860ae464d902f57b17c96a2737f6b79ac33077f63b147ee6ab67e828253796F1BB`, {
+                fetch(`https://api.trello.com/1/boards/${env.TRELLO_BOARD_ID}/members/${id}?key=${env.TRELLO_API_KEY}&token=${env.TRELLO_ACCOUNT_TOKEN}`, {
                 method: 'DELETE'
                 })
                 .then(response => {

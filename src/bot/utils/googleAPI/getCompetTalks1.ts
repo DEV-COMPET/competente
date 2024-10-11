@@ -80,7 +80,7 @@ export async function getCompetTalksRegistration(talksEventName: string): Promis
 }
 
 export async function getCompetTalksEligibleCertificateRecipients(talksEventName: string): Promise<FormResponseTalks[] | null > {
-  const certificateFormID = "1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w";
+  const certificateFormID = env.GOOGLE_FORM_ID;
   const recipients = await getAllCertificateResponses(certificateFormID);
 
   if(recipients !== null) {
@@ -106,7 +106,7 @@ export async function getNomesFromCertificateRecipients(talksEventName: string):
 }
 
 export async function getAllAnswersGrade(eventName: string): Promise<QuestionAnswers[] | null> {
-  const certificateFormID = "1aSdriuBvKrm6dVkl6TRVCY3yz_VriWCcqa7bk_xHy_w";
+  const certificateFormID = env.GOOGLE_FORM_ID;
   const recipients = await getAllCertificateResponses(certificateFormID);
 
   if(recipients !== null) {
