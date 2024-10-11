@@ -56,8 +56,8 @@ export default new Button({
         const filePath = `${pdfPath}.pdf`;
 
         try {
-            //await submitTalksCertificateToAutentique({ titulo, signer, filePath });
-            //await deletePdf(`${pdfPath}.pdf`);
+            await submitTalksCertificateToAutentique({ titulo, signer, filePath });
+            await deletePdf(`${pdfPath}.pdf`);
             return editSucessReply({ interaction, title: `Certificados do ${talksName[talksName.length - 1]} gerados com sucesso!` });
         }
         catch(e) {
