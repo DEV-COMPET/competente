@@ -7,11 +7,12 @@ Este comando cria um PDF com múltiplas páginas, uma para cada palestrante que 
 1. Apresentação de um menu de seleção com as 25 palestras mais recentes.
 2. Após selecionar uma palestra, é exibido um Modal que pede para digitar algumas informações, sendo elas:
     - Nome(s) do(s) palestrante(s) (caso haja mais de um, separar os nomes por ponto e vírgula ';')
+        - Palestrante1; Palestrante2; Palestrante3; ...; PalestranteN
     - Data do talks
     - Duração do talks (em minutos)
 3. Após o preenchimento do modal, é exibido um texto com o nome do Talks, a data do Talks, a duração do Talks e os nomes dos palestrantes
 4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento** (redirecionar para pasta do Drive que possui os certificados)
-5. Por fim, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados Palestrantes" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados/Talks/Palestrantes* (pode ser modificado. Dessa maneira, é recomendado usar o botão de redirecionamento)
+5. Por fim, após confirmadas as informações, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados Palestrantes" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados/Talks/Palestrantes* (pode ser modificado. Dessa maneira, é recomendado usar o botão de redirecionamento)
 6. Além disso, o certificado é enviado ao Autentique do André para assinar (enviado pela conta do Autentique do COMPET)
 
 
