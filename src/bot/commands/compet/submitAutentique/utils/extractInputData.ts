@@ -1,5 +1,4 @@
 import { CommandInteraction, ApplicationCommandOptionType } from "discord.js";
-//AUTENTIQUE_TOKEN=b1d077069c083f43baa22fff6d9ced1e40c8978248f8e39b27ad9d2e7334ae03
 
 interface CollectDocumentInfoRequest {
     interaction: CommandInteraction;
