@@ -6,7 +6,7 @@ Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preen
 
 1. Apresentação de um menu de seleção com as 25 palestras mais recentes.
 2. Após selecionar uma palestra, é exibido um Modal que pede para digitar algumas informações, sendo elas:
-    - Data do talks
+    - Data do talks (DD/MM/YYYY)
     - Duração do talks (em minutos)
 3. Após o preenchimento do modal, é exibido um texto com o nome do Talks, a data do Talks e a duração do Talks
 4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento** (redireciona para pasta do Drive que contém os certificados gerados pelo comando)
