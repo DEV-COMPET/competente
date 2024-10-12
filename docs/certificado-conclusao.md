@@ -6,8 +6,8 @@ Este comando cria um certificado de conclusão (saída) do COMPET para algum com
 
 1. Apresentação de um menu de seleção com todos os competianos ativos (no banco de dados)
 2. Após selecionar um competiano, é exibido um Modal que pede para digitar algumas informações, sendo elas:
-    - Data de entrada do competiano
-    - Data de saída do competiano
+    - Data de entrada do competiano (DD/MM/YYYY)
+    - Data de saída do competiano (DD/MM/YYYY)
 3. Após o preenchimento do modal, é exibido um texto com o nome do competiano (membro selecionado), a data de entrada e a data de saída
 4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento** (redireciona para pasta do Drive que possui os certificados gerados)
 5. Por fim, após confirmadas as informações, é gerado um PDF com o nome "Nome do competiano - Certificado Conclusão" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados/Conclusão COMPET*  (o caminho pode sofrer modificações). É melhor acessar o local do certificado por meio do botão de redirecionamento
