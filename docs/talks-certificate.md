@@ -10,7 +10,7 @@ Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preen
     - Duração do talks (em minutos)
 3. Após o preenchimento do modal, é exibido um texto com o nome do Talks, a data do Talks e a duração do Talks
 4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento** (redireciona para pasta do Drive que contém os certificados gerados pelo comando)
-5. Por fim, após confirmadas as informações, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados/Talks/Espectadores*  (o caminho pode sofrer modificações). Deste modo, é melhor acessar a pasta por meio do botão de redirecionamento
+5. Por fim, após confirmadas as informações, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados/Talks/Espectadores*  (o caminho pode sofrer modificações. Deste modo, é melhor acessar a pasta por meio do botão de redirecionamento)
 6. Além disso, o PDF gerado é também enviado para o Autentique do André para que ele assine (enviado por meio da conta do Autentique do COMPET)
 
 ### Imagem Exemplificativa:
