@@ -45,4 +45,4 @@ Este comando cria um PDF com múltiplas páginas, uma para cada palestrante que 
 
 * *OBS*: Os PDFs no print são exemplos de teste que fizemos
 
-![Pasta com os pdfs gerados pelo comando](./assets/talks-certificate-7.png)
+![Pasta com os pdfs gerados pelo comando](./assets/talks-speaker-certificate-7.png)
