@@ -50,7 +50,7 @@ export default new Modal({
         const talksNameContent = `Nome da palestra: ${talksName[talksName.length-1]}`;
         const dataContent = `Data: ${data}`;
         const minutosContent = `Minutos: ${minutos}`;
-        const speakersText = `Palestrantes: ${palestrantes.join(', ')}`;
+        const speakersText = `Palestrante(s): ${palestrantes.join(', ')}`;
 
         const linkButton = makeRedirectLinkButton({ customId: "redirect", label: "Clique aqui para acessar o certificado", url: `https://drive.google.com/drive/folders/${env.GOOGLE_DRIVE_TALKS_SPEAKERS_FOLDER_ID}`});
         const buttonRow = await makeButtonsRow([confirmButtonTalksSpeakersCertificate, cancelButtonTalksSpeakersCertificate, linkButton]);
