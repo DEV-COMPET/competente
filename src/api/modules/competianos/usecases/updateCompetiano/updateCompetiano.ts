@@ -15,7 +15,8 @@ const updateUserDataBodySchema = z.object({
     linkedin: z.string().optional(),
     depoimentos: z.string().optional(),
     url_imagem: z.string().optional(),
-    advertencias: z.number().optional()
+    advertencias: z.number().optional(),
+    advertenciasArr: z.array(z.string()).optional()
 })
 
 const updateUserNameBodySchema = z.object({

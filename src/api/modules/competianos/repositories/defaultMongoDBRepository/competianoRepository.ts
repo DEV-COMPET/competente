@@ -17,6 +17,7 @@ export type MemberData = {
   linkedin?: string;
   depoimentos?: string;
   url_imagem?: string;
+  advertenciasArr?: string[]
 };
 export class CompetianoMongoDBRepository
   extends DefaultMongoDBRepository<CompetianoType>

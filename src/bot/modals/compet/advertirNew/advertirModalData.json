@@ -1,0 +1,15 @@
+{
+    "modalBuilderRequest": {
+        "title": "Insira o motivo da advertencia",
+        "customId": "advertir-modal-new"
+    },
+    "inputFields": [
+        {
+            "label": "Motivo da advertencia",
+            "placeholder": "Atraso na entrega de uma tarefa",
+            "customId": "motivo",
+            "required": true,
+            "style": 1
+        }
+    ]
+}

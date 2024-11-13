@@ -38,7 +38,7 @@ export default new Event("interactionCreate", "on", async (interaction) => {
 
     if (!command) {
       await modalInteraction.deferReply();
-      await modalInteraction.followUp("Você usou um comando não existente");
+      await modalInteraction.followUp("Você usou um comando não existente: " + interaction.customId);
       return;
     }
     try {

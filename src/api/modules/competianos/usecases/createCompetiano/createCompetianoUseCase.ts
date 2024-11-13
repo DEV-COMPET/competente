@@ -29,7 +29,7 @@ export class CreateCompetianoUseCase  {
     
 
     const competiano = new Competiano({
-        data_inicio, email, nome, url_imagem, linkedin, lates, 
+        data_inicio, email, nome, url_imagem, linkedin, lates, advertenciasArr: []
     });
 
     await this.repository.create(competiano);
