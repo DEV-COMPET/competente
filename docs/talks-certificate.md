@@ -2,15 +2,16 @@
 
 ## Descrição
 
-Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preencheu o formulário de certificado (sendo que a primeira é uma página com instruções de como imprimir/baixar apenas uma página)
+Este comando cria um PDF com múltiplas páginas, uma para cada pessoa que preencheu o formulário de certificado (sendo que a primeira é uma página com instruções de como imprimir/baixar apenas uma página), envia-o para uma pasta do Drive e para o Autentique do André assinar (por meio da conta do COMPET)
 
 1. Apresentação de um menu de seleção com as 25 palestras mais recentes.
 2. Após selecionar uma palestra, é exibido um Modal que pede para digitar algumas informações, sendo elas:
-    - Data do talks
+    - Data do talks (DD/MM/YYYY)
     - Duração do talks (em minutos)
 3. Após o preenchimento do modal, é exibido um texto com o nome do Talks, a data do Talks e a duração do Talks
-4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento**
-4. Por fim, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados*
+4. Junto ao texto, há três botões: um de **confirmação**, outro de **cancelamento** e outro de **redirecionamento** (redireciona para pasta do Drive que contém os certificados gerados pelo comando)
+5. Por fim, após confirmadas as informações, é gerado um PDF com o nome "Nome do Talks - Data do Talks - Certificados" no drive do COMPET. O caminho da pasta é: */COMPET/2024/2024.1/Desenvolvimento/Certificados/Talks/Espectadores*  (o caminho pode sofrer modificações. Deste modo, é melhor acessar a pasta por meio do botão de redirecionamento)
+6. Além disso, o PDF gerado é também enviado para o Autentique do André para que ele assine (enviado por meio da conta do Autentique do COMPET)
 
 ### Imagem Exemplificativa:
 **Menu com os talks**
