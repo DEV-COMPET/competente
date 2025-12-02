@@ -1,6 +1,6 @@
 {
     "name": "new-talks-forms",
-    "description": "Ãlteração do titulo do formulário do Talks",
+    "description": "Alteração do titulo do formulário do Talks",
     "options": [
         {
             "name": "title",

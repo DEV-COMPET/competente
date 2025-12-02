@@ -82,28 +82,14 @@ src/bot/utils/googleAPT/competente.development.example.json
 ```
 $ npm run api:dev
 ```
-- no segundo execute dois comandos:
-- ative o ambiente virtual do python.
-
-#### Windows
-```
-.\src\bot\utils\python\venv\Scripts\activate
-```
-
-#### Linux
-```
-source src/bot/utils/python/venv/bin/activate
-```
-
-- e coloque o bot no ar:
-
+- No segundo execute:
 ```
 $ npm run bot:dev
 ```
 
 ## env
 
-- Nota: toas as variaveis ambiente com [*] são únicas e, portanto, devem ser guardadas com segurança assim que forem geradas inicialmente. Caso contrário, será necessário gerar uma nova chave.
+- Nota: todas as variaveis ambiente com [*] são únicas e, portanto, devem ser guardadas com segurança assim que forem geradas inicialmente. Caso contrário, será necessário gerar uma nova chave.
 
 ### **DISCORD_GUILD_ID**
 
@@ -169,12 +155,20 @@ $ npm run bot:dev
 ## API
 A ideia é construir uma api baseada nas demandas que o próprio compet pode vir a necessitar ou mesmo que já necessita atualmente, como por exemplo o cadastro de novos membros, ou a saida de um membro. Tornar o membro scrum de uma equipe ou participante de intercâmbio. As rotas da api serão rotas em geral restritas apenas a membros do compet com autorização para tal, Tutores scrums e devs, com isso em mente, para fins de documentação, aqui estão listadas os ENDPOINTS disponíveis para acesso atualmente:
 
-Endpoint|Metódo|Descrição|Autorização
-:---:|:---:|:---:|:---:
-/competianos|GET|Recebe uma lista com todos os competianos já cadastrados|standart
-/competianos/email|GET|Recebe os dados do competiano cujo email é igual ao passado no corpo da requisição|standart
-/competianos|POST|Cria um novo competiano|standart
-/competianos|DELETE|Exclui um competiano|standart
-/competianos|PUT|Atualiza os dados de um competiano|standart
-/certificados|GET|Recebe uma lista com todos os certificados já cadastrados|standart
-/certificados|POST|Registra os certificados salvos no link do drive na base de dados|standart 
+Comando|Descrição
+:---:|:---:
+/add-to-compet|Adiciona um novo competiano.
+/advertir|Comando para advertir um membro.
+/certificado-conclusao|Comando que gera o certificado de conclusão de um competiano.
+/close-talks|Comando para finalizar um Talks.
+/compet-em-numeros|Comando para listar os dados do compet.
+/create|Esse comando adiciona um novo competiano ao compet.
+/criar-talks|Comando para fazer criação inicial do talks.
+/get-talks-info|Comando parar retorno de infomações sobre os talks.
+/help|Comando para saber como funciona determinado comando.
+/new-talks-forms|Alteração do titulo do fomulário do Talks.
+/quit-member|Esse comando é utilizado para anunciar que um membro está de saida.
+/registrar-talks|Registra os certificados assinados do talks em questão.
+/relatorio|Envia para a planilha o relatorio semanal do usuario.
+/remove-from-compet|Comando para remover um membro do compet.
+/talks-certificate|Comando para emitir os certificados de um talks.
