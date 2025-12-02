@@ -58,7 +58,6 @@
     "pdf-lib": "^1.17.1",
     "pm2": "^5.3.0",
     "python-shell": "^5.0.0",
-    "tsconfig-paths": "^4.2.0",
     "uuid": "^9.0.0",
     "zod": "^3.22.2"
   },
@@ -83,10 +82,12 @@
     "eslint": "^8.48.0",
     "graphql-tag": "^2.12.6",
     "nodemon": "^3.0.1",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsc-alias": "^1.8.7",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^3.12.10",
-    "typescript": "^5.2.2"
+    "typescript": "^5.8.3"
   },
   "paths": {
     "@/*": [
